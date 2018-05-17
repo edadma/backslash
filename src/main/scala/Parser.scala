@@ -68,14 +68,28 @@ class Parser( commands: Map[String, Command] ) {
   def parseName( r: Input ): (Input, String) = consume( r, _.isLetterOrDigit )
 
   def parseString( r: Input ): (Input, String) =
-    if (r atEnd)
-      (r, "")
-    else
-      r.first match {
-        case '"' => consumeDelimited( r.rest, '"' )
-        case '\'' => consumeDelimited( r.rest, '\'' )
-        case _ => consume( r, !_.isWhitespace )
-      }
+    r.first match {
+      case '"' => consumeDelimited( r.rest, '"' )
+      case '\'' => consumeDelimited( r.rest, '\'' )
+      case _ => consume( r, !_.isWhitespace )
+    }
+
+  def parseArgument( r: Input ): (Input, StatementAST) = {
+    val r1 = skipSpace( r )
+
+    if (r1 atEnd)
+      problem( r1, "expected command argument" )
+
+    r1 first match {
+      case '{' => parseBlock( r1.rest )
+      case _ =>
+        val (r2, s) = parseString( r1 )
+
+        (r2, StaticStatementAST( s ))
+    }
+  }
+
+
 
   def skipSpace( r: Input ): Input = consume( r, _.isWhitespace )._1
 
@@ -85,13 +99,13 @@ class Parser( commands: Map[String, Command] ) {
     commands get name match {
       case None => (r1, VariableStatementAST( name ))
       case Some( c ) =>
-        val buf = new ListBuffer[String]
+        val buf = new ListBuffer[StatementAST]
 
         def arg( r: Input, n: Int ): Input = {
           if (n == 0)
             r
           else {
-            val (r2, s) = parseString( skipSpace(r1) )
+            val (r2, s) = parseArgument( r1 )
 
             buf += s
             arg( r2, n - 1 )
