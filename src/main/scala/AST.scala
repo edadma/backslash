@@ -5,6 +5,7 @@ trait AST
 
 trait StatementAST extends AST
 
+case class IfStatementAST( cond: Seq[(ExpressionAST, StatementAST)], els: Option[StatementAST] ) extends StatementAST
 case class BlockStatementAST( statements: Vector[StatementAST] ) extends StatementAST
 case class StaticStatementAST( s: String ) extends StatementAST
 case class VariableStatementAST( v: String ) extends StatementAST

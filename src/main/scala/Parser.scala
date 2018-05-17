@@ -89,30 +89,37 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
+  def parseArguments( r: Input, n: Int, buf: ListBuffer[StatementAST] = new ListBuffer[StatementAST] ): (Input, List[StatementAST]) = {
+    if (n == 0)
+      (r, buf toList)
+    else {
+      val (r1, s) = parseArgument( r )
 
+      buf += s
+      parseArguments( r1, n - 1, buf )
+    }
+  }
 
   def skipSpace( r: Input ): Input = consume( r, _.isWhitespace )._1
 
   def parseCommand( r: Input ): (Input, StatementAST) = {
     val (r1, name) = parseName( r )
 
-    commands get name match {
-      case None => (r1, VariableStatementAST( name ))
-      case Some( c ) =>
-        val buf = new ListBuffer[StatementAST]
+    name match {
+      case "if" =>
+        val (r2, args) = parseArguments( r1, 2 )
 
-        def arg( r: Input, n: Int ): Input = {
-          if (n == 0)
-            r
-          else {
-            val (r2, s) = parseArgument( r1 )
 
-            buf += s
-            arg( r2, n - 1 )
-          }
+      case _ =>
+        commands get name match {
+          case None => (r1, VariableStatementAST( name ))
+          case Some( c ) =>
+
+            val (r2, args) = parseArguments( r1, c.arity )
+
+            println( args)
+            (r2, CommandStatementAST( c, args ))
         }
-
-        (arg( r1, c.arity ), CommandStatementAST( c, buf.toList ))
     }
   }
 
