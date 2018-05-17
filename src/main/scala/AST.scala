@@ -9,7 +9,7 @@ case class BlockStatementAST( statements: Vector[StatementAST] ) extends Stateme
 case class StaticStatementAST( s: String ) extends StatementAST
 case class VariableStatementAST( v: String ) extends StatementAST
 case class ExpressionStatementAST( expr: ExpressionAST ) extends StatementAST
-case class CommandStatementAST( c: Command ) extends StatementAST
+case class CommandStatementAST( c: Command, args: List[String] ) extends StatementAST
 
 trait ExpressionAST extends AST
 

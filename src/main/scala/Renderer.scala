@@ -13,7 +13,7 @@ class Renderer( config: Map[Symbol, Any], out: PrintStream ) {
     ast match {
       case BlockStatementAST( block ) => block foreach render
       case StaticStatementAST( s ) => out.print( s )
-      case CommandStatementAST( c ) => c( config, vars, out, List(), null )
+      case CommandStatementAST( c, args ) => c( config, vars, out, args, null )
     }
   }
 

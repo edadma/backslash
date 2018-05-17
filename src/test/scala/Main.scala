@@ -9,7 +9,7 @@ object Main extends App {
     Map(
       'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG )
     )
-  val input = """asdf \today wert"""
+  val input = """asdf \date 'yyyy MM dd' sdfg"""
   val parser = new Parser( Command.standard )
   val ast = parser.parse(io.Source.fromString(input))
   val renderer = new Renderer( config, Console.out )

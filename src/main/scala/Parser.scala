@@ -1,9 +1,10 @@
 package xyz.hyperreal.backslash
 
-import util.parsing.input.{PagedSeqReader, PagedSeq, Position, Reader}
+import scala.collection.mutable.ListBuffer
+import util.parsing.input.{PagedSeq, PagedSeqReader, Position, Reader}
 
 
-class Parser(commands: Map[String, Command] ) {
+class Parser( commands: Map[String, Command] ) {
 
   type Input = Reader[Char]
 
@@ -47,23 +48,57 @@ class Parser(commands: Map[String, Command] ) {
       case _ => parseStatic( r )
     }
 
-  def parseName( r: Input, buf: StringBuilder = new StringBuilder ): (Input, String) =
+  def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) =
     if (r atEnd)
       (r, buf toString)
     else
       r first match {
-        case c if c.isLetter =>
+        case c if set( c ) =>
           buf += c
-          parseName( r.rest, buf )
+          consume( r.rest, set, buf )
         case _ => (r, buf toString)
       }
+
+  def consumeDelimited( r: Input, delim: Char ): (Input, String) = {
+    val (r1, s) = consume( r, _ != delim )
+
+    (r1.rest, s)
+  }
+
+  def parseName( r: Input ): (Input, String) = consume( r, _.isLetterOrDigit )
+
+  def parseString( r: Input ): (Input, String) =
+    if (r atEnd)
+      (r, "")
+    else
+      r.first match {
+        case '"' => consumeDelimited( r.rest, '"' )
+        case '\'' => consumeDelimited( r.rest, '\'' )
+        case _ => consume( r, !_.isWhitespace )
+      }
+
+  def skipSpace( r: Input ): Input = consume( r, _.isWhitespace )._1
 
   def parseCommand( r: Input ): (Input, StatementAST) = {
     val (r1, name) = parseName( r )
 
     commands get name match {
       case None => (r1, VariableStatementAST( name ))
-      case Some( c ) => (r1, CommandStatementAST( c ))
+      case Some( c ) =>
+        val buf = new ListBuffer[String]
+
+        def arg( r: Input, n: Int ): Input = {
+          if (n == 0)
+            r
+          else {
+            val (r2, s) = parseString( skipSpace(r1) )
+
+            buf += s
+            arg( r2, n - 1 )
+          }
+        }
+
+        (arg( r1, c.arity ), CommandStatementAST( c, buf.toList ))
     }
   }
 
