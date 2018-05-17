@@ -9,12 +9,16 @@ object Main extends App {
     Map(
       'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG )
     )
-  val input = """asdf \date {yyyy MM dd} sdfg"""
+  val input = """asdf \if v wow zxcv"""
+  val assigns =
+    Map(
+      "v" -> 123
+    )
   val parser = new Parser( Command.standard )
   val ast = parser.parse(io.Source.fromString(input))
   val renderer = new Renderer( config )
 
-  renderer.render( ast, Console.out )
+  renderer.render( ast, assigns, Console.out )
   println
 
 }

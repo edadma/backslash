@@ -74,7 +74,7 @@ class Parser( commands: Map[String, Command] ) {
       case _ => consume( r, !_.isWhitespace )
     }
 
-  def parseArgument( r: Input ): (Input, StatementAST) = {
+  def parseRenderedArgument( r: Input ): (Input, StatementAST) = {
     val r1 = skipSpace( r )
 
     if (r1 atEnd)
@@ -89,11 +89,23 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
+  def parseStaticArgument( r: Input ): (Input, String) = {
+    val r1 = skipSpace( r )
+
+    if (r1 atEnd)
+      problem( r1, "expected command argument" )
+
+    r1 first match {
+      case '{' => consumeDelimited( r1.rest, '}' )
+      case _ => parseString( r1 )
+    }
+  }
+
   def parseArguments( r: Input, n: Int, buf: ListBuffer[StatementAST] = new ListBuffer[StatementAST] ): (Input, List[StatementAST]) = {
     if (n == 0)
       (r, buf toList)
     else {
-      val (r1, s) = parseArgument( r )
+      val (r1, s) = parseRenderedArgument( r )
 
       buf += s
       parseArguments( r1, n - 1, buf )
@@ -107,9 +119,10 @@ class Parser( commands: Map[String, Command] ) {
 
     name match {
       case "if" =>
-        val (r2, args) = parseArguments( r1, 2 )
+        val (r2, s) = parseStaticArgument( r1 )
+        val (r3, yes) = parseRenderedArgument( r2 )
 
-
+        (r3, IfStatementAST( List((VariableExpressionAST(s), yes)), None ))
       case _ =>
         commands get name match {
           case None => (r1, VariableStatementAST( name ))
@@ -117,7 +130,6 @@ class Parser( commands: Map[String, Command] ) {
 
             val (r2, args) = parseArguments( r1, c.arity )
 
-            println( args)
             (r2, CommandStatementAST( c, args ))
         }
     }
