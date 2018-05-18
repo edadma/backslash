@@ -43,10 +43,16 @@ class Parser( commands: Map[String, Command] ) {
       }
 
   def parseStatement( r: Input ): (Input, StatementAST) =
-    r first match {
-      case '\\' => parseCommand( r.rest )
-      case _ => parseStatic( r )
+    parseOptionalControlSequence( r ) match {
+      case None => parseStatic( r )
+      case Some( (r1, name) ) => parseCommand( name, r1 )
     }
+
+  def parseOptionalControlSequence( r: Input ): Option[(Input, String)] =
+    if (!r.atEnd && r.first == '\\' && r.rest.first.isLetterOrDigit)
+      Some( parseName(r.rest) )
+    else
+      None
 
   def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) =
     if (r atEnd)
@@ -114,23 +120,28 @@ class Parser( commands: Map[String, Command] ) {
 
   def skipSpace( r: Input ): Input = consume( r, _.isWhitespace )._1
 
-  def parseCommand( r: Input ): (Input, StatementAST) = {
-    val (r1, name) = parseName( r )
-
+  def parseCommand( name: String, r: Input ): (Input, StatementAST) = {
     name match {
       case "if" =>
-        val (r2, s) = parseStaticArgument( r1 )
-        val (r3, yes) = parseRenderedArgument( r2 )
+        val (r1, s) = parseStaticArgument( r )
+        val (r2, yes) = parseRenderedArgument( r1 )
 
-        (r3, IfStatementAST( List((VariableExpressionAST(s), yes)), None ))
+        parseOptionalControlSequence( skipSpace(r2) ) match {
+          case Some( (r3, "else") ) =>
+            val (r4, no) = parseRenderedArgument( r3 )
+
+            (r4, IfStatementAST( List((VariableExpressionAST(s), yes)), Some(no) ))
+          case _ => (r2, IfStatementAST( List((VariableExpressionAST(s), yes)), None ))
+        }
+
       case _ =>
         commands get name match {
-          case None => (r1, VariableStatementAST( name ))
+          case None => (r, VariableStatementAST( name ))
           case Some( c ) =>
 
-            val (r2, args) = parseArguments( r1, c.arity )
+            val (r1, args) = parseArguments( r, c.arity )
 
-            (r2, CommandStatementAST( c, args ))
+            (r1, CommandStatementAST( c, args ))
         }
     }
   }

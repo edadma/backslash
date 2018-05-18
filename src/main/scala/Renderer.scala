@@ -20,6 +20,10 @@ class Renderer( config: Map[Symbol, Any] ) {
         case IfStatementAST( cond, els ) =>
           cond find { case (expr, _) => truthy( eval(expr) ) } match {
             case None =>
+              els match {
+                case None =>
+                case Some( no ) => render( no )
+              }
             case Some( (_, yes) ) => render( yes )
           }
       }

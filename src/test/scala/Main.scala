@@ -9,7 +9,7 @@ object Main extends App {
     Map(
       'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG )
     )
-  val input = """asdf \if v wow zxcv"""
+  val input = """asdf \if v wow \else blah zxcv"""
   val assigns =
     Map(
       "v" -> 123
