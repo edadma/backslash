@@ -86,26 +86,53 @@ class Parser( commands: Map[String, Command] ) {
     if (r1 atEnd)
       problem( r1, "expected command argument" )
 
-    r1 first match {
-      case '{' => parseBlock( r1.rest )
-      case _ =>
-        val (r2, s) = parseString( r1 )
+    parseOptionalControlSequence( r1 ) match {
+      case None =>
+        r1 first match {
+          case '{' => parseBlock( r1.rest )
+          case _ =>
+            val (r2, s) = parseString( r1 )
 
-        (r2, LiteralExpressionAST( s ))
+            (r2, LiteralExpressionAST( s ))
+        }
+      case Some( (r2, name) ) => parseCommand( name, r2 )
     }
   }
 
-  def parseStaticArgument( r: Input ): (Input, String) = {
+  def parseExpressionArgument( r: Input ): (Input, ExpressionAST) = {
     val r1 = skipSpace( r )
 
     if (r1 atEnd)
       problem( r1, "expected command argument" )
 
-    r1 first match {
-      case '{' => consumeDelimited( r1.rest, '}' )
-      case _ => parseString( r1 )
+    parseOptionalControlSequence( r1 ) match {
+      case None =>
+        r1 first match {
+          case '{' => parseBlock( r1.rest )
+          case '"'|'\'' =>
+            val (r2, s) = parseString( r1 )
+
+            (r2, LiteralExpressionAST( s ))
+          case _ =>
+            val (r2, s) = parseString( r1 )
+
+            (r2, VariableExpressionAST( s ))
+        }
+      case Some( (r2, name) ) => parseCommand( name, r2 )
     }
   }
+
+//  def parseStaticArgument( r: Input ): (Input, String) = {
+//    val r1 = skipSpace( r )
+//
+//    if (r1 atEnd)
+//      problem( r1, "expected command argument" )
+//
+//    r1 first match {
+//      case '{' => consumeDelimited( r1.rest, '}' )
+//      case _ => parseString( r1 )
+//    }
+//  }
 
   def parseArguments( r: Input, n: Int, buf: ListBuffer[ExpressionAST] = new ListBuffer[ExpressionAST] ): (Input, List[ExpressionAST]) = {
     if (n == 0)
@@ -123,15 +150,15 @@ class Parser( commands: Map[String, Command] ) {
   def parseCommand( name: String, r: Input ): (Input, ExpressionAST) = {
     name match {
       case "if" =>
-        val (r1, s) = parseStaticArgument( r )
+        val (r1, expr) = parseExpressionArgument( r )
         val (r2, yes) = parseRenderedArgument( r1 )
 
         parseOptionalControlSequence( skipSpace(r2) ) match {
           case Some( (r3, "else") ) =>
             val (r4, no) = parseRenderedArgument( r3 )
 
-            (r4, IfExpressionAST( List((VariableExpressionAST(s), yes)), Some(no) ))
-          case _ => (r2, IfExpressionAST( List((VariableExpressionAST(s), yes)), None ))
+            (r4, IfExpressionAST( List((expr, yes)), Some(no) ))
+          case _ => (r2, IfExpressionAST( List((expr, yes)), None ))
         }
 
       case _ =>
