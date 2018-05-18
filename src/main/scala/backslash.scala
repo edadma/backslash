@@ -28,4 +28,18 @@ package object backslash {
 
   def falsy( a: Any ) = !truthy( a )
 
+  def display( a: Any ): String =
+    a match {
+      case l: collection.Seq[_] => l map qdisplay mkString ("[", ", ", "]")
+      case m: collection.Map[_, _] => m map { case (k, v) => qdisplay(k) + "=>" + qdisplay(v) } mkString ("{", ", ", "}")
+      case s => String.valueOf( s )
+    }
+
+  def qdisplay( a: Any ): String =
+    a match {
+      case s: String => '"' + s + '"'
+      case `nil` => "<nil>"
+      case _ => display( a )
+    }
+
 }

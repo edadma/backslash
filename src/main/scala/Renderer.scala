@@ -12,24 +12,24 @@ class Renderer( config: Map[Symbol, Any] ) {
 
   def render( ast: AST, assigns: Map[String, Any], out: PrintStream ): Unit = {
 
-    def render( ast: AST ): Unit =
+    def seval( ast: AST ) = eval( ast ).toString
+
+    def teval( ast: AST ) = truthy( eval(ast) )
+
+    def eval( ast: AST ): Any =
       ast match {
-        case BlockStatementAST( block ) => block foreach render
-        case StaticStatementAST( s ) => out.print( s )
-        case CommandStatementAST( c, args ) => c( config, vars, out, args map capture, null )
-        case IfStatementAST( cond, els ) =>
-          cond find { case (expr, _) => truthy( eval(expr) ) } match {
+        case BlockExpressionAST( block ) => block map seval mkString
+        case LiteralExpressionAST( v ) => v
+        case CommandExpressionAST( c, args ) => c( config, vars, args map eval, null )
+        case IfExpressionAST( cond, els ) =>
+          cond find { case (expr, _) => teval( expr ) } match {
             case None =>
               els match {
-                case None =>
-                case Some( no ) => render( no )
+                case None => nil
+                case Some( no ) => eval( no )
               }
-            case Some( (_, yes) ) => render( yes )
+            case Some( (_, yes) ) => eval( yes )
           }
-      }
-
-    def eval( expr: ExpressionAST ): Any =
-      expr match {
         case VariableExpressionAST( v ) =>
           vars get v match {
             case None => nil
@@ -38,14 +38,15 @@ class Renderer( config: Map[Symbol, Any] ) {
       }
 
     vars ++= assigns
-    render( ast )
+    out.print( eval(ast) )
+
   }
 
-  def capture( ast: AST ) = {
-    val bytes = new ByteArrayOutputStream
-
-    render( ast, Map(), new PrintStream(bytes) )
-    bytes.toString
-  }
+//  def capture( ast: AST ) = {
+//    val bytes = new ByteArrayOutputStream
+//
+//    render( ast, Map(), new PrintStream(bytes) )
+//    bytes.toString
+//  }
 
 }

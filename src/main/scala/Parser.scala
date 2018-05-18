@@ -14,19 +14,19 @@ class Parser( commands: Map[String, Command] ) {
       case (r1, _) => problem( r1, s"expected end of input: $r1" )
     }
 
-  def parseBlock( r: Input, v: Vector[StatementAST] = Vector() ): (Input, BlockStatementAST) =
+  def parseBlock( r: Input, v: Vector[ExpressionAST] = Vector() ): (Input, BlockExpressionAST) =
     if (r atEnd)
-      (r, BlockStatementAST( v ))
+      (r, BlockExpressionAST( v ))
     else if (r.first == '}')
-      (r rest, BlockStatementAST( v ))
+      (r rest, BlockExpressionAST( v ))
     else
       parseStatement( r ) match {
         case (r1, s) => parseBlock( r1, v :+ s )
       }
 
-  def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, StatementAST) =
+  def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, ExpressionAST) =
     if (r atEnd)
-      (r, StaticStatementAST( buf toString ))
+      (r, LiteralExpressionAST( buf toString ))
     else
       r first match {
         case '\\' =>
@@ -34,15 +34,15 @@ class Parser( commands: Map[String, Command] ) {
             case c@('\\'|'{'|'}') =>
               buf += c
               parseStatic( r.rest.rest, buf )
-            case _ => (r, StaticStatementAST( buf toString ))
+            case _ => (r, LiteralExpressionAST( buf toString ))
           }
-        case '}' => (r, StaticStatementAST( buf toString ))
+        case '}' => (r, LiteralExpressionAST( buf toString ))
         case c =>
           buf += c
           parseStatic( r.rest, buf )
       }
 
-  def parseStatement( r: Input ): (Input, StatementAST) =
+  def parseStatement( r: Input ): (Input, ExpressionAST) =
     parseOptionalControlSequence( r ) match {
       case None => parseStatic( r )
       case Some( (r1, name) ) => parseCommand( name, r1 )
@@ -80,7 +80,7 @@ class Parser( commands: Map[String, Command] ) {
       case _ => consume( r, !_.isWhitespace )
     }
 
-  def parseRenderedArgument( r: Input ): (Input, StatementAST) = {
+  def parseRenderedArgument( r: Input ): (Input, ExpressionAST) = {
     val r1 = skipSpace( r )
 
     if (r1 atEnd)
@@ -91,7 +91,7 @@ class Parser( commands: Map[String, Command] ) {
       case _ =>
         val (r2, s) = parseString( r1 )
 
-        (r2, StaticStatementAST( s ))
+        (r2, LiteralExpressionAST( s ))
     }
   }
 
@@ -107,7 +107,7 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def parseArguments( r: Input, n: Int, buf: ListBuffer[StatementAST] = new ListBuffer[StatementAST] ): (Input, List[StatementAST]) = {
+  def parseArguments( r: Input, n: Int, buf: ListBuffer[ExpressionAST] = new ListBuffer[ExpressionAST] ): (Input, List[ExpressionAST]) = {
     if (n == 0)
       (r, buf toList)
     else {
@@ -120,7 +120,7 @@ class Parser( commands: Map[String, Command] ) {
 
   def skipSpace( r: Input ): Input = consume( r, _.isWhitespace )._1
 
-  def parseCommand( name: String, r: Input ): (Input, StatementAST) = {
+  def parseCommand( name: String, r: Input ): (Input, ExpressionAST) = {
     name match {
       case "if" =>
         val (r1, s) = parseStaticArgument( r )
@@ -130,18 +130,18 @@ class Parser( commands: Map[String, Command] ) {
           case Some( (r3, "else") ) =>
             val (r4, no) = parseRenderedArgument( r3 )
 
-            (r4, IfStatementAST( List((VariableExpressionAST(s), yes)), Some(no) ))
-          case _ => (r2, IfStatementAST( List((VariableExpressionAST(s), yes)), None ))
+            (r4, IfExpressionAST( List((VariableExpressionAST(s), yes)), Some(no) ))
+          case _ => (r2, IfExpressionAST( List((VariableExpressionAST(s), yes)), None ))
         }
 
       case _ =>
         commands get name match {
-          case None => (r, VariableStatementAST( name ))
+          case None => (r, VariableExpressionAST( name ))
           case Some( c ) =>
 
             val (r1, args) = parseArguments( r, c.arity )
 
-            (r1, CommandStatementAST( c, args ))
+            (r1, CommandExpressionAST( c, args ))
         }
     }
   }
