@@ -18,6 +18,17 @@ class Renderer( config: Map[Symbol, Any] ) {
 
     def eval( ast: AST ): Any =
       ast match {
+        case MatchAST( expr, cases, els ) =>
+          val e = eval( expr )
+
+          cases find { case (expr, _) => e == eval( expr ) } match {
+            case None =>
+              els match {
+                case None => nil
+                case Some( no ) => eval( no )
+              }
+            case Some( (_, yes) ) => eval( yes )
+          }
         case BlockAST( block ) => block map seval mkString
         case LiteralAST( v ) => v
         case CommandAST( pos, c, args ) => c( pos, config, vars, args map eval, null )

@@ -152,7 +152,7 @@ class Parser( commands: Map[String, Command] ) {
       case "if" =>
         val (r1, expr) = parseExpressionArgument( r )
         val (r2, body) = parseRenderedArgument( r1 )
-        val (r3, elsifs) = parseElsif( r2 )
+        val (r3, elsifs) = parseCases( "elsif", r2 )
         val conds = (expr, body) +: elsifs
 
         parseElse( r3 ) match {
@@ -166,6 +166,14 @@ class Parser( commands: Map[String, Command] ) {
         parseElse( r2 ) match {
           case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
           case _ => (r2, UnlessAST( expr, body, None ))
+        }
+      case "match" =>
+        val (r1, expr) = parseExpressionArgument( r )
+        val (r2, cases) = parseCases( "case", r1 )
+
+        parseElse( r2 ) match {
+          case Some( (r3, els) ) => (r3, MatchAST( expr, cases, Some(els) ))
+          case _ => (r2, MatchAST( expr, cases, None ))
         }
       case "for" =>
         val r0 = skipSpace( r )
@@ -188,13 +196,13 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def parseElsif( r: Input, elsifs: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
+  def parseCases( cs: String, r: Input, elsifs: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
     parseOptionalControlSequence( skipSpace(r) ) match {
-      case Some( (r1, "elsif") ) =>
+      case Some( (r1, cs) ) =>
         val (r2, expr) = parseExpressionArgument( r1 )
         val (r3, yes) = parseRenderedArgument( r2 )
 
-        parseElsif( r3, elsifs :+ (expr, yes) )
+        parseCases( cs, r3, elsifs :+ (expr, yes) )
       case _ => (r, elsifs)
     }
 
