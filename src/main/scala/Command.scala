@@ -1,12 +1,14 @@
 package xyz.hyperreal.backslash
 
-import java.time.ZonedDateTime
+import java.time.{Instant, OffsetDateTime, ZonedDateTime}
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAccessor
 
 import collection.mutable
+import scala.util.parsing.input.Position
 
 
-abstract class Command( val name: String, var arity: Int ) extends ((Map[Symbol, Any], mutable.Map[String, Any], List[Any], AnyRef) => Any) {
+abstract class Command( val name: String, var arity: Int ) extends ((Position, Map[Symbol, Any], mutable.Map[String, Any], List[Any], AnyRef) => Any) {
   override def toString = s"<$name/$arity>"
 }
 
@@ -16,13 +18,26 @@ object Command {
     List(
 
       new Command( "today", 0 ) {
-        def apply( config: Map[Symbol, Any], vars: mutable.Map[String, Any], args: List[Any], context: AnyRef ): Any =
+        def apply( pos: Position, config: Map[Symbol, Any], vars: mutable.Map[String, Any], args: List[Any], context: AnyRef ): Any =
           ZonedDateTime.now.format( config('today).asInstanceOf[DateTimeFormatter] )
       },
 
-      new Command( "date", 1 ) {
-        def apply( config: Map[Symbol, Any], vars: mutable.Map[String, Any], args: List[Any], context: AnyRef ): Any =
-          ZonedDateTime.now.format( DateTimeFormatter.ofPattern(args.head.toString) )
+      new Command( "now", 0 ) {
+        def apply( pos: Position, config: Map[Symbol, Any], vars: mutable.Map[String, Any], args: List[Any], context: AnyRef ): Any =
+          OffsetDateTime.now
+      },
+
+      new Command( "date", 2 ) {
+        def apply( pos: Position, config: Map[Symbol, Any], vars: mutable.Map[String, Any], args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( date: TemporalAccessor, format: String ) => DateTimeFormatter.ofPattern( format ).format( date )
+            case List( a, b ) => problem( pos, s"expected arguments <date> <format>, given $a $b" )
+          }
+      },
+
+      new Command( "nil", 1 ) {
+        def apply( pos: Position, onfig: Map[Symbol, Any], vars: mutable.Map[String, Any], args: List[Any], context: AnyRef ): Any =
+          nil
       }
 
     ) map (c => c.name -> c) toMap

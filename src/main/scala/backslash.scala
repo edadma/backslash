@@ -13,7 +13,7 @@ package object backslash {
     if (pos eq null)
       sys.error( error )
     else
-      sys.error( pos.line + ": " + error + "\n" + pos.longString )
+      sys.error( s"${pos.line}, ${pos.column}: $error" + "\n" + pos.longString )
 
   case object nil {
     override def toString = ""

@@ -18,10 +18,10 @@ class Renderer( config: Map[Symbol, Any] ) {
 
     def eval( ast: AST ): Any =
       ast match {
-        case BlockExpressionAST( block ) => block map seval mkString
-        case LiteralExpressionAST( v ) => v
-        case CommandExpressionAST( c, args ) => c( config, vars, args map eval, null )
-        case IfExpressionAST( cond, els ) =>
+        case BlockAST( block ) => block map seval mkString
+        case LiteralAST( v ) => v
+        case CommandAST( pos, c, args ) => c( pos, config, vars, args map eval, null )
+        case IfAST( cond, els ) =>
           cond find { case (expr, _) => teval( expr ) } match {
             case None =>
               els match {
@@ -30,7 +30,7 @@ class Renderer( config: Map[Symbol, Any] ) {
               }
             case Some( (_, yes) ) => eval( yes )
           }
-        case VariableExpressionAST( v ) =>
+        case VariableAST( v ) =>
           vars get v match {
             case None => nil
             case Some( a ) => a

@@ -1,13 +1,13 @@
 package xyz.hyperreal.backslash
 
+import scala.util.parsing.input.Position
+
 
 trait AST
 
-trait ExpressionAST extends AST
-
-case class IfExpressionAST( cond: Seq[(ExpressionAST, ExpressionAST)], els: Option[ExpressionAST] ) extends ExpressionAST
-case class BlockExpressionAST( statements: Vector[ExpressionAST] ) extends ExpressionAST
-case class LiteralExpressionAST( v: Any ) extends ExpressionAST
-case class VariableExpressionAST( v: String ) extends ExpressionAST
-case class ExpressionExpressionAST( expr: ExpressionAST ) extends ExpressionAST
-case class CommandExpressionAST( c: Command, args: List[ExpressionAST] ) extends ExpressionAST
+case class IfAST( cond: Seq[(AST, AST)], els: Option[AST] ) extends AST
+case class BlockAST( statements: Seq[AST] ) extends AST
+case class LiteralAST( v: Any ) extends AST
+case class VariableAST( v: String ) extends AST
+case class ExpressionAST( expr: AST ) extends AST
+case class CommandAST( pos: Position, c: Command, args: List[AST] ) extends AST
