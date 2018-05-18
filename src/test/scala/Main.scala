@@ -11,9 +11,12 @@ object Main extends App {
     )
   val input =
     """
+      |<em>\today</em>
+      |
       |\for l {
       |  Hi \i!
-      |}""".stripMargin
+      |}
+    """.stripMargin
   val assigns =
     Map(
       "x" -> 3,

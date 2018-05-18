@@ -159,6 +159,14 @@ class Parser( commands: Map[String, Command] ) {
           case Some( (r4, els) ) => (r4, IfAST( conds, Some(els) ))
           case _ => (r3, IfAST( conds, None ))
         }
+      case "unless" =>
+        val (r1, expr) = parseExpressionArgument( r )
+        val (r2, body) = parseRenderedArgument( r1 )
+
+        parseElse( r2 ) match {
+          case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
+          case _ => (r2, UnlessAST( expr, body, None ))
+        }
       case "for" =>
         val r0 = skipSpace( r )
         val (r1, expr) = parseExpressionArgument( r0 )

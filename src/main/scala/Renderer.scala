@@ -39,6 +39,14 @@ class Renderer( config: Map[Symbol, Any] ) {
               }
             case Some( (_, yes) ) => eval( yes )
           }
+        case UnlessAST( cond, body, els ) =>
+          if (!teval( cond ))
+            eval( body )
+          else
+              els match {
+                case None => nil
+                case Some( yes ) => eval( yes )
+              }
         case VariableAST( v ) =>
           vars get v match {
             case None => nil
@@ -46,8 +54,14 @@ class Renderer( config: Map[Symbol, Any] ) {
           }
       }
 
+    def output( ast: AST ) = out print eval( ast )
+
     vars ++= assigns
-    out.print( eval(ast) )
+
+    ast match {
+      case BlockAST( b ) => b foreach output
+      case _ => output( ast )
+    }
 
   }
 
