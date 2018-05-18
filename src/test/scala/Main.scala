@@ -9,11 +9,16 @@ object Main extends App {
     Map(
       'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG )
     )
-  val input = """asdf \date \now 'yyyy' zxcv"""
+  val input =
+    """
+      |\for l {
+      |  Hi \i!
+      |}""".stripMargin
   val assigns =
     Map(
       "x" -> 3,
-      "y" -> 4
+      "y" -> 4,
+      "l" -> List( "Larry", "Moe", "Curly" )
     )
   val parser = new Parser( Command.standard )
   val ast = parser.parse(io.Source.fromString(input))

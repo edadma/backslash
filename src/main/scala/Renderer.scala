@@ -21,6 +21,15 @@ class Renderer( config: Map[Symbol, Any] ) {
         case BlockAST( block ) => block map seval mkString
         case LiteralAST( v ) => v
         case CommandAST( pos, c, args ) => c( pos, config, vars, args map eval, null )
+        case ForAST( pos, expr, body, None ) =>
+          eval( expr ) match {
+            case s: Seq[Any] =>
+              s map { e =>
+                vars("i") = e
+                seval( body )
+              } mkString
+            case a => problem( pos, s"expected sequence: $a" )
+          }
         case IfAST( cond, els ) =>
           cond find { case (expr, _) => teval( expr ) } match {
             case None =>

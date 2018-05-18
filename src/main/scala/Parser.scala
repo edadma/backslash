@@ -151,13 +151,22 @@ class Parser( commands: Map[String, Command] ) {
     name match {
       case "if" =>
         val (r1, expr) = parseExpressionArgument( r )
-        val (r2, yes) = parseRenderedArgument( r1 )
+        val (r2, body) = parseRenderedArgument( r1 )
         val (r3, elsifs) = parseElsif( r2 )
-        val conds = (expr, yes) +: elsifs
+        val conds = (expr, body) +: elsifs
 
         parseElse( r3 ) match {
           case Some( (r4, els) ) => (r4, IfAST( conds, Some(els) ))
           case _ => (r3, IfAST( conds, None ))
+        }
+      case "for" =>
+        val r0 = skipSpace( r )
+        val (r1, expr) = parseExpressionArgument( r0 )
+        val (r2, body) = parseRenderedArgument( r1 )
+
+        parseElse( r2 ) match {
+          case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
+          case _ => (r2, ForAST( r0.pos, expr, body, None ))
         }
       case _ =>
         commands get name match {
