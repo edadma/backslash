@@ -8,6 +8,10 @@ class Parser( commands: Map[String, Command] ) {
 
   type Input = Reader[Char]
 
+  var csDelim = "\\"
+  var beginDelim = "{"
+  var endDelim = "}"
+
   def parse( src: io.Source ): AST =
     parseBlock( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
       case (r1, b) if r1 atEnd => b
@@ -21,6 +25,7 @@ class Parser( commands: Map[String, Command] ) {
       (r rest, BlockAST( v ))
     else
       parseStatement( r ) match {
+        case (r1, null) => parseBlock( r1, v )
         case (r1, s) => parseBlock( r1, v :+ s )
       }
 
@@ -45,6 +50,15 @@ class Parser( commands: Map[String, Command] ) {
   def parseStatement( r: Input ): (Input, AST) =
     parseOptionalControlSequence( r ) match {
       case None => parseStatic( r )
+      case Some( (r1, "delim") ) =>
+        val (r2, c) = parseStringArgument( r1 )
+        val (r3, b) = parseStringArgument( r2 )
+        val (r4, e) = parseStringArgument( r3 )
+
+        csDelim = c
+        beginDelim = b
+        endDelim = e
+        (r4, null)
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
 
@@ -53,6 +67,14 @@ class Parser( commands: Map[String, Command] ) {
       Some( parseName(r.rest) )
     else
       None
+
+  def matches(r: Input, s: String, idx: Int = 0 ): Option[Input] =
+    if (idx == s.length)
+      Some( r )
+    else if (r.atEnd || r.first != s.charAt( idx ))
+      None
+    else
+      matches( r.rest, s, idx + 1 )
 
   def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) =
     if (r atEnd)
@@ -73,12 +95,27 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseName( r: Input ): (Input, String) = consume( r, _.isLetterOrDigit )
 
-  def parseString( r: Input ): (Input, String) =
+  def parseLiteral( r: Input ): (Input, Any) =
     r.first match {
       case '"' => consumeDelimited( r.rest, '"' )
       case '\'' => consumeDelimited( r.rest, '\'' )
-      case _ => consume( r, !_.isWhitespace )
+      case '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
+        consume( r, c => c.isDigit || c == '.' ) match {
+          case (r1, n) => (r1, BigDecimal( n ) )
+        }
+      case _ => parseString( r )
     }
+
+  def parseString( r: Input ) = consume( r, !_.isWhitespace )
+
+  def parseStringArgument( r: Input ): (Input, String) = {
+    val r1 = skipSpace( r )
+
+    if (r1 atEnd)
+      problem( r1, "expected string argument" )
+
+    parseString( r1 )
+  }
 
   def parseRenderedArgument( r: Input ): (Input, AST) = {
     val r1 = skipSpace( r )
@@ -91,7 +128,7 @@ class Parser( commands: Map[String, Command] ) {
         r1 first match {
           case '{' => parseBlock( r1.rest )
           case _ =>
-            val (r2, s) = parseString( r1 )
+            val (r2, s) = parseLiteral( r1 )
 
             (r2, LiteralAST( s ))
         }
@@ -109,8 +146,8 @@ class Parser( commands: Map[String, Command] ) {
       case None =>
         r1 first match {
           case '{' => parseBlock( r1.rest )
-          case '"'|'\'' =>
-            val (r2, s) = parseString( r1 )
+          case '"'|'\''|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
+            val (r2, s) = parseLiteral( r1 )
 
             (r2, LiteralAST( s ))
           case _ =>
@@ -145,7 +182,11 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def skipSpace( r: Input ): Input = consume( r, _.isWhitespace )._1
+  def skipSpace( r: Input ): Input =
+    if (r.atEnd || !r.first.isWhitespace)
+      r
+    else
+      skipSpace( r.rest )
 
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
