@@ -7,7 +7,8 @@ object Main extends App {
 
   val config =
     Map(
-      'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG )
+      'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG ),
+      'include -> "."
     )
   val input =
     """
@@ -24,8 +25,8 @@ object Main extends App {
       "l" -> List( "Larry", "Moe", "Curly" )
     )
   val parser = new Parser( Command.standard )
-  val ast = parser.parse(io.Source.fromString(input))
-  val renderer = new Renderer( config )
+  val ast = parser.parse( io.Source.fromString(input) )
+  val renderer = new Renderer( parser, config )
 
   renderer.render( ast, assigns, Console.out )
   println
