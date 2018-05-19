@@ -12,5 +12,4 @@ case class ForAST( pos: Position, expr: AST, body: AST, els: Option[AST] ) exten
 case class BlockAST( statements: Seq[AST] ) extends AST
 case class LiteralAST( v: Any ) extends AST
 case class VariableAST( v: String ) extends AST
-case class ExpressionAST( expr: AST ) extends AST
 case class CommandAST( pos: Position, c: Command, args: List[AST] ) extends AST
