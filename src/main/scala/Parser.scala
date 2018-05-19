@@ -100,7 +100,7 @@ class Parser( commands: Map[String, Command] ) {
       case '\'' => consumeDelimited( r.rest, '\'' )
       case '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
         consume( r, c => c.isDigit || c == '.' ) match {
-          case (r1, n) => (r1, BigDecimal( n ) )
+          case (r1, n) => (r1, BigDecimal( n ))
         }
       case _ => parseString( r )
     }

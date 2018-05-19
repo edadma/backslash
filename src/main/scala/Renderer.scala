@@ -44,8 +44,9 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
       case ForAST( pos, expr, body, None ) =>
         eval( expr ) match {
           case s: Seq[Any] =>
-            s map { e =>
+            s.zipWithIndex map { case (e, idx) =>
               vars("i") = e
+              vars("idx") = BigDecimal( idx )
               seval( body )
             } mkString
           case a => problem( pos, s"expected sequence: $a" )

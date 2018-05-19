@@ -15,7 +15,10 @@ object Main extends App {
       |<em>\today</em>
       |
       |\for l {
-      |  <p>Hi \i !</p>
+      |  \if \< \idx 2
+      |    wow
+      |
+      |  <p>Hi \i\ \+ 3 4 !</p>
       |}
     """.stripMargin
   val assigns =

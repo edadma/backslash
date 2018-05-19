@@ -44,6 +44,23 @@ object Command {
       new Command( "include", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           renderer.eval( renderer.parser.parse(io.Source.fromFile(new File(renderer.config('include).toString, args.head.toString))) )
+      },
+
+      new Command( "+", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          (number( args.head ), number( args.tail.head )) match {
+            case (Some( a ), Some( b )) => a + b
+            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+          }
+      },
+
+      new Command( "<", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( a: String, b: String ) => a < b
+            case List( a: BigDecimal, b: BigDecimal ) => a < b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a $b" )
+          }
       }
 
     ) map (c => c.name -> c) toMap

@@ -7,6 +7,8 @@ import scala.util.parsing.input.{Position, Reader}
 
 package object backslash {
 
+  val numberRegex = """-?\d+\.\d+""".r
+
   def problem( r: Reader[Char], error: String ): Nothing = problem( r.pos, error )
 
   def problem( pos: Position, error: String ) =
@@ -23,6 +25,15 @@ package object backslash {
 
   def round( n: BigDecimal, scale: Int, settings: Map[Symbol, Any] ) =
     n.setScale( scale, settings('roundingMode).asInstanceOf[BigDecimal.RoundingMode.Value] )
+
+  def isNumber( a: String ) = numberRegex.pattern.matcher( a ).matches
+
+  def number( a: Any ) =
+    a match {
+      case s: String if isNumber( s ) => Some( BigDecimal(s) )
+      case n: BigDecimal => Some( n )
+      case _ => None
+    }
 
   def truthy( a: Any ) = a != nil && a != false
 
