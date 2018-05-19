@@ -1,5 +1,6 @@
 package xyz.hyperreal.backslash
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import util.parsing.input.{PagedSeq, PagedSeqReader, Position, Reader}
 
@@ -11,6 +12,10 @@ class Parser( commands: Map[String, Command] ) {
   var csDelim = "\\"
   var beginDelim = "{"
   var endDelim = "}"
+
+  case class Macro( parameters: Vector[String], body: String )
+
+  val macros = mutable.HashMap[String, Macro]
 
   def parse( src: io.Source ): AST =
     parseBlock( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
@@ -52,8 +57,34 @@ class Parser( commands: Map[String, Command] ) {
         beginDelim = b
         endDelim = e
         (r4, null)
+      case Some( (r1, "def") ) =>
+        val (r2, v) = parseStrings( r1 )
+
+        if (v isEmpty)
+          problem( r1.pos, "expected name of macro" )
+
+        val name = v.head
+
+        if (r2.atEnd || r2.first != '{')
+          problem( r2.pos, s"expected body of definition for $name" )
+
+        val (r3, body) = consumeDelimited( r2.rest, '}' )
+
+        macros(name) = Macro( v, body )
+        (r3, null)
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
+
+  def parseStrings( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
+    val r1 = skipSpace( r )
+
+    if (r1.atEnd || r1.first == '{')
+      (r1, v)
+    else
+      parseString( r1 ) match {
+        case (r2, s) => parseStrings( r2, v :+ s )
+      }
+  }
 
   def parseControlSequence( r: Input ): Option[(Input, String)] =
     if (!r.atEnd && r.first == '\\') {
