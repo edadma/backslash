@@ -34,21 +34,14 @@ class Parser( commands: Map[String, Command] ) {
       (r, LiteralAST( buf toString ))
     else
       r first match {
-        case '\\' =>
-          r.rest.first match {
-            case c@('\\'|'{'|'}') =>
-              buf += c
-              parseStatic( r.rest.rest, buf )
-            case _ => (r, LiteralAST( buf toString ))
-          }
-        case '}' => (r, LiteralAST( buf toString ))
+        case '\\'|'}' => (r, LiteralAST( buf toString ))
         case c =>
           buf += c
           parseStatic( r.rest, buf )
       }
 
   def parseStatement( r: Input ): (Input, AST) =
-    parseOptionalControlSequence( r ) match {
+    parseControlSequence( r ) match {
       case None => parseStatic( r )
       case Some( (r1, "delim") ) =>
         val (r2, c) = parseStringArgument( r1 )
@@ -62,13 +55,21 @@ class Parser( commands: Map[String, Command] ) {
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
 
-  def parseOptionalControlSequence( r: Input ): Option[(Input, String)] =
-    if (!r.atEnd && r.first == '\\' && r.rest.first.isLetterOrDigit)
-      Some( parseName(r.rest) )
-    else
+  def parseControlSequence( r: Input ): Option[(Input, String)] =
+    if (!r.atEnd && r.first == '\\') {
+      val (r1, s) =
+        if (r.rest.first.isLetterOrDigit)
+          consume( r.rest, _.isLetterOrDigit )
+        else if (r.rest.first.isWhitespace)
+          (r.rest, " ")
+        else
+          consume( r.rest, c => !c.isLetterOrDigit && !c.isWhitespace )
+
+      Some( (skipSpace(r1), s) )
+    } else
       None
 
-  def matches(r: Input, s: String, idx: Int = 0 ): Option[Input] =
+  def matches( r: Input, s: String, idx: Int = 0 ): Option[Input] =
     if (idx == s.length)
       Some( r )
     else if (r.atEnd || r.first != s.charAt( idx ))
@@ -92,8 +93,6 @@ class Parser( commands: Map[String, Command] ) {
 
     (r1.rest, s)
   }
-
-  def parseName( r: Input ): (Input, String) = consume( r, _.isLetterOrDigit )
 
   def parseLiteral( r: Input ): (Input, Any) =
     r.first match {
@@ -123,7 +122,7 @@ class Parser( commands: Map[String, Command] ) {
     if (r1 atEnd)
       problem( r1, "expected command argument" )
 
-    parseOptionalControlSequence( r1 ) match {
+    parseControlSequence( r1 ) match {
       case None =>
         r1 first match {
           case '{' => parseBlock( r1.rest )
@@ -137,25 +136,23 @@ class Parser( commands: Map[String, Command] ) {
   }
 
   def parseExpressionArgument( r: Input ): (Input, AST) = {
-    val r1 = skipSpace( r )
+    if (r atEnd)
+      problem( r, "expected command argument" )
 
-    if (r1 atEnd)
-      problem( r1, "expected command argument" )
-
-    parseOptionalControlSequence( r1 ) match {
+    parseControlSequence( r ) match {
       case None =>
-        r1 first match {
-          case '{' => parseBlock( r1.rest )
+        r first match {
+          case '{' => parseBlock( r.rest )
           case '"'|'\''|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
-            val (r2, s) = parseLiteral( r1 )
+            val (r1, s) = parseLiteral( r )
 
-            (r2, LiteralAST( s ))
+            (r1, LiteralAST( s ))
           case _ =>
-            val (r2, s) = parseString( r1 )
+            val (r1, s) = parseString( r )
 
-            (r2, VariableAST( s ))
+            (r1, VariableAST( s ))
         }
-      case Some( (r2, name) ) => parseCommand( r1.pos, name, r2 )
+      case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
   }
 
@@ -190,6 +187,7 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
+      case " " => (r, LiteralAST( " " ))
       case "if" =>
         val (r1, expr) = parseExpressionArgument( r )
         val (r2, body) = parseRenderedArgument( r1 )
@@ -238,7 +236,7 @@ class Parser( commands: Map[String, Command] ) {
   }
 
   def parseCases( cs: String, r: Input, elsifs: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
-    parseOptionalControlSequence( skipSpace(r) ) match {
+    parseControlSequence( skipSpace(r) ) match {
       case Some( (r1, cs) ) =>
         val (r2, expr) = parseExpressionArgument( r1 )
         val (r3, yes) = parseRenderedArgument( r2 )
@@ -248,7 +246,7 @@ class Parser( commands: Map[String, Command] ) {
     }
 
   def parseElse( r: Input ): Option[(Input, AST)] =
-    parseOptionalControlSequence( skipSpace(r) ) match {
+    parseControlSequence( skipSpace(r) ) match {
       case Some( (r1, "else") ) => Some( parseRenderedArgument(r1) )
       case _ => None
     }
