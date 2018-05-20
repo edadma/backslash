@@ -12,6 +12,8 @@ object Main extends App {
     )
   val input =
     """
+      |\def asdf {asdf asdf}
+      |
       |<em>\today</em>
       |
       |\for l {
@@ -32,6 +34,7 @@ object Main extends App {
   val renderer = new Renderer( parser, config )
 
   renderer.render( ast, assigns, Console.out )
+  println( parser.macros )
   println
 
 }

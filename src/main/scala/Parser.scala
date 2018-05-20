@@ -15,7 +15,7 @@ class Parser( commands: Map[String, Command] ) {
 
   case class Macro( parameters: Vector[String], body: String )
 
-  val macros = mutable.HashMap[String, Macro]
+  val macros = new mutable.HashMap[String, Macro]
 
   def parse( src: io.Source ): AST =
     parseBlock( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
@@ -70,7 +70,7 @@ class Parser( commands: Map[String, Command] ) {
 
         val (r3, body) = consumeDelimited( r2.rest, '}' )
 
-        macros(name) = Macro( v, body )
+        macros(name) = Macro( v.tail, body )
         (r3, null)
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
