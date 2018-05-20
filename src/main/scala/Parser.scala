@@ -187,6 +187,9 @@ class Parser( commands: Map[String, Command] ) {
           case _ =>
             val (r1, s) = parseString( r )
 
+            if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
+              problem( r, "illegal variable name" )
+
             (r1, VariableAST( s ))
         }
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )

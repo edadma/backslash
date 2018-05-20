@@ -22,6 +22,9 @@ object Main extends App {
       |
       |  <p>Hi \item\ \+ 3 4 !</p>
       |}
+      |
+      |\set v 123
+      |\v
     """.stripMargin
   val assigns =
     Map(

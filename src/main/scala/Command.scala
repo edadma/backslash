@@ -72,6 +72,16 @@ object Command {
               renderer.ForGenerator( v, s )
             case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
           }
+      },
+
+      new Command( "set", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( v: String, a: Any ) =>
+              renderer.setVar( v, a )
+              nil
+            case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
+          }
       }
 
     ) map (c => c.name -> c) toMap
