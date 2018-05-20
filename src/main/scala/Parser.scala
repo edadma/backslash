@@ -255,13 +255,18 @@ class Parser( commands: Map[String, Command] ) {
           case _ => (r2, ForAST( r0.pos, expr, body, None ))
         }
       case _ =>
-        commands get name match {
-          case None => (r, VariableAST( name ))
-          case Some( c ) =>
+        macros get name match {
+          case None =>
+            commands get name match {
+              case None => (r, VariableAST( name ))
+              case Some( c ) =>
 
-            val (r1, args) = parseArguments( r, c.arity )
+                val (r1, args) = parseArguments( r, c.arity )
 
-            (r1, CommandAST( pos, c, args ))
+                (r1, CommandAST( pos, c, args ))
+            }
+          case Some( Macro(parameters, body) ) =>
+
         }
     }
   }
