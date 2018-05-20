@@ -59,7 +59,18 @@ object Command {
           args match {
             case List( a: String, b: String ) => a < b
             case List( a: BigDecimal, b: BigDecimal ) => a < b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a $b" )
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "in", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( v: String, s: Seq[_] ) =>
+              if (renderer.scopes isEmpty) problem( pos, "not inside a loop" )
+
+              renderer.ForGenerator( v, s )
+            case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
           }
       }
 

@@ -31,7 +31,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 			case Some( scope ) => scope(name)
 		}
 
-	def enterScope( locals: String* ): Unit = scopes += mutable.HashMap( locals map (_ -> nil): _* )
+	def enterScope: Unit = scopes push new mutable.HashMap
 
 	def exitScope: Unit = scopes pop
 
@@ -71,24 +71,33 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
       case ForAST( pos, expr, body, None ) =>
         val buf = new StringBuilder
 
-				enterScope( "_i", "_idx" )
+				enterScope
 
-        eval( expr ) match {
-          case s: Seq[Any] =>
-		    		try {
-              s.zipWithIndex foreach { case (e, idx) =>
-						    try {
-                  setVar( "_i", e )
-                  setVar( "_idx", BigDecimal(idx) )
-                  buf ++= seval( body )
-                } catch {
-                  case _: ContinueException =>
+        val (in, seq) =
+          eval( expr ) match {
+            case ForGenerator( v, s ) => (Some( v ), s)
+            case s: Seq[Any] => (None, s)
+            case a => problem( pos, s"expected sequence: $a" )
+          }
+
+        try {
+          seq.zipWithIndex foreach { case (e, idx) =>
+            try {
+              scopes.top(if (in isDefined) in.get else "_i") = e
+              scopes.top("_idx") = BigDecimal( idx )
+
+              if (in.isEmpty && e.isInstanceOf[collection.Map[_, _]])
+                e.asInstanceOf[collection.Map[String, Any]] foreach {
+                  case (k, v) => scopes.top(k) = v
                 }
-              }
+
+              buf ++= seval( body )
             } catch {
-              case _: BreakException =>
+              case _: ContinueException =>
             }
-          case a => problem( pos, s"expected sequence: $a" )
+          }
+        } catch {
+          case _: BreakException =>
         }
 
 				exitScope
@@ -120,8 +129,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
               case None => nil
               case Some( yes ) => eval( yes )
             }
-      case VariableAST( v ) =>
-        getVar( v, Map() )
+      case VariableAST( v ) => getVar( v, Map() )
     }
 
 //  def capture( ast: AST ) = {
@@ -135,4 +143,5 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
 	class ContinueException extends RuntimeException
 
+  case class ForGenerator( v: String, s: Seq[Any] )
 }

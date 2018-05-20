@@ -16,18 +16,18 @@ object Main extends App {
       |
       |<em>\today</em>
       |
-      |\for l {
+      |\for \in item \l {
       |  \if \< \_idx 2
       |    \asdf
       |
-      |  <p>Hi \i\ \+ 3 4 !</p>
+      |  <p>Hi \item\ \+ 3 4 !</p>
       |}
     """.stripMargin
   val assigns =
     Map(
       "x" -> 3,
       "y" -> 4,
-      "l" -> List( "Larry", "Moe", "Curly" )
+      "l" -> List( Map("name" -> "Larry"), Map("name" -> "Moe"), Map("name" -> "Curly") )
     )
   val parser = new Parser( Command.standard )
   val ast = parser.parse( io.Source.fromString(input) )
