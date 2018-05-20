@@ -17,7 +17,7 @@ object Main extends App {
       |<em>\today</em>
       |
       |\for l {
-      |  \if \< \idx 2
+      |  \if \< \_idx 2
       |    \asdf
       |
       |  <p>Hi \i\ \+ 3 4 !</p>

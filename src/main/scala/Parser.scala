@@ -86,15 +86,21 @@ class Parser( commands: Map[String, Command] ) {
       }
   }
 
+  def nameFirst( ch: Char ) = ch.isLetter || ch == '_'
+
+  def nameRest( ch: Char ) = ch.isLetterOrDigit || ch == '_'
+
   def parseControlSequence( r: Input ): Option[(Input, String)] =
     if (!r.atEnd && r.first == '\\') {
       val (r1, s) =
-        if (r.rest.first.isLetterOrDigit)
-          consume( r.rest, _.isLetterOrDigit )
+        if (nameFirst( r.rest.first ))
+          consume( r.rest, nameRest(_) )
         else if (r.rest.first.isWhitespace)
           (r.rest, " ")
+        else if (r.rest.first.isDigit)
+          problem( r.rest.pos, s"control sequence name can't start with a digit" )
         else
-          consume( r.rest, c => !c.isLetterOrDigit && !c.isWhitespace )
+          consume( r.rest, c => !nameRest(c) && !c.isWhitespace )
 
       Some( (skipSpace(r1), s) )
     } else
@@ -186,18 +192,6 @@ class Parser( commands: Map[String, Command] ) {
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
   }
-
-//  def parseStaticArgument( r: Input ): (Input, String) = {
-//    val r1 = skipSpace( r )
-//
-//    if (r1 atEnd)
-//      problem( r1, "expected command argument" )
-//
-//    r1 first match {
-//      case '{' => consumeDelimited( r1.rest, '}' )
-//      case _ => parseString( r1 )
-//    }
-//  }
 
   def parseArguments( r: Input, n: Int, buf: ListBuffer[AST] = new ListBuffer[AST] ): (Input, List[AST]) = {
     if (n == 0)
