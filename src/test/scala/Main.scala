@@ -23,7 +23,7 @@ object Main extends App {
       |  <p>Hi \item\ \+ 3 4 !</p>
       |}
       |
-      |\set v 123
+      |\set v \for \to 5 8 {\_i\ }
       |\v
     """.stripMargin
   val assigns =
