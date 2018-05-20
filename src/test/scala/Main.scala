@@ -12,19 +12,16 @@ object Main extends App {
     )
   val input =
     """
-      |\def asdf {asdf asdf}
+      |\def em a {<em>\a</em>}
       |
       |<em>\today</em>
       |
       |\for \in item \l {
       |  \if \< \_idx 2
-      |    \asdf
+      |    \asdf {wow wee}
       |
       |  <p>Hi \item\ \+ 3 4 !</p>
       |}
-      |
-      |\set v \for \to 5 8 {\_i\ }
-      |\v
     """.stripMargin
   val assigns =
     Map(

@@ -39,6 +39,7 @@ class Parser( commands: Map[String, Command] ) {
       (r, LiteralAST( buf toString ))
     else
       r first match {
+        case '{' => problem( r, "can't start a group here" )
         case '\\'|'}' => (r, LiteralAST( buf toString ))
         case c =>
           buf += c
@@ -267,7 +268,7 @@ class Parser( commands: Map[String, Command] ) {
             else {
               val (r1, args) = parseArguments( r, parameters.length )
 
-              (r1, MacroAST( body, parameters zip args toMap ))
+              (r1, MacroAST( body, parameters zip args ))
             }
         }
     }
