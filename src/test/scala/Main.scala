@@ -18,7 +18,7 @@ object Main extends App {
       |
       |\for l {
       |  \if \< \idx 2
-      |    wow
+      |    \asdf
       |
       |  <p>Hi \i\ \+ 3 4 !</p>
       |}
@@ -34,7 +34,6 @@ object Main extends App {
   val renderer = new Renderer( parser, config )
 
   renderer.render( ast, assigns, Console.out )
-  println( parser.macros )
   println
 
 }

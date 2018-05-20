@@ -13,7 +13,7 @@ class Parser( commands: Map[String, Command] ) {
   var beginDelim = "{"
   var endDelim = "}"
 
-  case class Macro( parameters: Vector[String], body: String )
+  case class Macro( parameters: Vector[String], body: AST )
 
   val macros = new mutable.HashMap[String, Macro]
 
@@ -68,7 +68,7 @@ class Parser( commands: Map[String, Command] ) {
         if (r2.atEnd || r2.first != '{')
           problem( r2.pos, s"expected body of definition for $name" )
 
-        val (r3, body) = consumeDelimited( r2.rest, '}' )
+        val (r3, body) = parseRenderedArgument( r2 )
 
         macros(name) = Macro( v.tail, body )
         (r3, null)
@@ -260,13 +260,18 @@ class Parser( commands: Map[String, Command] ) {
             commands get name match {
               case None => (r, VariableAST( name ))
               case Some( c ) =>
-
                 val (r1, args) = parseArguments( r, c.arity )
 
                 (r1, CommandAST( pos, c, args ))
             }
           case Some( Macro(parameters, body) ) =>
+            if (parameters isEmpty)
+              (r, body)
+            else {
+              val (r1, args) = parseArguments( r, parameters.length )
 
+              (r1, MacroAST( body, parameters zip args toMap ))
+            }
         }
     }
   }

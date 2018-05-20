@@ -27,6 +27,8 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
   def eval( ast: AST ): Any =
     ast match {
+      case MacroAST( body, args ) =>
+
       case MatchAST( expr, cases, els ) =>
         val e = eval( expr )
 
