@@ -18,6 +18,21 @@ object Command {
   val standard =
     List(
 
+      new Command( "true", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          true
+      },
+
+      new Command( "false", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          false
+      },
+
+      new Command( "null", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          null
+      },
+
       new Command( "today", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           ZonedDateTime.now.format( renderer.config('today).asInstanceOf[DateTimeFormatter] )
