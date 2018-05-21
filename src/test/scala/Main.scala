@@ -12,9 +12,7 @@ object Main extends App {
     )
   val input =
     """
-      |\for l {
-      |  \_i.name
-      |}
+      |3 plus 4 is \+ 3 {4} .
     """.stripMargin
   val assigns =
     Map(

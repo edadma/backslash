@@ -7,7 +7,7 @@ import scala.util.parsing.input.{Position, Reader}
 
 package object backslash {
 
-  val numberRegex = """-?\d+\.\d+""".r
+  val numberRegex = """-?\d+(\.\d+)?""".r
 
   def problem( r: Reader[Char], error: String ): Nothing = problem( r.pos, error )
 
