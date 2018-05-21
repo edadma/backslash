@@ -49,9 +49,7 @@ class Parser( commands: Map[String, Command] ) {
   def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, AST) =
     if (r atEnd)
       (r, LiteralAST( buf toString ))
-    else if (lookahead( r, beginDelim ))
-      problem( r, "can't start a group here" )
-    else if (lookahead( r, csDelim ) || lookahead( r, endDelim ))
+    else if (lookahead( r, csDelim ) || lookahead( r, endDelim ) || lookahead( r, beginDelim ))
       (r, LiteralAST( buf toString ))
     else {
       buf += r.first
@@ -60,9 +58,13 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseStatement( r: Input ): (Input, AST) =
     parseControlSequence( r ) match {
-      case None => parseStatic( r )
+      case None =>
+        matches( r, beginDelim ) match {
+          case None => parseStatic( r )
+          case Some( r1 ) => parseGroup( r1 )
+        }
       case Some( (r1, "#") ) =>
-        val (r2, _) = parseRenderedArgument( r1 )
+        val (r2, _) = parseRegularArgument( r1 )
 
         (r2, null)
       case Some( (r1, "delim") ) =>
@@ -85,7 +87,7 @@ class Parser( commands: Map[String, Command] ) {
         if (r2.atEnd || lookahead( r2, beginDelim ))
           problem( r2.pos, s"expected body of definition for $name" )
 
-        val (r3, body) = parseRenderedArgument( r2 )
+        val (r3, body) = parseRegularArgument( r2 )
 
         macros(name) = Macro( v.tail, body )
         (r3, null)
@@ -174,7 +176,7 @@ class Parser( commands: Map[String, Command] ) {
     parseString( r1 )
   }
 
-  def parseRenderedArgument( r: Input ): (Input, AST) = {
+  def parseRegularArgument( r: Input ): (Input, AST) = {
     val r1 = skipSpace( r )
 
     if (r1 atEnd)
@@ -242,7 +244,7 @@ class Parser( commands: Map[String, Command] ) {
     if (n == 0)
       (r, buf toList)
     else {
-      val (r1, s) = parseRenderedArgument( r )
+      val (r1, s) = parseRegularArgument( r )
 
       buf += s
       parseArguments( r1, n - 1, buf )
@@ -274,7 +276,7 @@ class Parser( commands: Map[String, Command] ) {
       case " " => (r, LiteralAST( " " ))
       case "if" =>
         val (r1, expr) = parseExpressionArgument( r )
-        val (r2, body) = parseRenderedArgument( r1 )
+        val (r2, body) = parseRegularArgument( r1 )
         val (r3, elsifs) = parseCases( "elsif", r2 )
         val conds = (expr, body) +: elsifs
 
@@ -284,7 +286,7 @@ class Parser( commands: Map[String, Command] ) {
         }
       case "unless" =>
         val (r1, expr) = parseExpressionArgument( r )
-        val (r2, body) = parseRenderedArgument( r1 )
+        val (r2, body) = parseRegularArgument( r1 )
 
         parseElse( r2 ) match {
           case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
@@ -301,7 +303,7 @@ class Parser( commands: Map[String, Command] ) {
       case "for" =>
         val r0 = skipSpace( r )
         val (r1, expr) = parseExpressionArgument( r0 )
-        val (r2, body) = parseRenderedArgument( r1 )
+        val (r2, body) = parseRegularArgument( r1 )
 
         parseElse( r2 ) match {
           case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
@@ -333,7 +335,7 @@ class Parser( commands: Map[String, Command] ) {
     parseControlSequence( skipSpace(r) ) match {
       case Some( (r1, cs) ) =>
         val (r2, expr) = parseExpressionArgument( r1 )
-        val (r3, yes) = parseRenderedArgument( r2 )
+        val (r3, yes) = parseRegularArgument( r2 )
 
         parseCases( cs, r3, elsifs :+ (expr, yes) )
       case _ => (r, elsifs)
@@ -341,7 +343,7 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseElse( r: Input ): Option[(Input, AST)] =
     parseControlSequence( skipSpace(r) ) match {
-      case Some( (r1, "else") ) => Some( parseRenderedArgument(r1) )
+      case Some( (r1, "else") ) => Some( parseRegularArgument(r1) )
       case _ => None
     }
 
