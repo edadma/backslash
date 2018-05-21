@@ -18,21 +18,29 @@ class Parser( commands: Map[String, Command] ) {
   val macros = new mutable.HashMap[String, Macro]
 
   def parse( src: io.Source ): AST =
-    parseGroup( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
+    parseStatements( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
       case (r1, b) if r1 atEnd => b
       case (r1, _) => problem( r1, s"expected end of input: $r1" )
     }
 
-  def parseGroup( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) =
-    if (r atEnd)
+  def parseStatements( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) =
+    if (r.atEnd || lookahead( r, endDelim ))
       (r, GroupAST( v ))
-    else if (r.first == '}')
-      (r rest, GroupAST( v ))
     else
       parseStatement( r ) match {
-        case (r1, null) => parseGroup( r1, v )
-        case (r1, s) => parseGroup( r1, v :+ s )
+        case (r1, null) => parseStatements( r1, v )
+        case (r1, s) => parseStatements( r1, v :+ s )
       }
+
+  def parseGroup( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) = {
+    val (r1, g) = parseStatements( r )
+
+    matches( r1, endDelim ) match {
+      case Some( r2 ) => (r2, g)
+      case None =>
+        problem( r, "unexpected end of input" )
+    }
+  }
 
   def lookahead( r: Input, s: String ) = matches( r, s ) nonEmpty
 
