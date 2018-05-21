@@ -18,20 +18,20 @@ class Parser( commands: Map[String, Command] ) {
   val macros = new mutable.HashMap[String, Macro]
 
   def parse( src: io.Source ): AST =
-    parseBlock( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
+    parseGroup( new PagedSeqReader(PagedSeq.fromSource(src)) ) match {
       case (r1, b) if r1 atEnd => b
       case (r1, _) => problem( r1, s"expected end of input: $r1" )
     }
 
-  def parseBlock( r: Input, v: Vector[AST] = Vector() ): (Input, BlockAST) =
+  def parseGroup( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) =
     if (r atEnd)
-      (r, BlockAST( v ))
+      (r, GroupAST( v ))
     else if (r.first == '}')
-      (r rest, BlockAST( v ))
+      (r rest, GroupAST( v ))
     else
       parseStatement( r ) match {
-        case (r1, null) => parseBlock( r1, v )
-        case (r1, s) => parseBlock( r1, v :+ s )
+        case (r1, null) => parseGroup( r1, v )
+        case (r1, s) => parseGroup( r1, v :+ s )
       }
 
   def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, AST) =
@@ -49,6 +49,10 @@ class Parser( commands: Map[String, Command] ) {
   def parseStatement( r: Input ): (Input, AST) =
     parseControlSequence( r ) match {
       case None => parseStatic( r )
+      case Some( (r1, "#") ) =>
+        val (r2, _) = parseRenderedArgument( r1 )
+
+        (r2, null)
       case Some( (r1, "delim") ) =>
         val (r2, c) = parseStringArgument( r1 )
         val (r3, b) = parseStringArgument( r2 )
@@ -163,7 +167,7 @@ class Parser( commands: Map[String, Command] ) {
     parseControlSequence( r1 ) match {
       case None =>
         r1 first match {
-          case '{' => parseBlock( r1.rest )
+          case '{' => parseGroup( r1.rest )
           case _ =>
             val (r2, s) = parseLiteralArgument( r1 )
 
@@ -180,7 +184,7 @@ class Parser( commands: Map[String, Command] ) {
     parseControlSequence( r ) match {
       case None =>
         r first match {
-          case '{' => parseBlock( r.rest )
+          case '{' => parseGroup( r.rest )
           case '"'|'\''|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
             val (r1, s) = parseLiteralArgument( r )
 

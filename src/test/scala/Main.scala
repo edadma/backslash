@@ -12,6 +12,7 @@ object Main extends App {
     )
   val input =
     """
+      |\# {this is a comment}
       |\rem 10 4
     """.stripMargin
   val assigns =

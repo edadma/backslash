@@ -41,7 +41,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
     globals ++= assigns
 
     ast match {
-      case BlockAST( b ) => b foreach output
+      case GroupAST( b ) => b foreach output
       case _ => output( ast )
     }
   }
@@ -73,7 +73,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
             }
           case Some( (_, yes) ) => eval( yes )
         }
-      case BlockAST( block ) => block map seval mkString
+      case GroupAST( block ) => block map seval mkString
       case LiteralAST( v ) => v
       case CommandAST( pos, c, args ) => c( pos, this, args map eval, null )
       case ForAST( pos, expr, body, None ) =>
