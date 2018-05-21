@@ -59,7 +59,7 @@ class Parser( commands: Map[String, Command] ) {
         endDelim = e
         (r4, null)
       case Some( (r1, "def") ) =>
-        val (r2, v) = parseStrings( r1 )
+        val (r2, v) = parseStringArguments( r1 )
 
         if (v isEmpty)
           problem( r1.pos, "expected name of macro" )
@@ -76,14 +76,14 @@ class Parser( commands: Map[String, Command] ) {
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
 
-  def parseStrings( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
+  def parseStringArguments(r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
     val r1 = skipSpace( r )
 
     if (r1.atEnd || r1.first == '{')
       (r1, v)
     else
       parseString( r1 ) match {
-        case (r2, s) => parseStrings( r2, v :+ s )
+        case (r2, s) => parseStringArguments( r2, v :+ s )
       }
   }
 
@@ -132,7 +132,7 @@ class Parser( commands: Map[String, Command] ) {
     (r1.rest, s)
   }
 
-  def parseLiteral( r: Input ): (Input, Any) =
+  def parseLiteralArgument( r: Input ): (Input, Any) =
     r.first match {
       case '"' => consumeDelimited( r.rest, '"' )
       case '\'' => consumeDelimited( r.rest, '\'' )
@@ -165,7 +165,7 @@ class Parser( commands: Map[String, Command] ) {
         r1 first match {
           case '{' => parseBlock( r1.rest )
           case _ =>
-            val (r2, s) = parseLiteral( r1 )
+            val (r2, s) = parseLiteralArgument( r1 )
 
             (r2, LiteralAST( s ))
         }
@@ -182,7 +182,7 @@ class Parser( commands: Map[String, Command] ) {
         r first match {
           case '{' => parseBlock( r.rest )
           case '"'|'\''|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
-            val (r1, s) = parseLiteral( r )
+            val (r1, s) = parseLiteralArgument( r )
 
             (r1, LiteralAST( s ))
           case _ =>
