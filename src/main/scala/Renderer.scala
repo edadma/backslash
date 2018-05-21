@@ -1,7 +1,7 @@
 //@
 package xyz.hyperreal.backslash
 
-import java.io.{ByteArrayOutputStream, PrintStream}
+import java.io.PrintStream
 
 import scala.collection.mutable
 
@@ -139,13 +139,6 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
             }
       case VariableAST( v ) => getVar( v, Map() )
     }
-
-//  def capture( ast: AST ) = {
-//    val bytes = new ByteArrayOutputStream
-//
-//    render( ast, Map(), new PrintStream(bytes) )
-//    bytes.toString
-//  }
 
 	class BreakException extends RuntimeException
 
