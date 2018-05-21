@@ -12,7 +12,7 @@ object Main extends App {
     )
   val input =
     """
-      |3 plus 4 is \+ 3 {4} .
+      |{}
     """.stripMargin
   val assigns =
     Map(
@@ -24,7 +24,8 @@ object Main extends App {
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
 
+  print( '|' )
   renderer.render( ast, assigns, Console.out )
-  println
+  println( '|' )
 
 }
