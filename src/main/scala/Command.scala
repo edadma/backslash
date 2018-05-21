@@ -5,7 +5,6 @@ import java.time.{OffsetDateTime, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 
-import collection.mutable
 import scala.util.parsing.input.Position
 
 
@@ -59,6 +58,25 @@ object Command {
       new Command( "not", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           falsy( args.head )
+      },
+
+      new Command( "reverse", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args.head match {
+            case List( s: String ) => s reverse
+            case List( s: Seq[_] ) => s reverse
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "size", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args.head match {
+            case List( s: String ) => s length
+            case List( s: Seq[_] ) => s length
+            case List( s: collection.Map[_, _] ) => s size
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
       },
 
       new Command( "include", 1 ) {
@@ -173,7 +191,7 @@ object Command {
           }
       },
 
-      new Command( "to", 2 ) {
+      new Command( "..", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( start: BigDecimal, end: BigDecimal ) => start to end by 1
