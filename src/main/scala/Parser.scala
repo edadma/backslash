@@ -34,17 +34,19 @@ class Parser( commands: Map[String, Command] ) {
         case (r1, s) => parseGroup( r1, v :+ s )
       }
 
+  def lookahead( r: Input, s: String ) = matches( r, s ) nonEmpty
+
   def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, AST) =
     if (r atEnd)
       (r, LiteralAST( buf toString ))
-    else
-      r first match {
-        case '{' => problem( r, "can't start a group here" )
-        case '\\'|'}' => (r, LiteralAST( buf toString ))
-        case c =>
-          buf += c
-          parseStatic( r.rest, buf )
-      }
+    else if (lookahead( r, beginDelim ))
+      problem( r, "can't start a group here" )
+    else if (lookahead( r, csDelim ) || lookahead( r, endDelim ))
+      (r, LiteralAST( buf toString ))
+    else {
+      buf += r.first
+      parseStatic( r.rest, buf )
+    }
 
   def parseStatement( r: Input ): (Input, AST) =
     parseControlSequence( r ) match {
@@ -70,7 +72,7 @@ class Parser( commands: Map[String, Command] ) {
 
         val name = v.head
 
-        if (r2.atEnd || r2.first != '{')
+        if (r2.atEnd || lookahead( r2, beginDelim ))
           problem( r2.pos, s"expected body of definition for $name" )
 
         val (r3, body) = parseRenderedArgument( r2 )
@@ -80,10 +82,10 @@ class Parser( commands: Map[String, Command] ) {
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
 
-  def parseStringArguments(r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
+  def parseStringArguments( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
     val r1 = skipSpace( r )
 
-    if (r1.atEnd || r1.first == '{')
+    if (r1.atEnd || lookahead( r1, beginDelim ))
       (r1, v)
     else
       parseString( r1 ) match {
@@ -91,25 +93,29 @@ class Parser( commands: Map[String, Command] ) {
       }
   }
 
-  def nameFirst( ch: Char ) = ch.isLetter || ch == '_'
+  def nameFirst( c : Char ) = c.isLetter || c == '_'
 
-  def nameRest( ch: Char ) = ch.isLetterOrDigit || ch == '_'
+  def nameRest( c: Char ) = c.isLetterOrDigit || c == '_' || c == '.'
 
   def parseControlSequence( r: Input ): Option[(Input, String)] =
-    if (!r.atEnd && r.first == '\\') {
-      val (r1, s) =
-        if (nameFirst( r.rest.first ))
-          consume( r.rest, nameRest(_) )
-        else if (r.rest.first.isWhitespace)
-          (r.rest, " ")
-        else if (r.rest.first.isDigit)
-          problem( r.rest.pos, s"control sequence name can't start with a digit" )
-        else
-          consume( r.rest, c => !nameRest(c) && !c.isWhitespace )
-
-      Some( (skipSpace(r1), s) )
-    } else
+    if (r.atEnd)
       None
+    else
+      matches( r, csDelim ) match {
+        case Some( r1 ) =>
+          val (r2, s) =
+            if (nameFirst( r1.first ))
+              consume( r1, nameRest )
+            else if (r1.first.isWhitespace)
+              (r1.rest, " ")
+            else if (r1.first.isDigit)
+              problem( r1.pos, s"control sequence name can't start with a digit" )
+            else
+              consume( r1, c => !(c.isLetterOrDigit || c == '_' || c.isWhitespace) )
+
+          Some( (skipSpace(r2), s) )
+        case None => None
+      }
 
   def matches( r: Input, s: String, idx: Int = 0 ): Option[Input] =
     if (idx == s.length)
@@ -166,9 +172,9 @@ class Parser( commands: Map[String, Command] ) {
 
     parseControlSequence( r1 ) match {
       case None =>
-        r1 first match {
-          case '{' => parseGroup( r1.rest )
-          case _ =>
+        matches( r1, beginDelim ) match {
+          case Some( r2 ) => parseGroup( r2 )
+          case None =>
             val (r2, s) = parseLiteralArgument( r1 )
 
             (r2, LiteralAST( s ))
@@ -183,19 +189,21 @@ class Parser( commands: Map[String, Command] ) {
 
     parseControlSequence( r ) match {
       case None =>
-        r first match {
-          case '{' => parseGroup( r.rest )
-          case '"'|'\''|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
-            val (r1, s) = parseLiteralArgument( r )
+        matches( r, beginDelim ) match {
+          case Some( r1 ) => parseGroup( r1 )
+          case None =>
+            if (nameFirst( r first )) {
+              val (r1, s) = parseString( r )
 
-            (r1, LiteralAST( s ))
-          case _ =>
-            val (r1, s) = parseString( r )
+              if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
+                problem( r, "illegal variable name" )
 
-            if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
-              problem( r, "illegal variable name" )
+              (r1, VariableAST( s ))
+            } else {
+              val (r1, s) = parseLiteralArgument( r )
 
-            (r1, VariableAST( s ))
+              (r1, LiteralAST( s ))
+            }
         }
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
     }
