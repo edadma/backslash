@@ -216,6 +216,14 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
+      case "and" =>
+        val (r1, args) = parseArguments( r, 2 )
+
+        (r1, AndAST( args.head, args.tail.head ))
+      case "or" =>
+        val (r1, args) = parseArguments( r, 2 )
+
+        (r1, OrAST( args.head, args.tail.head ))
       case " " => (r, LiteralAST( " " ))
       case "if" =>
         val (r1, expr) = parseExpressionArgument( r )

@@ -52,6 +52,8 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
   def eval( ast: AST ): Any =
     ast match {
+      case AndAST( left, right ) => teval( left ) && teval( right )
+      case OrAST( left, right ) => teval( left ) || teval( right )
       case MacroAST( body, args ) =>
         enterScope
         scopes.top ++= args map {case (k, v) => (k, eval(v))}

@@ -16,3 +16,5 @@ case class CommandAST( pos: Position, c: Command, args: List[AST] ) extends AST
 case class MacroAST( body: AST, args: Seq[(String, AST)] ) extends AST
 case class BreakAST( pos: Position ) extends AST
 case class ContinueAST( pos: Position ) extends AST
+case class AndAST( left: AST, right: AST ) extends AST
+case class OrAST( left: AST, right: AST ) extends AST

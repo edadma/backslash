@@ -41,6 +41,11 @@ object Command {
           nil
       },
 
+      new Command( "not", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          falsy( args.head )
+      },
+
       new Command( "include", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           renderer.eval( renderer.parser.parse(io.Source.fromFile(new File(renderer.config('include).toString, args.head.toString))) )
