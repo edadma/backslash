@@ -52,6 +52,15 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
   def eval( ast: AST ): Any =
     ast match {
+      case DotAST( epos, expr, kpos, key ) =>
+        eval( expr ) match {
+          case m: collection.Map[_, _] =>
+            m.asInstanceOf[Map[String, Any]] get key match {
+              case None => problem( kpos, "field not found" )
+              case Some( v ) => v
+            }
+          case o => problem( epos, s"not a map: $o" )
+        }
       case AndAST( left, right ) => teval( left ) && teval( right )
       case OrAST( left, right ) => teval( left ) || teval( right )
       case MacroAST( body, args ) =>

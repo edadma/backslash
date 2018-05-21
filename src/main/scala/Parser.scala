@@ -13,6 +13,8 @@ class Parser( commands: Map[String, Command] ) {
   var beginDelim = "{"
   var endDelim = "}"
 
+  val varRegex = """\.([^.]*)"""r
+
   case class Macro( parameters: Vector[String], body: AST )
 
   val macros = new mutable.HashMap[String, Macro]
@@ -191,6 +193,25 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
+  def parseVariable( pos: Position, v: String ) = {
+    def fields( start: Int, expr: AST ): AST =
+      v.indexOf( '.', start ) match {
+        case -1 => expr
+        case dot if dot == start + 1 || dot == v.length - 1 => problem( pos, "illegal variable reference" )
+        case dot =>
+          v.indexOf( '.', dot + 1 ) match {
+            case -1 => DotAST( pos, expr, pos, v.substring(dot + 1) )
+            case idx => fields( idx + 1, DotAST(pos, expr, pos, v.substring(dot + 1, idx)) )
+          }
+      }
+
+    fields( 0, VariableAST(
+      v indexOf '.' match {
+        case -1 => v
+        case dot => v.substring( 0, dot )
+      }) )
+  }
+
   def parseExpressionArgument( r: Input ): (Input, AST) = {
     if (r atEnd)
       problem( r, "expected command argument" )
@@ -206,7 +227,7 @@ class Parser( commands: Map[String, Command] ) {
               if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
                 problem( r, "illegal variable name" )
 
-              (r1, VariableAST( s ))
+              (r1, parseVariable( r.pos, s ))
             } else {
               val (r1, s) = parseLiteralArgument( r )
 
@@ -236,6 +257,12 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
+      case "." =>
+        val (r1, ast) = parseExpressionArgument( r )
+        val r2 = skipSpace( r1 )
+        val (r3, s) = parseStringArgument( r1 )
+
+        (r3, DotAST( r.pos, ast, r2.pos, s ))
       case "and" =>
         val (r1, args) = parseArguments( r, 2 )
 
@@ -284,7 +311,7 @@ class Parser( commands: Map[String, Command] ) {
         macros get name match {
           case None =>
             commands get name match {
-              case None => (r, VariableAST( name ))
+              case None => (r, parseVariable( pos, name ))
               case Some( c ) =>
                 val (r1, args) = parseArguments( r, c.arity )
 

@@ -12,8 +12,9 @@ object Main extends App {
     )
   val input =
     """
-      |\# {this is a comment}
-      |\rem 10 4
+      |\for l {
+      |  \_i.name
+      |}
     """.stripMargin
   val assigns =
     Map(
