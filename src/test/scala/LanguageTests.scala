@@ -20,6 +20,21 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """3 plus 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
 	}
 
+  "comments" in {
+    test( """3 plus \#super boring\#4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
+    test( """3 plus\# super boring \# 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
+    test(
+      """
+        |\#
+        |  This is the start of a very boring comment.
+        |
+        |  This is the end of a very boring comment.
+        |\#
+        |
+        |Today is \today .
+      """.stripMargin, true ) shouldBe s"Today is $today."
+  }
+
   "delim" in {
     test(
       """

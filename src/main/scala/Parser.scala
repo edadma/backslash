@@ -64,9 +64,10 @@ class Parser( commands: Map[String, Command] ) {
           case Some( r1 ) => parseGroup( r1 )
         }
       case Some( (r1, "#") ) =>
-        val (r2, _) = parseRegularArgument( r1 )
-
-        (r2, null)
+        matches( skip( r1, lookahead(_, csDelim + "#") ), csDelim + "#" ) match {
+          case None => problem( r, "unclosed comment" )
+          case Some( r2 ) => (r2, null)
+        }
       case Some( (r1, "delim") ) =>
         val (r2, c) = parseStringArgument( r1 )
         val (r3, b) = parseStringArgument( r2 )
@@ -251,11 +252,9 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def skipSpace( r: Input ): Input =
-    if (r.atEnd || !r.first.isWhitespace)
-      r
-    else
-      skipSpace( r.rest )
+  def skipSpace( r: Input ): Input = skip( r, !_.first.isWhitespace )
+
+  def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
