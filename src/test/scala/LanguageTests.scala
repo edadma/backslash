@@ -12,6 +12,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   val today = ZonedDateTime.now.format( DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG) )
 
 	"basic" in {
+    test( "", false ) shouldBe ""
     test( "Hello World!", false ) shouldBe "Hello World!"
     test( """Today is \today .""", false ) shouldBe s"Today is $today."
     test( """3 plus 4 is \+ 3 4 .""", false ) shouldBe "3 plus 4 is 7 ."
@@ -33,6 +34,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
         |
         |Today is \today .
       """.stripMargin, true ) shouldBe s"Today is $today."
+    a [RuntimeException] should be thrownBy {test( """3 plus \#super boring""", false )}
   }
 
   "delim" in {
