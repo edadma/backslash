@@ -46,12 +46,54 @@ object Command {
           renderer.eval( renderer.parser.parse(io.Source.fromFile(new File(renderer.config('include).toString, args.head.toString))) )
       },
 
+      new Command( "rem", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          (number( args.head ), number( args.tail.head )) match {
+            case (Some( a ), Some( b )) => a remainder b
+            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+          }
+      },
+
       new Command( "+", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           (number( args.head ), number( args.tail.head )) match {
             case (Some( a ), Some( b )) => a + b
             case _ => problem( pos, s"expected arguments <number> <number>: $args" )
           }
+      },
+
+      new Command( "-", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          (number( args.head ), number( args.tail.head )) match {
+            case (Some( a ), Some( b )) => a - b
+            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+          }
+      },
+
+      new Command( "*", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          (number( args.head ), number( args.tail.head )) match {
+            case (Some( a ), Some( b )) => a * b
+            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+          }
+      },
+
+      new Command( "/", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          (number( args.head ), number( args.tail.head )) match {
+            case (Some( a ), Some( b )) => a + b
+            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+          }
+      },
+
+      new Command( "=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args.head == args.tail.head
+      },
+
+      new Command( "/=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args.head != args.tail.head
       },
 
       new Command( "<", 2 ) {
@@ -63,6 +105,33 @@ object Command {
           }
       },
 
+      new Command( ">", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( a: String, b: String ) => a > b
+            case List( a: BigDecimal, b: BigDecimal ) => a > b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "<=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( a: String, b: String ) => a <= b
+            case List( a: BigDecimal, b: BigDecimal ) => a <= b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( ">=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( a: String, b: String ) => a >= b
+            case List( a: BigDecimal, b: BigDecimal ) => a >= b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
       new Command( "in", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
@@ -70,16 +139,6 @@ object Command {
               if (renderer.scopes isEmpty) problem( pos, "not inside a loop" )
 
               renderer.ForGenerator( v, s )
-            case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
-          }
-      },
-
-      new Command( "set", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          args match {
-            case List( v: String, a: Any ) =>
-              renderer.setVar( v, a )
-              nil
             case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
           }
       },
