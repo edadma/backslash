@@ -1,3 +1,4 @@
+//@
 package xyz.hyperreal.backslash
 
 import scala.collection.mutable
@@ -164,17 +165,26 @@ class Parser( commands: Map[String, Command] ) {
 
   def consumeStringLiteral( r: Input ) = {
     val del = r.first
+    var first = true
+    var prev = ' '
 
-    def cond( cr: Input ) =
-      if (cr atEnd)
-        problem( r, "unclosed string literal" )
-      else
-        cr first match {
-          case '\\' if cr.rest.atEnd => problem( cr, "unclosed string literal" )
-          case '\\' if !"bfnrtu".contains( cr.rest.first ) => problem( cr.rest, "illegal escape sequence in string literal" )
-          case `del` => false
-          case _ => true
-        }
+    def cond( cr: Input ) = {
+      val res =
+        if (cr atEnd)
+          problem( r, "unclosed string literal" )
+        else
+          cr first match {
+            case '\\' if cr.rest.atEnd => problem( cr, "unclosed string literal" )
+            case '\\' if !"bfnrtu\\'\"".contains( cr.rest.first ) => problem( cr.rest, "illegal escape sequence in string literal" )
+            case `del` if !first && prev == '\\' => true
+            case `del` => false
+            case _ => true
+          }
+
+      first = false
+      prev = cr.first
+      res
+    }
 
     val (r1, s) = consumeCond( r.rest, cond )
 
