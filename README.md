@@ -1,5 +1,5 @@
 Backslash
-==========
+=========
 
 [![Build Status](https://www.travis-ci.org/edadma/backslash.svg?branch=master)](https://www.travis-ci.org/edadma/backslash)
 [![Coverage Status](https://coveralls.io/repos/github/edadma/backslash/badge.svg?branch=master)](https://coveralls.io/github/edadma/backslash?branch=master)

@@ -71,13 +71,21 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( date: TemporalAccessor, format: String ) => DateTimeFormatter.ofPattern( format ).format( date )
-            case List( a, b ) => problem( pos, s"expected arguments <date> <format>, given $a $b" )
+            case List( a, b ) => problem( pos, s"expected arguments <date> <format>, given $a, $b" )
           }
       },
 
       new Command( "nil", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           nil
+      },
+
+      new Command( "join", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: Seq[_], sep: String ) => s mkString sep
+            case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
+          }
       },
 
       new Command( "not", 1 ) {
