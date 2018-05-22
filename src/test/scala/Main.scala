@@ -12,7 +12,11 @@ object Main extends App {
     )
   val input =
     """
-      |start \if v defined \else undefined end
+      |\for l {
+      |  \if \= \_idx 1
+      |    \break
+      |  {\_i\ }
+      |}
     """.trim.stripMargin
   val assigns =
     Map(

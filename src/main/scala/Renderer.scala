@@ -107,7 +107,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
           statements map deval mkString
       case LiteralAST( v ) => v
       case CommandAST( pos, c, args ) => c( pos, this, args map eval, null )
-      case ForAST( pos, expr, body, None ) =>
+      case ForAST( pos, expr, body, els ) =>
         val buf = new StringBuilder
 
 				enterScope
@@ -134,6 +134,11 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
             } catch {
               case _: ContinueException =>
             }
+          }
+
+          els match {
+            case None =>
+            case Some( after ) => buf ++= deval( after )
           }
         } catch {
           case _: BreakException =>
@@ -171,9 +176,9 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
       case VariableAST( v ) => getVar( v, Map() )
     }
 
-	class BreakException extends RuntimeException
+  private class BreakException extends RuntimeException
 
-	class ContinueException extends RuntimeException
+  private class ContinueException extends RuntimeException
 
   private case class ForGenerator( v: String, s: Seq[Any] )
 

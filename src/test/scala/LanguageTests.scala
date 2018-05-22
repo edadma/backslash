@@ -45,6 +45,24 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """start \if v defined \else undefined end""", true ) shouldBe "start undefined end"
   }
 
+  "for" in {
+    test( """start \for l \_i end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start abcend"
+    test( """start \for l {\_i} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start abc end"
+    test( """start \for l {\_i\ } end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start a b c end"
+    test( """start \for l {\_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start a b c else end"
+  }
+
+  "break" in {
+    test( """start \for l {\if \> \_idx 1 \break {\_i\ }} \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start a b end"
+    test( """start \for l {\if \> \_idx 1 \break {\_i\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start a b end"
+  }
+
   "comments" in {
     test( """3 plus \#super boring\#4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
     test( """3 plus\# super boring \# 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
@@ -61,21 +79,21 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     a [RuntimeException] should be thrownBy {test( """3 plus \#super boring""", false )}
   }
 
-  "raw" in {
-    test(
-      """
-        |\<<<
-        |\set v 'asdf'
-        |\v
-        |\>>> wow
-      """.stripMargin
-      , false ) shouldBe
-      """
-        |\set v 'asdf'
-        |\v
-        |wow
-      """.stripMargin
-  }
+//  "raw" in {
+//    test(
+//      """
+//        |\<<<
+//        |\set v 'asdf'
+//        |\v
+//        |\>>> wow
+//      """.stripMargin
+//      , false ) shouldBe
+//      """
+//        |\set v 'asdf'
+//        |\v
+//        |wow
+//      """.stripMargin
+//  }
 
   "delim" in {
     test(

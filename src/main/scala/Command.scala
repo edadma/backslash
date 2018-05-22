@@ -20,12 +20,12 @@ object Command {
 
       new Command( "n", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          '\n'
+          "\n"
       },
 
       new Command( "t", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          '\t'
+          "\t"
       },
 
       new Command( "true", 0 ) {

@@ -386,6 +386,8 @@ class Parser( commands: Map[String, Command] ) {
           case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
           case _ => (r2, ForAST( r0.pos, expr, body, None ))
         }
+      case "break" => (r, BreakAST( pos ))
+      case "continue" => (r, ContinueAST( pos ))
       case _ =>
         macros get name match {
           case None =>
