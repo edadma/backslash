@@ -14,7 +14,7 @@ Examples
 
 ### Library
 
-This example program shows how to create a custom tag to output an HTML unordered list, and also demonstrates a Liquid `for` loop.
+This example program shows how to create a custom command to output an HTML unordered list, and also demonstrates a Backslash `\for` loop.
 
 ```scala
 import scala.util.parsing.input.Position
