@@ -119,40 +119,41 @@ object Command {
 
       new Command( "rem", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          (number( args.head ), number( args.tail.head )) match {
-            case (Some( a ), Some( b )) => a remainder b
+          args match {
+            case List( a: BigDecimal, b: BigDecimal ) => a remainder b
             case _ => problem( pos, s"expected arguments <number> <number>: $args" )
           }
       },
 
       new Command( "+", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          (number( args.head ), number( args.tail.head )) match {
-            case (Some( a ), Some( b )) => a + b
-            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+          args match {
+            case List( a: BigDecimal, b: BigDecimal ) => a + b
+            case List( a: String, b: String ) => a + b
+            case _ => problem( pos, s"expected arguments <number> <number> or <string> <string>: $args" )
           }
       },
 
       new Command( "-", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          (number( args.head ), number( args.tail.head )) match {
-            case (Some( a ), Some( b )) => a - b
+          args match {
+            case List( a: BigDecimal, b: BigDecimal ) => a - b
             case _ => problem( pos, s"expected arguments <number> <number>: $args" )
           }
       },
 
       new Command( "*", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          (number( args.head ), number( args.tail.head )) match {
-            case (Some( a ), Some( b )) => a * b
+          args match {
+            case List( a: BigDecimal, b: BigDecimal ) => a * b
             case _ => problem( pos, s"expected arguments <number> <number>: $args" )
           }
       },
 
       new Command( "/", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          (number( args.head ), number( args.tail.head )) match {
-            case (Some( a ), Some( b )) => a + b
+          args match {
+            case List( a: BigDecimal, b: BigDecimal ) => a / b
             case _ => problem( pos, s"expected arguments <number> <number>: $args" )
           }
       },
