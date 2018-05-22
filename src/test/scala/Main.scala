@@ -12,7 +12,7 @@ object Main extends App {
     )
   val input =
     """
-      |\split "a b c" \false
+      |start \if v defined \else undefined end
     """.trim.stripMargin
   val assigns =
     Map(

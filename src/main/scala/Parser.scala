@@ -408,14 +408,14 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def parseCases( cs: String, r: Input, elsifs: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
+  def parseCases( cs: String, r: Input, cases: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
     parseControlSequence( skipSpace(r) ) match {
-      case Some( (r1, cs) ) =>
+      case Some( (r1, `cs`) ) =>
         val (r2, expr) = parseExpressionArgument( r1 )
         val (r3, yes) = parseRegularArgument( r2 )
 
-        parseCases( cs, r3, elsifs :+ (expr, yes) )
-      case _ => (r, elsifs)
+        parseCases( cs, r3, cases :+ (expr, yes) )
+      case _ => (r, cases)
     }
 
   def parseElse( r: Input ): Option[(Input, AST)] =

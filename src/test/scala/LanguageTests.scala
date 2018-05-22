@@ -33,6 +33,11 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     a [RuntimeException] should be thrownBy {test( """asdf \set v "'\b\f\n\r\t\\\'\"""", false )}
   }
 
+  "if" in {
+    test( """start \if v defined end""", true ) shouldBe "start end"
+    test( """start \if v defined \else undefined end""", true ) shouldBe "start undefined end"
+  }
+
   "comments" in {
     test( """3 plus \#super boring\#4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
     test( """3 plus\# super boring \# 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
