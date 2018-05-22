@@ -6,7 +6,7 @@ Backslash
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://github.com/edadma/backslash/blob/master/LICENSE)
 [![Version](https://img.shields.io/badge/latest_release-v0.1-orange.svg)](https://github.com/edadma/backslash/releases/tag/v0.1)
 
-*Backslash* is a string templating language for the [Scala](http://scala-lang.org) programming language.
+*Backslash* is a string templating language written in [Scala](http://scala-lang.org).
 
 
 Examples
@@ -90,7 +90,7 @@ This program prints
 
 ### Executable
 
-This next example shows how to use *Backslash* as an executable on the command line.
+This next example shows how to use *Backslash* as an executable from the command line.
 
 ```bash
 echo "testing \join \v \", \"" | java -jar backslash-0.1.jar -j "{v: [\"one\", \"two\", \"three\"]}" --
