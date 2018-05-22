@@ -1,7 +1,7 @@
 //@
 package xyz.hyperreal.backslash
 
-import java.io.PrintStream
+import java.io.{ByteArrayOutputStream, PrintStream}
 
 import scala.collection.mutable
 
@@ -9,7 +9,7 @@ import scala.collection.mutable
 class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
   val globals = new mutable.HashMap[String, Any]
-  val scopes = new mutable.ArrayStack[mutable.HashMap[String, Any]]()
+  val scopes = new mutable.ArrayStack[mutable.HashMap[String, Any]]
 
 	def setVar( name: String, value: Any ): Unit =
 		scopes find (_ contains name) match {
@@ -35,7 +35,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
 	def exitScope: Unit = scopes pop
 
-  def render( ast: AST, assigns: Map[String, Any], out: PrintStream ): Unit = {
+  def render( ast: AST, assigns: collection.Map[String, Any], out: PrintStream ): Unit = {
     def output( ast: AST ) = out print eval( ast )
 
     globals ++= assigns
@@ -44,6 +44,13 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
       case GroupAST( b ) => b foreach output
       case _ => output( ast )
     }
+  }
+
+  def capture( ast: AST, assigns: collection.Map[String, Any] ) = {
+		val bytes = new ByteArrayOutputStream
+
+    render( ast, assigns, new PrintStream(bytes) )
+    bytes.toString
   }
 
   def seval( ast: AST ) = eval( ast ).toString
@@ -154,4 +161,5 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 	class ContinueException extends RuntimeException
 
   case class ForGenerator( v: String, s: Seq[Any] )
+
 }

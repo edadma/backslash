@@ -21,6 +21,11 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """3 plus 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
 	}
 
+  "literals" in {
+    test( """asdf \b\f\n\r\t zxvc""", false ) shouldBe "asdf \b\f\n\r\tzxvc"
+    test( """asdf \set v '\b\f\n\r\t'\v zxvc""", false ) shouldBe "asdf \b\f\n\r\tzxvc"
+  }
+
   "comments" in {
     test( """3 plus \#super boring\#4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
     test( """3 plus\# super boring \# 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."

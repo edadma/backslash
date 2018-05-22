@@ -4,13 +4,9 @@ version := "0.1"
 
 scalaVersion := "2.12.6"
 
-//crossScalaVersions := Seq( "2.11.11" )
-
 scalacOptions ++= Seq( "-deprecation", "-feature", "-unchecked", "-language:postfixOps", "-language:implicitConversions", "-language:existentials" )
 
 organization := "xyz.hyperreal"
-
-//resolvers += Resolver.sonatypeRepo( "snapshots" )
 
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
@@ -23,41 +19,15 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
 	"org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.0"
-//	"org.scala-lang.modules" %% "scala-xml" % "1.0.6"
-//	"org.scala-lang.modules" %% "scala-swing" % "2.0.3"
 )
-
-//libraryDependencies ++= Seq(
-//  "com.typesafe" % "config" % "1.3.3"
-//)
-
-//libraryDependencies ++= Seq(
-//  "jline" % "jline" % "2.14.6"
-//)
-
-libraryDependencies ++= {
-	val akkaV = "2.5.12"
-	Seq(
-//		"com.typesafe.akka" %% "akka-actor"    % akkaV
-//		"com.typesafe.akka" %% "akka-remote"   % akkaV,
-//		"com.typesafe.akka" %% "akka-testkit"  % akkaV    % "test",
-//		"org.specs2"        %% "specs2-core"   % "2.3.11" % "test"
-	)
-}
-
-//libraryDependencies ++= {
-//	val akka_http = "10.1.1"
-//	Seq(
-//		"com.typesafe.akka" %% "akka-http-core"       % akka_http,
-//		"com.typesafe.akka" %% "akka-http"            % akka_http,
-//		"com.typesafe.akka" %% "akka-http-testkit"    % akka_http,
-//		"com.typesafe.akka" %% "akka-http-spray-json" % akka_http,
-//		"com.typesafe.akka" %% "akka-http-jackson"    % akka_http
-//	)
-//}
 
 libraryDependencies ++= Seq(
+  "xyz.hyperreal" %% "json" % "0.7.1",
+  "xyz.hyperreal" %% "args" % "0.1",
+  "xyz.hyperreal" %% "hsl" % "0.3.1"
 )
+
+coverageExcludedPackages := ".*Main;.*nil;.*package;.*Tag;.*Filter"
 
 mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value.replace('-', '_') + ".Main" )
 

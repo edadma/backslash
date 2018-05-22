@@ -12,8 +12,9 @@ object Main extends App {
     )
   val input =
     """
-      |{}
-    """.stripMargin
+      |\set v '\b\f\n\r\t'
+      |\v
+    """.trim.stripMargin
   val assigns =
     Map(
       "x" -> 3,
@@ -23,9 +24,10 @@ object Main extends App {
   val parser = new Parser( Command.standard )
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
+  val result = renderer.capture( ast, assigns )
 
-  print( '|' )
-  renderer.render( ast, assigns, Console.out )
-  println( '|' )
+//  println( s"|$result|
+  println( result )
+  println( result map (_.toInt) )
 
 }

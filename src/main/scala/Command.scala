@@ -17,6 +17,31 @@ object Command {
   val standard =
     List(
 
+      new Command( "n", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          '\n'
+      },
+
+      new Command( "t", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          '\t'
+      },
+
+      new Command( "r", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          '\r'
+      },
+
+      new Command( "b", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          '\b'
+      },
+
+      new Command( "f", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          '\f'
+      },
+
       new Command( "true", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           true

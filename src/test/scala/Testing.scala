@@ -1,7 +1,6 @@
 //@
 package xyz.hyperreal.backslash
 
-import java.io.{ByteArrayOutputStream, PrintStream}
 import java.time.format.{DateTimeFormatter, FormatStyle}
 
 
@@ -14,17 +13,15 @@ trait Testing {
     )
 
 	def test( input: String, collapse: Boolean, assigns: (String, Any)* ) = {
-		val bytes = new ByteArrayOutputStream
     val parser = new Parser( Command.standard )
     val ast = parser.parse( io.Source.fromString(input) )
     val renderer = new Renderer( parser, config )
-
-    renderer.render( ast, assigns toMap, new PrintStream(bytes) )
+    val result = renderer.capture( ast, assigns toMap )
 
 		if (collapse)
-			bytes.toString.trim.replaceAll( """\s+""", " " )
+			result.trim.replaceAll( """\s+""", " " )
 		else
-			bytes.toString
+			result
 	}
 
 }

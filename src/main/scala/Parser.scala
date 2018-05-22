@@ -14,6 +14,21 @@ class Parser( commands: Map[String, Command] ) {
   var endDelim = "}"
 
   val varRegex = """\.([^.]*)"""r
+  val unicodeRegex = "\\\\u[0-9a-fA-F]{4}".r
+
+  def escapes( s: String ) =
+    unicodeRegex.replaceAllIn(
+      s
+        .replace( """\b""", "\b" )
+        .replace( """\t""", "\t" )
+        .replace( """\f""", "\f" )
+        .replace( """\n""", "\n" )
+        .replace( """\r""", "\r" )
+        .replace( """\\""", "\\" )
+        .replace( """\"""", "\"" )
+        .replace( """\'""", "\'" ),
+      m => Integer.parseInt( m.matched.substring(2), 16 ).toChar.toString
+    )
 
   case class Macro( parameters: Vector[String], body: AST )
 
@@ -138,27 +153,37 @@ class Parser( commands: Map[String, Command] ) {
     else
       matches( r.rest, s, idx + 1 )
 
-  def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) =
-    if (r atEnd)
+  def consumeCond( r: Input, cond: Input => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) =
+    if (cond( r )) {
+      buf += r.first
+      consumeCond( r.rest, cond, buf )
+    } else
       (r, buf toString)
-    else
-      r first match {
-        case c if set( c ) =>
-          buf += c
-          consume( r.rest, set, buf )
-        case _ => (r, buf toString)
-      }
 
-  def consumeDelimited( r: Input, delim: Char ): (Input, String) = {
-    val (r1, s) = consume( r, _ != delim )
+  def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) = consumeCond( r, (r: Input) => !r.atEnd && set(r.first), buf )
 
-    (r1.rest, s)
+  def consumeStringLiteral( r: Input ) = {
+    val del = r.first
+
+    def cond( cr: Input ) =
+      if (cr atEnd)
+        problem( r, "unclosed string literal" )
+      else
+        cr first match {
+          case '\\' if cr.rest.atEnd => problem( cr, "unclosed string literal" )
+          case '\\' if !"bfnrtu".contains( cr.rest.first ) => problem( cr.rest, "illegal escape sequence in string literal" )
+          case `del` => false
+          case _ => true
+        }
+
+    val (r1, s) = consumeCond( r.rest, cond )
+
+    (r1.rest, escapes( s ))
   }
 
   def parseLiteralArgument( r: Input ): (Input, Any) =
     r.first match {
-      case '"' => consumeDelimited( r.rest, '"' )
-      case '\'' => consumeDelimited( r.rest, '\'' )
+      case '"'|'\'' => consumeStringLiteral( r )
       case '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
         consume( r, c => c.isDigit || c == '.' ) match {
           case (r1, n) => (r1, BigDecimal( n ))
