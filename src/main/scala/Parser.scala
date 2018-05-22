@@ -293,6 +293,25 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
+      case "<<<" =>
+        var first = true
+        var prev = ' '
+
+        def cond( cr: Input ) = {
+          val res =
+            if (cr atEnd)
+              problem( r, "unclosed raw text" )
+            else
+              !lookahead( cr, csDelim + ">>>" )
+
+          first = false
+          prev = cr.first
+          res
+        }
+
+        val (r1, s) = consumeCond( r, cond )
+
+        (r1, LiteralAST( s ))
       case "." =>
         val (r1, ast) = parseExpressionArgument( r )
         val r2 = skipSpace( r1 )

@@ -12,8 +12,10 @@ object Main extends App {
     )
   val input =
     """
-      |\set v '\b\f\n\r\t'
+      |\<<<
+      |\set v 'asdf'
       |\v
+      |\>>> wow
     """.trim.stripMargin
   val assigns =
     Map(
@@ -28,6 +30,6 @@ object Main extends App {
 
 //  println( s"|$result|
   println( result )
-  println( result map (_.toInt) )
+//  println( result map (_.toInt) )
 
 }

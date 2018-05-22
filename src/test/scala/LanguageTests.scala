@@ -25,6 +25,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """asdf \b\f\n\r\t zxvc""", false ) shouldBe "asdf \b\f\n\r\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v "'\b\f\n\r\t\\\'\""\v zxvc""", false ) shouldBe "asdf '\b\f\n\r\t\\\'\"zxvc"
+    a [RuntimeException] should be thrownBy {test( """asdf \set v "'\b\f\n\r\t\\\'\"""", false )}
   }
 
   "comments" in {
@@ -41,6 +42,22 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
         |Today is \today .
       """.stripMargin, true ) shouldBe s"Today is $today."
     a [RuntimeException] should be thrownBy {test( """3 plus \#super boring""", false )}
+  }
+
+  "raw" in {
+    test(
+      """
+        |\<<<
+        |\set v 'asdf'
+        |\v
+        |\>>> wow
+      """.stripMargin
+      , false ) shouldBe
+      """
+        |\set v 'asdf'
+        |\v
+        |wow
+      """.stripMargin
   }
 
   "delim" in {
@@ -72,5 +89,3 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 	
 }
-
-//		a [RuntimeException] should be thrownBy {interpret( """ (= 1 1] """ )}
