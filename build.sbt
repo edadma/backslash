@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(
   "xyz.hyperreal" %% "hsl" % "0.3.1"
 )
 
-coverageExcludedPackages := ".*Main;.*nil;.*package;.*Tag;.*Filter"
+coverageExcludedPackages := ".*Main;.*nil;.*package;.*Command;.*Example"
 
 mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value.replace('-', '_') + ".Main" )
 
