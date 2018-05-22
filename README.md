@@ -104,6 +104,8 @@ The above command prints
 Usage
 -----
 
+### Library
+
 Use the following definition to use Backslash in your Maven project:
 
 ```xml
@@ -126,6 +128,12 @@ resolvers += "Hyperreal Repository" at "https://dl.bintray.com/edadma/maven"
 
 libraryDependencies += "xyz.hyperreal" %% "backslash" % "0.1"
 ```
+
+### Executable
+
+An executable can be downloaded from [here](https://dl.bintray.com/edadma/generic/backslash-0.1.jar). *You do not need* the Scala library for it to work because the JAR already contains all dependencies. You just need Java 8+ installed.
+
+Run it as a normal Java executable JAR with the command `java -jar backslash-0.1.jar <template>` in the folder where you downloaded the file, where *template* is the name of the template file to be rendered.
 
 Building
 --------
@@ -150,4 +158,4 @@ The command `sbt assembly` also runs all the unit tests.
 License
 -------
 
-ISC © 2018 Edward Maxedon
+ISC © 2018 Edward A. Maxedon, Sr.
