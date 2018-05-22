@@ -12,10 +12,7 @@ object Main extends App {
     )
   val input =
     """
-      |\<<<
-      |\set v 'asdf'
-      |\v
-      |\>>> wow
+      |\for \drop \l 2 {\_i.name\ }
     """.trim.stripMargin
   val assigns =
     Map(

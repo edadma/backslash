@@ -36,7 +36,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 	def exitScope: Unit = scopes pop
 
   def render( ast: AST, assigns: collection.Map[String, Any], out: PrintStream ): Unit = {
-    def output( ast: AST ) = out print eval( ast )
+    def output( ast: AST ) = out print deval( ast )
 
     globals ++= assigns
 
@@ -53,7 +53,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
     bytes.toString
   }
 
-  def seval( ast: AST ) = eval( ast ).toString
+  def deval( ast: AST ) = display( eval(ast) )
 
   def teval( ast: AST ) = truthy( eval(ast) )
 
@@ -93,7 +93,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
         if (statements.length == 1)
           eval( statements.head )
         else
-          statements map seval mkString
+          statements map deval mkString
       case LiteralAST( v ) => v
       case CommandAST( pos, c, args ) => c( pos, this, args map eval, null )
       case ForAST( pos, expr, body, None ) =>
@@ -119,7 +119,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
                   case (k, v) => scopes.top(k) = v
                 }
 
-              buf ++= seval( body )
+              buf ++= deval( body )
             } catch {
               case _: ContinueException =>
             }

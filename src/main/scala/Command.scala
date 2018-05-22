@@ -88,6 +88,30 @@ object Command {
           }
       },
 
+      new Command( "take", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: Seq[_], n: BigDecimal ) => s take n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <sequence> <number>, given $a, $b" )
+          }
+      },
+
+      new Command( "drop", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: Seq[_], n: BigDecimal ) => s drop n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <sequence> <number>, given $a, $b" )
+          }
+      },
+
+      new Command( "join", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: Seq[_], sep: String ) => s mkString sep
+            case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
+          }
+      },
+
       new Command( "not", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           falsy( args.head )
@@ -121,7 +145,17 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( a: BigDecimal, b: BigDecimal ) => a remainder b
-            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "contains", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( a: String, b: String ) => a contains b
+            case List( a: Seq[_], b: String ) => a contains b
+            case List( a: Map[_, _], b: String ) => a.asInstanceOf[Map[String, Any]] contains b
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
           }
       },
 
@@ -130,7 +164,7 @@ object Command {
           args match {
             case List( a: BigDecimal, b: BigDecimal ) => a + b
             case List( a: String, b: String ) => a + b
-            case _ => problem( pos, s"expected arguments <number> <number> or <string> <string>: $args" )
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
           }
       },
 
@@ -138,7 +172,7 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( a: BigDecimal, b: BigDecimal ) => a - b
-            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
           }
       },
 
@@ -146,7 +180,7 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( a: BigDecimal, b: BigDecimal ) => a * b
-            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
           }
       },
 
@@ -154,7 +188,7 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( a: BigDecimal, b: BigDecimal ) => a / b
-            case _ => problem( pos, s"expected arguments <number> <number>: $args" )
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
           }
       },
 
