@@ -12,8 +12,7 @@ object Main extends App {
     )
   val input =
     """
-      |\set r \regex "\\s+"
-      |\split "a   b c" \r
+      |\split "a b c" \false
     """.trim.stripMargin
   val assigns =
     Map(
