@@ -6,7 +6,7 @@ Backslash
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://github.com/edadma/backslash/blob/master/LICENSE)
 [![Version](https://img.shields.io/badge/latest_release-v0.1-orange.svg)](https://github.com/edadma/backslash/releases/tag/v0.1)
 
-*Backslash* is an implementation of the [Liquid](https://shopify.github.io/liquid/) templating language for the [Scala](http://scala-lang.org) programming language.
+*Backslash* is a string templating language for the [Scala](http://scala-lang.org) programming language.
 
 
 Examples
@@ -17,9 +17,7 @@ Examples
 This example program shows how to create a custom tag to output an HTML unordered list, and also demonstrates a Liquid `for` loop.
 
 ```scala
-import java.io.PrintStream
-
-import scala.collection.mutable
+import scala.util.parsing.input.Position
 
 import xyz.hyperreal.backslash._
 
@@ -30,12 +28,12 @@ object Example extends App {
     """
       |<h2>Vaudeville Acts</h2>
       |<ol>
-      |  {% for act in acts %}
+      |  \for \in act \acts {
       |    <li>
-      |      <h3>{{ act.name }}</h3>
-      |      {% ul act.members %}
+      |      <h3>\act.name</h3>
+      |      \list \act.members
       |    </li>
-      |  {% endfor %}
+      |  }
       |</ol>
     """.trim.stripMargin
   val acts =
@@ -53,17 +51,19 @@ object Example extends App {
         "members" -> List( "William (Bud) Abbott", "Lou Costello" )
       )
     )
-  val customtag =
-    new Tag( "ul" ) {
-      def apply( settings: Map[Symbol, Any], vars: mutable.Map[String, Any], out: PrintStream, args: List[Any], context: AnyRef ) = {
+  val customCommand =
+    new Command( "list", 1 ) {
+      def apply( pos: Position, rendered: Renderer, args: List[Any], context: AnyRef ) = {
         val list = args.head.asInstanceOf[List[String]]
 
-        out.print(s"<ul>${list map (item => s"<li>$item</li>") mkString}</ul>")
+        s"<ul>${list map (item => s"<li>$item</li>") mkString}</ul>"
       }
     }
 
-  new Interpreter( StandardFilters.map, Tag(customtag), Map(), Map("acts" -> acts), null ).
-    render( BackslashParser.parse(io.Source.fromString(input)), Map(), Console.out, false )
+  val parser = new Parser( Command.standard ++ Map("list" -> customCommand) )
+  val renderer = new Renderer( parser, Map() )
+
+  renderer.render( parser.parse(io.Source.fromString(input)), Map("acts" -> acts), Console.out )
 }
 ```
 
@@ -75,18 +75,15 @@ This program prints
 
     <li>
       <h3>Three Stooges</h3>
-      <ul><li>Larry</li><li>Moe</li><li>Curly</li></ul>
-    </li>
+      <ul><li>Larry</li><li>Moe</li><li>Curly</li></ul></li>
 
     <li>
       <h3>Andrews Sisters</h3>
-      <ul><li>LaVerne</li><li>Maxine</li><li>Patty</li></ul>
-    </li>
+      <ul><li>LaVerne</li><li>Maxine</li><li>Patty</li></ul></li>
 
     <li>
       <h3>Abbott and Costello</h3>
-      <ul><li>William (Bud) Abbott</li><li>Lou Costello</li></ul>
-    </li>
+      <ul><li>William (Bud) Abbott</li><li>Lou Costello</li></ul></li>
 
 </ol>
 ```
@@ -96,12 +93,12 @@ This program prints
 This next example shows how to use *Backslash* as an executable on the command line.
 
 ```bash
-echo "{{ v | join: \", \" }}" | java -jar backslash-0.1.jar -j "{v: [\"one\", \"two\", \"three\"]}" --
+echo "testing \join \v \", \"" | java -jar backslash-0.1.jar -j "{v: [\"one\", \"two\", \"three\"]}" --
 ```
 
 The above command prints
 
-    one, two, three
+    testing one, two, three
 
 
 Usage
