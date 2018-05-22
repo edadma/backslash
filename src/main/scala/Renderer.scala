@@ -89,7 +89,11 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
             }
           case Some( (_, yes) ) => eval( yes )
         }
-      case GroupAST( block ) => block map seval mkString
+      case GroupAST( statements ) =>
+        if (statements.length == 1)
+          eval( statements.head )
+        else
+          statements map seval mkString
       case LiteralAST( v ) => v
       case CommandAST( pos, c, args ) => c( pos, this, args map eval, null )
       case ForAST( pos, expr, body, None ) =>
