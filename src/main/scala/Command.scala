@@ -241,17 +241,6 @@ object Command {
           }
       },
 
-      new Command( "in", 2 ) {//todo: should be a special command to check variable name
-        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          args match {
-            case List( v: String, s: Seq[_] ) =>
-              if (renderer.scopes isEmpty) problem( pos, "not inside a loop" )
-
-              renderer.ForGenerator( v, s )
-            case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
-          }
-      },
-
       new Command( "..", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {

@@ -62,6 +62,14 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
       case SetAST( v, expr ) =>
         setVar( v, eval(expr) )
         nil
+      case InAST( cpos, v, epos, expr ) =>
+        eval( expr ) match {
+          case s: Seq[_] =>
+            if (scopes isEmpty) problem( cpos, "not inside a loop" )
+
+            ForGenerator( v, s )
+          case a => problem( epos, s"expected a sequence: $a" )
+        }
       case DotAST( epos, expr, kpos, key ) =>
         eval( expr ) match {
           case m: collection.Map[_, _] =>
@@ -167,6 +175,6 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
 	class ContinueException extends RuntimeException
 
-  case class ForGenerator( v: String, s: Seq[Any] )
+  private case class ForGenerator( v: String, s: Seq[Any] )
 
 }

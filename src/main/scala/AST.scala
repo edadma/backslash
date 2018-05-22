@@ -20,3 +20,4 @@ case class AndAST( left: AST, right: AST ) extends AST
 case class OrAST( left: AST, right: AST ) extends AST
 case class DotAST( epos: Position, expr: AST, kpos: Position, key: Any ) extends AST
 case class SetAST( v: String, expr: AST ) extends AST
+case class InAST( cpos: Position, v: String, epos: Position, expr: AST ) extends AST
