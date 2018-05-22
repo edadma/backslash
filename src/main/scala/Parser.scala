@@ -175,7 +175,6 @@ class Parser( commands: Map[String, Command] ) {
         else
           cr first match {
             case '\\' if cr.rest.atEnd => problem( cr, "unclosed string literal" )
-            case '\\' if !"bfnrtu\\'\"".contains( cr.rest.first ) => problem( cr.rest, "illegal escape sequence in string literal" )
             case `del` if !first && prev == '\\' => true
             case `del` => false
             case _ => true
@@ -232,7 +231,7 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def parseVariable( pos: Position, v: String ) = {
+  def dotExpression( pos: Position, v: String ) = {
     def fields( start: Int, expr: AST ): AST =
       v.indexOf( '.', start ) match {
         case -1 => expr
@@ -251,6 +250,16 @@ class Parser( commands: Map[String, Command] ) {
       }) )
   }
 
+  def parseVariableArgument( r: Input ) = {
+    val res@(_, s) = parseString( r )
+
+    if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
+      problem( r, "illegal variable name" )
+
+    check( r.pos, s )
+    res
+  }
+
   def parseExpressionArgument( r: Input ): (Input, AST) = {
     if (r atEnd)
       problem( r, "expected command argument" )
@@ -261,12 +270,9 @@ class Parser( commands: Map[String, Command] ) {
           case Some( r1 ) => parseGroup( r1 )
           case None =>
             if (nameFirst( r first )) {
-              val (r1, s) = parseString( r )
+              val (r1, s) = parseVariableArgument( r )
 
-              if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
-                problem( r, "illegal variable name" )
-
-              (r1, parseVariable( r.pos, s ))
+              (r1, dotExpression( r.pos, s ))
             } else {
               val (r1, s) = parseLiteralArgument( r )
 
@@ -292,6 +298,12 @@ class Parser( commands: Map[String, Command] ) {
 
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
+  def check( pos: Position, name: String ) =
+    if (Set( "if", "for", "unless", "match", "set", "and", "or" ) contains name)
+      problem( pos, "illegal variable name, it's a reserved word" )
+    else if (commands contains name)
+      problem( pos, "illegal variable name, it's a command" )
+
   def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
     name match {
       case "<<<" =>
@@ -316,9 +328,14 @@ class Parser( commands: Map[String, Command] ) {
       case "." =>
         val (r1, ast) = parseExpressionArgument( r )
         val r2 = skipSpace( r1 )
-        val (r3, s) = parseStringArgument( r1 )
+        val (r3, a) = parseRegularArgument( r1 )
 
-        (r3, DotAST( r.pos, ast, r2.pos, s ))
+        (r3, DotAST( r.pos, ast, r2.pos, a ))
+      case "set" =>
+        val (r1, v) = parseVariableArgument( r )
+        val (r2, ast) = parseExpressionArgument( skipSpace(r1) )
+
+        (r2, SetAST( v, ast ))
       case "and" =>
         val (r1, args) = parseArguments( r, 2 )
 
@@ -367,7 +384,7 @@ class Parser( commands: Map[String, Command] ) {
         macros get name match {
           case None =>
             commands get name match {
-              case None => (r, parseVariable( pos, name ))
+              case None => (r, dotExpression( pos, name ))
               case Some( c ) =>
                 val (r1, args) = parseArguments( r, c.arity )
 

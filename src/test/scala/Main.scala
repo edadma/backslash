@@ -12,7 +12,8 @@ object Main extends App {
     )
   val input =
     """
-      |\for \drop \l 2 {\_i.name\ }
+      |\set r \regex "\\s+"
+      |\split "a   b c" \r
     """.trim.stripMargin
   val assigns =
     Map(
@@ -23,6 +24,9 @@ object Main extends App {
   val parser = new Parser( Command.standard )
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
+
+//  println( ast )
+
   val result = renderer.capture( ast, assigns )
 
 //  println( s"|$result|

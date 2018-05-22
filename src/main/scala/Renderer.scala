@@ -59,10 +59,13 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
   def eval( ast: AST ): Any =
     ast match {
+      case SetAST( v, expr ) =>
+        setVar( v, eval(expr) )
+        nil
       case DotAST( epos, expr, kpos, key ) =>
         eval( expr ) match {
           case m: collection.Map[_, _] =>
-            m.asInstanceOf[Map[String, Any]] get key match {
+            m.asInstanceOf[collection.Map[Any, Any]] get key match {
               case None => problem( kpos, "field not found" )
               case Some( v ) => v
             }

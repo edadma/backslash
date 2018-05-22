@@ -22,7 +22,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
 	}
 
   "literals" in {
-    test( """asdf \b\f\n\r\t zxvc""", false ) shouldBe "asdf \b\f\n\r\tzxvc"
+    test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v "'\b\f\n\r\t\\\'\""\v zxvc""", false ) shouldBe "asdf '\b\f\n\r\t\\\'\"zxvc"
     a [RuntimeException] should be thrownBy {test( """asdf \set v "'\b\f\n\r\t\\\'\"""", false )}

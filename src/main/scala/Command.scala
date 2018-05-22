@@ -5,6 +5,7 @@ import java.time.{OffsetDateTime, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 
+import scala.util.matching.Regex
 import scala.util.parsing.input.Position
 
 
@@ -25,21 +26,6 @@ object Command {
       new Command( "t", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           '\t'
-      },
-
-      new Command( "r", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          '\r'
-      },
-
-      new Command( "b", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          '\b'
-      },
-
-      new Command( "f", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          '\f'
       },
 
       new Command( "true", 0 ) {
@@ -109,6 +95,23 @@ object Command {
           args match {
             case List( s: Seq[_], sep: String ) => s mkString sep
             case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
+          }
+      },
+
+      new Command( "split", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: String, sep: String ) => s split sep toList
+            case List( s: String, sep: Regex ) => sep split s toList
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <string> <regex>, given $a, $b" )
+          }
+      },
+
+      new Command( "regex", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: String ) => s.r
+            case List( a ) => problem( pos, s"expected string argument, given $a" )
           }
       },
 
@@ -238,23 +241,13 @@ object Command {
           }
       },
 
-      new Command( "in", 2 ) {
+      new Command( "in", 2 ) {//todo: should be a special command to check variable name
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
             case List( v: String, s: Seq[_] ) =>
               if (renderer.scopes isEmpty) problem( pos, "not inside a loop" )
 
               renderer.ForGenerator( v, s )
-            case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
-          }
-      },
-
-      new Command( "set", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          args match {
-            case List( v: String, a: Any ) =>
-              renderer.setVar( v, a )
-              nil
             case List( a, b ) => problem( pos, s"expected arguments <variable name> <sequence>: $a, $b" )
           }
       },
