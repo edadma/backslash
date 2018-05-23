@@ -12,19 +12,26 @@ object Main extends App {
     )
   val input =
     """
-      |\for m {
-      |  {\firstName} \lastName
-      |}
+      |<h3>Products</h3>
       |
-      |\firstName
-      |\m
+      |<ul>
+      |  \for \products {
+      |    <li>\name &emsp; $\price &emsp;
+      |      \if inStock {
+      |        <a href="#">Buy It!</a>
+      |      } \else {
+      |        Out of stock.
+      |      }
+      |    </li>
+      |  }
+      |</ul>
     """.trim.stripMargin
   val assigns =
     Map(
       "x" -> 3,
       "y" -> 4,
       "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),
-      "l" -> List( Map("name" -> "Larry"), Map("name" -> "Moe"), Map("name" -> "Curly") )
+      "products" -> List( Map("name" -> "RCA 32\" ROKU SMART TV", "price" -> BigDecimal("207.00"), "inStock" -> true), Map("name" -> "LG 55UK6300", "price" -> BigDecimal("1098.00"), "inStock" -> false) )
     )
   val parser = new Parser( Command.standard )
   val ast = parser.parse( io.Source.fromString(input) )

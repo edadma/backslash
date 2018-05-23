@@ -14,7 +14,66 @@ Examples
 
 ### Templating
 
+Here's a typical Backslash template with looping and conditionals.
 
+#### Template
+
+```html
+<h3>Products</h3>
+
+<ul>
+  \for \products {
+    <li>\name &emsp; $\price &emsp;
+      \if inStock {
+        <a href="#">Buy It!</a>
+      } \else {
+        Out of stock.
+      }
+    </li>
+  }
+</ul>
+```
+
+#### Data
+
+```json
+{
+  "products": [
+    {
+      "name": "RCA 32" ROKU SMART TV",
+      "price": 207.00,
+      "inStock": true
+    },
+    {
+      "name": "LG 55UK6300",
+      "price": 1098.00,
+      "inStock": false
+    }
+  ]
+}
+```
+
+#### Output
+
+```html
+<h3>Products</h3>
+
+<ul>
+
+    <li>RCA 32" ROKU SMART TV&emsp; $207.00&emsp;
+
+        <a href="#">Buy It!</a>
+
+    </li>
+
+    <li>LG 55UK6300&emsp; $1098.00&emsp;
+
+        Out of stock.
+
+    </li>
+
+</ul>
+```
 
 ### Library
 
