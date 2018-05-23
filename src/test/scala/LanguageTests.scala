@@ -71,6 +71,13 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start a b end"
   }
 
+  "continue" in {
+    test( """start \for l {\if \= \_idx 1 \continue {\_i\ }} \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start a c else end"
+    test( """start \for l {\if \= \_idx 1 \continue {\_i\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start a c end"
+  }
+
   "match" in {
     test( """start \match 5 end""", true ) shouldBe
       "start end"
