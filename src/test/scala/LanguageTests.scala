@@ -62,6 +62,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start a b c end"
     test( """start \for l {\_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b c else end"
+    test( """start \for m \f end""", true, "m" -> Map("f" -> 123) ) shouldBe
+      "start 123end"
   }
 
   "break" in {

@@ -12,16 +12,18 @@ object Main extends App {
     )
   val input =
     """
-      |\for l {
-      |  \if \= \_idx 1
-      |    \break
-      |  {\_i\ }
+      |\for m {
+      |  {\firstName} \lastName
       |}
+      |
+      |\firstName
+      |\m
     """.trim.stripMargin
   val assigns =
     Map(
       "x" -> 3,
       "y" -> 4,
+      "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),
       "l" -> List( Map("name" -> "Larry"), Map("name" -> "Moe"), Map("name" -> "Curly") )
     )
   val parser = new Parser( Command.standard )
@@ -33,7 +35,7 @@ object Main extends App {
   val result = renderer.capture( ast, assigns )
 
 //  println( s"|$result|
-  println( result )
+  println( result.trim )
 //  println( result map (_.toInt) )
 
 }

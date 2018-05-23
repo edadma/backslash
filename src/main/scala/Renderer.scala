@@ -129,7 +129,8 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
           eval( expr ) match {
             case ForGenerator( v, s ) => (Some( v ), s)
             case s: Seq[Any] => (None, s)
-            case a => problem( pos, s"expected sequence: $a" )
+            case m: collection.Map[_, _] => (None, List( m ))
+            case a => problem( pos, s"expected sequence or map: $a" )
           }
 
         try {
