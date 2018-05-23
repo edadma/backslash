@@ -63,6 +63,23 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start a b end"
   }
 
+  "match" in {
+    test( """start \match 5 end""", true ) shouldBe
+      "start end"
+    test( """start \match 5 \case 3 three end""", true ) shouldBe
+      "start end"
+    test( """start \match 5 \case 3 three \else else end""", true ) shouldBe
+      "start else end"
+    test( """start \match 5 \case 5 five end""", true ) shouldBe
+      "start five end"
+    test( """start \match 5 \case 3 three \case 5 five end""", true ) shouldBe
+      "start five end"
+    test( """start \match 5 \case 5 five \case 3 three end""", true ) shouldBe
+      "start five end"
+    test( """start \match 5 \case 5 five \else else end""", true ) shouldBe
+      "start five end"
+  }
+
   "comments" in {
     test( """3 plus \#super boring\#4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
     test( """3 plus\# super boring \# 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
