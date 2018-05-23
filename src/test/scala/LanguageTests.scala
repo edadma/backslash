@@ -83,10 +83,17 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start true end"
     test( """start {\and \true \false} end""", true ) shouldBe
       "start false end"
+    test( """start {\and \true v} end""", true, "v" -> 123 ) shouldBe
+      "start true end"
+    test( """start {\and \true v} end""", true ) shouldBe
+      "start false end"
     test( """start {\or \true \true} end""", true ) shouldBe
       "start true end"
     test( """start {\or \true \false} end""", true ) shouldBe
       "start true end"
+  }
+
+  "set" in {
   }
 
   "match" in {

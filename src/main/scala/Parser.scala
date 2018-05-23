@@ -161,7 +161,7 @@ class Parser( commands: Map[String, Command] ) {
     } else
       (r, buf toString)
 
-  def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) = consumeCond( r, (r: Input) => !r.atEnd && set(r.first), buf )
+  def consume( r: Input, set: Char => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) = consumeCond( r, r => !r.atEnd && set(r.first), buf )
 
   def consumeStringLiteral( r: Input ) = {
     val del = r.first
@@ -201,7 +201,9 @@ class Parser( commands: Map[String, Command] ) {
       case _ => parseString( r )
     }
 
-  def parseString( r: Input ) = consume( r, !_.isWhitespace )
+  def parseString( r: Input ) = consumeCond( r, r => !r.atEnd && !r.first.isWhitespace && !lookahead(r, endDelim) )
+
+  def parseStringWhitespace( r: Input ) = consume( r, !_.isWhitespace )
 
   def parseStringArgument( r: Input ): (Input, String) = {
     val r1 = skipSpace( r )
@@ -209,7 +211,7 @@ class Parser( commands: Map[String, Command] ) {
     if (r1 atEnd)
       problem( r1, "expected string argument" )
 
-    parseString( r1 )
+    parseStringWhitespace( r1 )
   }
 
   def parseRegularArgument( r: Input ): (Input, AST) = {
@@ -261,36 +263,49 @@ class Parser( commands: Map[String, Command] ) {
   }
 
   def parseExpressionArgument( r: Input ): (Input, AST) = {
-    if (r atEnd)
-      problem( r, "expected command argument" )
+    val r0 = skipSpace( r )
 
-    parseControlSequence( r ) match {
+    if (r0 atEnd)
+      problem( r0, "expected command argument" )
+
+    parseControlSequence( r0 ) match {
       case None =>
-        matches( r, beginDelim ) match {
+        matches( r0, beginDelim ) match {
           case Some( r1 ) => parseGroup( r1 )
           case None =>
-            if (nameFirst( r first )) {
-              val (r1, s) = parseVariableArgument( r )
+            if (nameFirst( r0 first )) {
+              val (r1, s) = parseVariableArgument( r0 )
 
-              (r1, dotExpression( r.pos, s ))
+              (r1, dotExpression( r0.pos, s ))
             } else {
-              val (r1, s) = parseLiteralArgument( r )
+              val (r1, s) = parseLiteralArgument( r0 )
 
               (r1, LiteralAST( s ))
             }
         }
-      case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
+      case Some( (r1, name) ) => parseCommand( r0.pos, name, r1 )
     }
   }
 
-  def parseArguments( r: Input, n: Int, buf: ListBuffer[AST] = new ListBuffer[AST] ): (Input, List[AST]) = {
+  def parseRegularArguments( r: Input, n: Int, buf: ListBuffer[AST] = new ListBuffer[AST] ): (Input, List[AST]) = {
     if (n == 0)
       (r, buf toList)
     else {
       val (r1, s) = parseRegularArgument( r )
 
       buf += s
-      parseArguments( r1, n - 1, buf )
+      parseRegularArguments( r1, n - 1, buf )
+    }
+  }
+
+  def parseExpressionArguments( r: Input, n: Int, buf: ListBuffer[AST] = new ListBuffer[AST] ): (Input, List[AST]) = {
+    if (n == 0)
+      (r, buf toList)
+    else {
+      val (r1, s) = parseExpressionArgument( r )
+
+      buf += s
+      parseExpressionArguments( r1, n - 1, buf )
     }
   }
 
@@ -333,7 +348,7 @@ class Parser( commands: Map[String, Command] ) {
         (r3, DotAST( r.pos, ast, r2.pos, a ))
       case "set" =>
         val (r1, v) = parseVariableArgument( r )
-        val (r2, ast) = parseExpressionArgument( skipSpace(r1) )
+        val (r2, ast) = parseExpressionArgument( r1 )
 
         (r2, SetAST( v, ast ))
       case "in" =>
@@ -343,11 +358,11 @@ class Parser( commands: Map[String, Command] ) {
 
         (r3, InAST( pos, v, r2.pos, ast ))
       case "and" =>
-        val (r1, args) = parseArguments( r, 2 )
+        val (r1, args) = parseExpressionArguments( r, 2 )
 
         (r1, AndAST( args.head, args.tail.head ))
       case "or" =>
-        val (r1, args) = parseArguments( r, 2 )
+        val (r1, args) = parseExpressionArguments( r, 2 )
 
         (r1, OrAST( args.head, args.tail.head ))
       case " " => (r, LiteralAST( " " ))
@@ -394,7 +409,7 @@ class Parser( commands: Map[String, Command] ) {
             commands get name match {
               case None => (r, dotExpression( pos, name ))
               case Some( c ) =>
-                val (r1, args) = parseArguments( r, c.arity )
+                val (r1, args) = parseRegularArguments( r, c.arity )
 
                 (r1, CommandAST( pos, c, args ))
             }
@@ -402,7 +417,7 @@ class Parser( commands: Map[String, Command] ) {
             if (parameters isEmpty)
               (r, body)
             else {
-              val (r1, args) = parseArguments( r, parameters.length )
+              val (r1, args) = parseRegularArguments( r, parameters.length )
 
               (r1, MacroAST( body, parameters zip args ))
             }

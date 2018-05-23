@@ -115,7 +115,7 @@ object Command {
           }
       },
 
-      new Command( "not", 1 ) {
+      new Command( "not", 1 ) {//todo: should be a special command (parseExpressionArgument)
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           falsy( args.head )
       },
