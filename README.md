@@ -40,7 +40,7 @@ Here's a typical Backslash template with looping and conditionals.
 {
   "products": [
     {
-      "name": "RCA 32" ROKU SMART TV",
+      "name": "RCA 32\u2033 ROKU SMART TV",
       "price": 207.00,
       "inStock": true
     },
