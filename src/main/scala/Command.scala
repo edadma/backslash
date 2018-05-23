@@ -115,6 +115,23 @@ object Command {
           }
       },
 
+      new Command( "number", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: String ) =>
+              number( s ) match {
+                case None => problem( pos, s"not a number: $s" )
+                case Some( n ) => n
+              }
+            case List( a ) => problem( pos, s"expected string argument, given $a" )
+          }
+      },
+
+      new Command( "string", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          display( args.head )
+      },
+
       new Command( "reverse", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args.head match {
