@@ -60,7 +60,7 @@ Here's a typical Backslash template with looping and conditionals.
 
 <ul>
 
-    <li>RCA 32" ROKU SMART TV&emsp; $207.00&emsp;
+    <li>RCA 32″ ROKU SMART TV&emsp; $207.00&emsp;
 
         <a href="#">Buy It!</a>
 
