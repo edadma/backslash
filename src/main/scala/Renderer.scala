@@ -79,8 +79,21 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
             }
           case o => problem( epos, s"not a map: $o" )
         }
+      case NotAST( expr ) => !teval( expr )
       case AndAST( left, right ) => teval( left ) && teval( right )
-      case OrAST( left, right ) => teval( left ) || teval( right )
+      case OrAST( left, right ) =>
+        val l = eval( left )
+
+        if (truthy( l ))
+          l
+        else {
+          val r = eval( right )
+
+          if (truthy( r ))
+            r
+          else
+            false
+        }
       case MacroAST( body, args ) =>
         enterScope
         scopes.top ++= args map {case (k, v) => (k, eval(v))}

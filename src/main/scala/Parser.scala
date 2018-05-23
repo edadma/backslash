@@ -314,7 +314,7 @@ class Parser( commands: Map[String, Command] ) {
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def check( pos: Position, name: String ) =
-    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or" ) contains name)
+    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or", "not" ) contains name)
       problem( pos, "illegal variable name, it's a reserved word" )
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
@@ -357,6 +357,10 @@ class Parser( commands: Map[String, Command] ) {
         val (r3, ast) = parseExpressionArgument( r2 )
 
         (r3, InAST( pos, v, r2.pos, ast ))
+      case "not" =>
+        val (r1, expr) = parseExpressionArgument( r )
+
+        (r1, NotAST( expr ))
       case "and" =>
         val (r1, args) = parseExpressionArguments( r, 2 )
 
