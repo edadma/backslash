@@ -43,6 +43,14 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """start \if v defined \elsif x x \else undefined end""", true, "x" -> 123 ) shouldBe "start x end"
     test( """start \if v defined \elsif x x \else undefined end""", true, "v" -> 123 ) shouldBe "start defined end"
     test( """start \if v defined \else undefined end""", true ) shouldBe "start undefined end"
+    test( """start \if v defined \else undefined end""", true, "v" -> 123 ) shouldBe "start defined end"
+  }
+
+  "unless" in {
+    test( "start \\unless v undefined end", true ) shouldBe "start undefined end"
+    test( "start \\unless v undefined end", true, "v" -> 123 ) shouldBe "start end"
+    test( "start \\unless v undefined \\else defined end", true ) shouldBe "start undefined end"
+    test( "start \\unless v undefined \\else defined end", true, "v" -> 123 ) shouldBe "start defined end"
   }
 
   "for" in {
