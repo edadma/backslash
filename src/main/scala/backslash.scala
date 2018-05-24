@@ -7,7 +7,7 @@ import scala.util.parsing.input.{Position, Reader}
 
 package object backslash {
 
-  val numberRegex = """-?\d+(\.\d+)?""".r
+  val numberRegex = """-?\d+(\.\d+)?|0x[0-9a-fA-F]+""".r
 
   def problem( r: Reader[Char], error: String ): Nothing = problem( r.pos, error )
 
@@ -30,7 +30,11 @@ package object backslash {
 
   def number( a: Any ) =
     a match {
-      case s: String if isNumber( s ) => Some( BigDecimal(s) )
+      case s: String if isNumber( s ) =>
+        if (s startsWith "0x")
+          Some( BigDecimal(Integer.parseInt(s substring 2, 16)) )
+        else
+          Some( BigDecimal(s) )
       case n: BigDecimal => Some( n )
       case _ => None
     }

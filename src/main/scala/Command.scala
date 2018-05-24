@@ -115,6 +115,15 @@ object Command {
           }
       },
 
+      new Command( "u", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( n: BigDecimal ) if n.isValidChar => n.toChar
+            case List( n: BigDecimal ) => problem( pos, s"number not a valid character: $n" )
+            case List( a ) => problem( pos, s"expected number argument, given $a" )
+          }
+      },
+
       new Command( "number", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {

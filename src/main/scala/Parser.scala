@@ -13,6 +13,7 @@ class Parser( commands: Map[String, Command] ) {
   var csDelim = "\\"
   var beginDelim = "{"
   var endDelim = "}"
+  var pipeDelim = "|"
 
   val varRegex = """\.([^.]*)"""r
   val unicodeRegex = "\\\\u[0-9a-fA-F]{4}".r
@@ -59,8 +60,6 @@ class Parser( commands: Map[String, Command] ) {
         problem( r, "unexpected end of input" )
     }
   }
-
-  def lookahead( r: Input, s: String ) = matches( r, s ) nonEmpty
 
   def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, AST) =
     if (r atEnd)
@@ -154,6 +153,8 @@ class Parser( commands: Map[String, Command] ) {
     else
       matches( r.rest, s, idx + 1 )
 
+  def lookahead( r: Input, s: String ) = matches( r, s ) nonEmpty
+
   def consumeCond( r: Input, cond: Input => Boolean, buf: StringBuilder = new StringBuilder ): (Input, String) =
     if (cond( r )) {
       buf += r.first
@@ -193,10 +194,14 @@ class Parser( commands: Map[String, Command] ) {
   def parseLiteralArgument( r: Input ): (Input, Any) =
     r.first match {
       case '"'|'\'' => consumeStringLiteral( r )
+      case '0' if !r.rest.atEnd && r.rest.first == 'x' =>
+        consume( r.rest.rest, "0123456789abcdefABCDEF" contains _) match {
+          case (r1, s) => (r1, BigDecimal( Integer.parseInt(s, 16)) )
+        }
       case '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
         consume( r, c => c.isDigit || c == '.' ) match {
           case (r1, n) if isNumber( n ) => (r1, BigDecimal( n ))
-          case (r1, s) => (r1, s)
+          case s => s
         }
       case _ => parseString( r )
     }
