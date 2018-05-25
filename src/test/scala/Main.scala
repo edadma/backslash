@@ -12,7 +12,7 @@ object Main extends App {
     )
   val input =
     """
-      |\products | \map name | \size
+      |\products | \map name
     """.trim.stripMargin
   val assigns =
     Map(

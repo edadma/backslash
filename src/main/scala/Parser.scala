@@ -445,7 +445,7 @@ class Parser( commands: Map[String, Command] ) {
           }
 
         def filters( r: Input, ast: AST ): (Input, AST) =
-          matches( r, pipeDelim ) match {
+          matches( skipSpace(r), pipeDelim ) match {
             case None => (r, ast)
             case Some( r1 ) =>
               val r2 = skipSpace( r1 )
@@ -461,7 +461,6 @@ class Parser( commands: Map[String, Command] ) {
                         case Some( c ) =>
                           val (r4, args) = parseRegularArguments( r3, c.arity - 1 )
 
-                          println( r4)//dbg
                           filters(r4, CommandAST( r2.pos, c, args :+ ast ))
                       }
                     case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
