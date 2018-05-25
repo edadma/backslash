@@ -143,7 +143,7 @@ object Command {
 
       new Command( "reverse", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          args.head match {
+          args match {
             case List( s: String ) => s reverse
             case List( s: Seq[_] ) => s reverse
             case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
@@ -152,7 +152,7 @@ object Command {
 
       new Command( "size", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
-          args.head match {
+          args match {
             case List( s: String ) => s length
             case List( s: Seq[_] ) => s length
             case List( s: collection.Map[_, _] ) => s size

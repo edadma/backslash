@@ -12,7 +12,8 @@ object Main extends App {
     )
   val input =
     """
-      |\string 0x10
+      |\set a 123
+      |{\string \a} | \size
     """.trim.stripMargin
   val assigns =
     Map(
@@ -25,12 +26,12 @@ object Main extends App {
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
 
-//  println( ast )
+  println( ast )
 
-  val result = renderer.capture( ast, assigns )
+//  val result = renderer.capture( ast, assigns )
 
 //  println( s"|$result|
-  println( result.trim )
+//  println( result.trim )
 //  println( result map (_.toInt) )
 
 }

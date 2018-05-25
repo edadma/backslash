@@ -42,6 +42,17 @@ class Parser( commands: Map[String, Command] ) {
       case (r1, _) => problem( r1, s"expected end of input: $r1" )
     }
 
+  /*
+        parseStatement( r ) match {
+        case (r1, null) => parseStatements( r1, v )
+        case (r1, s) =>
+          matches( r1, pipeDelim ) match {
+            case None => parseStatements( r1, v :+ s )
+            case Some( r2 ) => stage( r2 )
+          }
+      }
+
+   */
   def parseStatements( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) =
     if (r.atEnd || lookahead( r, endDelim ))
       (r, GroupAST( v ))
@@ -413,24 +424,55 @@ class Parser( commands: Map[String, Command] ) {
       case "break" => (r, BreakAST( pos ))
       case "continue" => (r, ContinueAST( pos ))
       case _ =>
-        macros get name match {
-          case None =>
-            commands get name match {
-              case None => (r, dotExpression( pos, name ))
-              case Some( c ) =>
-                val (r1, args) = parseRegularArguments( r, c.arity )
+        val (r2, ast) =
+          macros get name match {
+            case None =>
+              commands get name match {
+                case None => (r, dotExpression( pos, name ))
+                case Some( c ) =>
+                  val (r1, args) = parseRegularArguments( r, c.arity )
 
-                (r1, CommandAST( pos, c, args ))
-            }
-          case Some( Macro(parameters, body) ) =>
-            if (parameters isEmpty)
-              (r, body)
-            else {
-              val (r1, args) = parseRegularArguments( r, parameters.length )
+                  (r1, CommandAST( pos, c, args ))
+              }
+            case Some( Macro(parameters, body) ) =>
+              if (parameters isEmpty)
+                (r, body)
+              else {
+                val (r1, args) = parseRegularArguments( r, parameters.length )
 
-              (r1, MacroAST( body, parameters zip args ))
-            }
-        }
+                (r1, MacroAST( body, parameters zip args ))
+              }
+          }
+
+        def filters( r: Input, ast: AST ): (Input, AST) =
+          matches( r, pipeDelim ) match {
+            case None => (r, ast)
+            case Some( r1 ) =>
+              val r2 = skipSpace( r1 )
+
+              parseControlSequence( r2 ) match {
+                case None => problem( r2, "expected a control sequence" )
+                case Some( (r3, name) ) =>
+                  macros get name match {
+                    case None =>
+                      commands get name match {
+                        case None => problem( r2, "expected a command or macro" )
+                        case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
+                        case Some( c ) =>
+                          val (r4, args) = parseRegularArguments( r3, c.arity - 1 )
+
+                          (r4, CommandAST( r2.pos, c, ast +: args ))
+                      }
+                    case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
+                    case Some( Macro(parameters, body) ) =>
+                      val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
+
+                      (r4, MacroAST( body, parameters zip (ast +: args) ))
+                  }
+              }
+          }
+
+        filters( r2, ast )
     }
   }
 
