@@ -56,8 +56,8 @@ object Command {
       new Command( "date", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
-            case List( date: TemporalAccessor, format: String ) => DateTimeFormatter.ofPattern( format ).format( date )
-            case List( a, b ) => problem( pos, s"expected arguments <date> <format>, given $a, $b" )
+            case List( format: String, date: TemporalAccessor ) => DateTimeFormatter.ofPattern( format ).format( date )
+            case List( a, b ) => problem( pos, s"expected arguments <format> <date>, given $a, $b" )
           }
       },
 
@@ -69,24 +69,33 @@ object Command {
       new Command( "join", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
-            case List( s: Seq[_], sep: String ) => s mkString sep
-            case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
+            case List( sep: String, s: Seq[_] ) => s mkString sep
+            case List( a, b ) => problem( pos, s"expected arguments <separator> <sequence>, given $a, $b" )
+          }
+      },
+
+      new Command( "map", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
+          args match {
+            case List( s: String, t: Traversable[_] ) =>
+              t.asInstanceOf[Traversable[Map[String, Any]]] map (_(s))
+            case List( a, b ) => problem( pos, s"expected arguments <variable> <sequence>, given $a, $b" )
           }
       },
 
       new Command( "take", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
-            case List( s: Seq[_], n: BigDecimal ) => s take n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <sequence> <number>, given $a, $b" )
+            case List( n: BigDecimal, s: Seq[_] ) => s take n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
           }
       },
 
       new Command( "drop", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
-            case List( s: Seq[_], n: BigDecimal ) => s drop n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <sequence> <number>, given $a, $b" )
+            case List( n: BigDecimal, s: Seq[_] ) => s drop n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
           }
       },
 
@@ -101,9 +110,9 @@ object Command {
       new Command( "split", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], context: AnyRef ): Any =
           args match {
-            case List( s: String, sep: String ) => s split sep toList
-            case List( s: String, sep: Regex ) => sep split s toList
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <string> <regex>, given $a, $b" )
+            case List( sep: String, s: String ) => s split sep toList
+            case List( sep: String, s: String ) => sep split s toList
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <regex> <string>, given $a, $b" )
           }
       },
 

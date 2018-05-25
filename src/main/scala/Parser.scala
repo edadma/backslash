@@ -461,13 +461,14 @@ class Parser( commands: Map[String, Command] ) {
                         case Some( c ) =>
                           val (r4, args) = parseRegularArguments( r3, c.arity - 1 )
 
-                          (r4, CommandAST( r2.pos, c, ast +: args ))
+                          println( r4)//dbg
+                          filters(r4, CommandAST( r2.pos, c, args :+ ast ))
                       }
                     case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
                     case Some( Macro(parameters, body) ) =>
                       val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
 
-                      (r4, MacroAST( body, parameters zip (ast +: args) ))
+                      filters(r4, MacroAST( body, parameters zip (args :+ ast) ))
                   }
               }
           }
