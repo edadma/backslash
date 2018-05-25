@@ -118,7 +118,7 @@ class Parser( commands: Map[String, Command] ) {
 
         macros(name) = Macro( v.tail, body )
         (r3, null)
-      case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
+      case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
 
   def parseStringArguments( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
@@ -245,7 +245,7 @@ class Parser( commands: Map[String, Command] ) {
 
             (r2, LiteralAST( s ))
         }
-      case Some( (r2, name) ) => parseCommand( r1.pos, name, r2 )
+      case Some( (r2, name) ) => parseCommand( r1.pos, name, r2, false )
     }
   }
 
@@ -299,7 +299,7 @@ class Parser( commands: Map[String, Command] ) {
               (r1, LiteralAST( s ))
             }
         }
-      case Some( (r1, name) ) => parseCommand( r0.pos, name, r1 )
+      case Some( (r1, name) ) => parseCommand( r0.pos, name, r1, false )
     }
   }
 
@@ -335,7 +335,7 @@ class Parser( commands: Map[String, Command] ) {
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
 
-  def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
+  def parseCommand( pos: Position, name: String, r: Input, statement: Boolean ): (Input, AST) = {
     name match {
       case "<<<" =>
         var first = true
@@ -424,7 +424,7 @@ class Parser( commands: Map[String, Command] ) {
       case "break" => (r, BreakAST( pos ))
       case "continue" => (r, ContinueAST( pos ))
       case _ =>
-        val (r2, ast) =
+        val res@(r2, ast) =
           macros get name match {
             case None =>
               commands get name match {
@@ -472,7 +472,10 @@ class Parser( commands: Map[String, Command] ) {
               }
           }
 
-        filters( r2, ast )
+        if (statement)
+          filters( r2, ast )
+        else
+          res
     }
   }
 
