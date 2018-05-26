@@ -10,7 +10,7 @@ object Main extends App {
     )
   val input =
     """
-      |\today
+      |date is {\today | size} characters
     """.trim.stripMargin
   val assigns =
     Map(

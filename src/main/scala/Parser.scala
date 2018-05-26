@@ -141,20 +141,27 @@ class Parser( commands: Map[String, Command] ) {
       None
     else
       matches( r, csDelim ) match {
-        case Some( r1 ) =>
-          val (r2, s) =
-            if (nameFirst( r1.first ))
-              consume( r1, nameRest )
-            else if (r1.first.isWhitespace)
-              (r1.rest, " ")
-            else if (r1.first.isDigit)
-              problem( r1.pos, s"control sequence name can't start with a digit" )
-            else
-              consume( r1, c => !(c.isLetterOrDigit || c == '_' || c.isWhitespace) )
-
-          Some( (skipSpace(r2), s) )
+        case Some( r1 ) => parseControlSequenceName( r1 )
         case None => None
       }
+
+  def parseControlSequenceName( r: Input ) = {
+    if (r atEnd)
+      None
+    else {
+      val (r1, s) =
+        if (nameFirst( r.first ))
+          consume( r, nameRest )
+        else if (r.first.isWhitespace)
+          (r.rest, " ")
+        else if (r.first.isDigit)
+          problem( r.pos, s"control sequence name can't start with a digit" )
+        else
+          consume( r, c => !(c.isLetterOrDigit || c == '_' || c.isWhitespace) )
+
+      Some( (skipSpace(r1), s) )
+    }
+  }
 
   def matches( r: Input, s: String, idx: Int = 0 ): Option[Input] =
     if (idx == s.length)
@@ -449,28 +456,33 @@ class Parser( commands: Map[String, Command] ) {
             case None => (r, ast)
             case Some( r1 ) =>
               val r2 = skipSpace( r1 )
+              val (r3, name) =
+                parseControlSequence( r2 ) match {
+                  case None =>
+                    parseControlSequenceName( r2 ) match {
+                      case None => problem( r2, "expected a command or macro" )
+                      case Some( cs ) => cs
+                    }
+                  case Some( cs ) => cs
+                }
 
-              parseControlSequence( r2 ) match {
-                case None => problem( r2, "expected a control sequence" )
-                case Some( (r3, name) ) =>
-                  macros get name match {
-                    case None =>
-                      commands get name match {
-                        case None => problem( r2, "expected a command or macro" )
-                        case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
-                        case Some( c ) =>
-                          val (r4, args) = parseRegularArguments( r3, c.arity - 1 )
+                macros get name match {
+                  case None =>
+                    commands get name match {
+                      case None => problem( r2, "expected a command or macro" )
+                      case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
+                      case Some( c ) =>
+                        val (r4, args) = parseRegularArguments( r3, c.arity - 1 )
 
-                          filters(r4, CommandAST( r2.pos, c, args :+ ast ))
-                      }
-                    case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
-                    case Some( Macro(parameters, body) ) =>
-                      val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
+                        filters(r4, CommandAST( r2.pos, c, args :+ ast ))
+                    }
+                  case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
+                  case Some( Macro(parameters, body) ) =>
+                    val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
 
-                      filters(r4, MacroAST( body, parameters zip (args :+ ast) ))
-                  }
+                    filters(r4, MacroAST( body, parameters zip (args :+ ast) ))
+                }
               }
-          }
 
         if (statement)
           filters( r2, ast )
