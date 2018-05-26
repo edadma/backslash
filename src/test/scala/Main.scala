@@ -12,7 +12,19 @@ object Main extends App {
     )
   val input =
     """
-      |\string 0x10
+      |<h3>Products</h3>
+      |
+      |<ul>
+      |  \for products {
+      |    <li>\name&emsp;$\price&emsp;
+      |      \if inStock {
+      |        <a href="#">Buy It!</a>
+      |      } \else {
+      |        Out of stock.
+      |      }
+      |    </li>
+      |  }
+      |</ul>
     """.trim.stripMargin
   val assigns =
     Map(

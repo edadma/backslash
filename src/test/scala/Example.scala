@@ -9,7 +9,7 @@
 //    """
 //      |<h2>Vaudeville Acts</h2>
 //      |<ol>
-//      |  \for \in act \acts {
+//      |  \for \in act acts {
 //      |    <li>
 //      |      <h3>\act.name</h3>
 //      |      \list \act.members

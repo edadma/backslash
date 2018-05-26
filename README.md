@@ -22,8 +22,8 @@ Here's a typical Backslash template with looping and conditionals.
 <h3>Products</h3>
 
 <ul>
-  \for \products {
-    <li>\name &emsp; $\price &emsp;
+  \for products {
+    <li>\name&emsp;$\price&emsp;
       \if inStock {
         <a href="#">Buy It!</a>
       } \else {
@@ -91,7 +91,7 @@ object Example extends App {
     """
       |<h2>Vaudeville Acts</h2>
       |<ol>
-      |  \for \in act \acts {
+      |  \for \in act acts {
       |    <li>
       |      <h3>\act.name</h3>
       |      \list \act.members
