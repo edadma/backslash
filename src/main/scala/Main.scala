@@ -14,8 +14,8 @@ object Main extends App {
 
   val config =
     Map(
-      'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG ),
-      'include -> "."
+      "today" -> "MMM d, y",
+      "include" -> "."
     )
   val assigns = new mutable.HashMap[String, Any]
   var templateFile: File = _

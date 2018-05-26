@@ -6,7 +6,7 @@ import java.io.{ByteArrayOutputStream, PrintStream}
 import scala.collection.mutable
 
 
-class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
+class Renderer( val parser: Parser, val config: Map[String, Any] ) {
 
   val globals = new mutable.HashMap[String, Any]
   val scopes = new mutable.ArrayStack[mutable.HashMap[String, Any]]

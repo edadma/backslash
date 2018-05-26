@@ -15,6 +15,23 @@ abstract class Command( val name: String, var arity: Int ) extends ((Position, R
 
 object Command {
 
+  class Const[T] {
+    private var set = false
+    private var value: T = _
+
+    def apply( v: => T ) = {
+      if (!set)
+        synchronized {
+          if (!set) {
+            value = v
+            set = true
+          }
+        }
+
+      value
+    }
+  }
+
   val standard =
     List(
 
@@ -44,8 +61,10 @@ object Command {
       },
 
       new Command( "today", 0 ) {
+        val format = new Const[DateTimeFormatter]
+
         def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
-          ZonedDateTime.now.format( renderer.config('today).asInstanceOf[DateTimeFormatter] )
+          ZonedDateTime.now.format( format(DateTimeFormatter.ofPattern(renderer.config("today").toString)) )
       },
 
       new Command( "now", 0 ) {
@@ -174,8 +193,10 @@ object Command {
       },
 
       new Command( "include", 1 ) {
+        val dir = new Const[String]
+
         def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
-          renderer.eval( renderer.parser.parse(io.Source.fromFile(new File(renderer.config('include).toString, renderer.eval(args.head).toString))) )
+          renderer.eval( renderer.parser.parse(io.Source.fromFile(new File(dir(renderer.config("include").toString), renderer.eval(args.head).toString))) )
       },
 
       new Command( "rem", 2 ) {
