@@ -5,8 +5,11 @@ import java.time.{OffsetDateTime, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 
-import scala.util.matching.Regex
 import scala.util.parsing.input.Position
+import collection.immutable.IntMap
+import collection.mutable
+
+import xyz.hyperreal.json.DefaultJSONReader
 
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], AnyRef) => Any) {
@@ -14,6 +17,13 @@ abstract class Command( val name: String, var arity: Int ) extends ((Position, R
 }
 
 object Command {
+
+  val entities = {
+    val map = new mutable.HashMap[Int, String]
+    val json = DefaultJSONReader.fromSource( io.Source.fromInputStream(classOf[Command].getResourceAsStream("entities.json")) )
+
+    println( json )
+  }
 
   class Const[T] {
     private var set = false
