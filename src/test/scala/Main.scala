@@ -12,10 +12,11 @@ object Main extends App {
     )
   val input =
     """
-      |\products | \map name
+      |start \for l {\if \= \_idx 1 \continue {\_i\ }} \else else end
     """.trim.stripMargin
   val assigns =
     Map(
+      "l" -> List("a", "b", "c"),
       "x" -> 3,
       "y" -> 4,
       "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),

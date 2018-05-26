@@ -57,6 +57,8 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
 
   def teval( ast: AST ) = truthy( eval(ast) )
 
+  def eval( l: List[AST] ): List[Any] = l map eval
+
   def eval( ast: AST ): Any =
     ast match {
       case SetAST( v, expr ) =>
@@ -119,7 +121,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
         else
           statements map deval mkString
       case LiteralAST( v ) => v
-      case CommandAST( pos, c, args ) => c( pos, this, args map eval, null )
+      case CommandAST( pos, c, args ) => c( pos, this, args, null )
       case ForAST( pos, expr, body, els ) =>
         val buf = new StringBuilder
 
