@@ -79,6 +79,8 @@ object Command {
           args match {
             case List( s: String, t: Traversable[_] ) =>
               t.asInstanceOf[Traversable[Map[String, Any]]] map (_(s))
+//            case List( v: VariableAST, t: Traversable[_] ) =>
+//              t.asInstanceOf[Traversable[Map[String, Any]]] map (_(v.name))
             case List( a, b ) => problem( pos, s"expected arguments <variable> <sequence>, given $a, $b" )
           }
       },
