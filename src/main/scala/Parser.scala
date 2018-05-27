@@ -145,7 +145,18 @@ class Parser( commands: Map[String, Command] ) {
         case None => None
       }
 
-  def parseControlSequenceName( r: Input ) = {
+  def parseName( r: Input ) =
+    if (r atEnd)
+      None
+    else if (nameFirst( r.first ))
+        consume( r, nameRest )
+      else
+        None
+
+      Some( (skipSpace(r1), s) )
+    }
+
+  def parseControlSequenceName( r: Input ) =
     if (r atEnd)
       None
     else {
@@ -161,7 +172,6 @@ class Parser( commands: Map[String, Command] ) {
 
       Some( (skipSpace(r1), s) )
     }
-  }
 
   def matches( r: Input, s: String, idx: Int = 0 ): Option[Input] =
     if (idx == s.length)
@@ -472,15 +482,15 @@ class Parser( commands: Map[String, Command] ) {
                       case None => problem( r2, "expected a command or macro" )
                       case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
                       case Some( c ) =>
-                        val (r4, args) = parseRegularArguments( r3, c.arity - 1 )
+                        val (r4, args, optional) = parseCommandArguments( r3, c.arity - 1 )
 
-                        filters(r4, CommandAST( r2.pos, c, args :+ ast ))
+                        filters( r4, CommandAST(r2.pos, c, args :+ ast, optional) )
                     }
                   case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
                   case Some( Macro(parameters, body) ) =>
                     val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
 
-                    filters(r4, MacroAST( body, parameters zip (args :+ ast) ))
+                    filters( r4, MacroAST(body, parameters zip (args :+ ast)) )
                 }
               }
 
@@ -489,6 +499,13 @@ class Parser( commands: Map[String, Command] ) {
         else
           res
     }
+  }
+
+  def parseCommandArguments( r: Input, n: Int ) = {
+    val (r1, args) = parseRegularArguments
+
+
+    (r1, args, optional)
   }
 
   def parseCases( cs: String, r: Input, cases: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
