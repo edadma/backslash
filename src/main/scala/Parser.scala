@@ -136,6 +136,12 @@ class Parser( commands: Map[String, Command] ) {
 
   def nameRest( c: Char ) = c.isLetterOrDigit || c == '_' || c == '.'
 
+  def parseFilter( r: Input ) =
+    parseControlSequence( r ) match {
+      case None => parseControlSequenceName( r )
+      case cs => cs
+    }
+
   def parseControlSequence( r: Input ): Option[(Input, String)] =
     if (r.atEnd)
       None
@@ -464,7 +470,7 @@ class Parser( commands: Map[String, Command] ) {
             case Some( r1 ) =>
               val r2 = skipSpace( r1 )
               val (r3, name) =
-                parseControlSequence( r2 ) match {
+                parseFilter( r2 ) match {
                   case None =>
                     parseControlSequenceName( r2 ) match {
                       case None => problem( r2, "expected a command or macro" )
