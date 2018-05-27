@@ -18,12 +18,15 @@ abstract class Command( val name: String, var arity: Int ) extends ((Position, R
 
 object Command {
 
-  val entities = {
-    val map = new mutable.HashMap[Int, String]
-    val json = DefaultJSONReader.fromSource( io.Source.fromInputStream(classOf[Command].getResourceAsStream("entities.json")) )
-
-    println( json )
-  }
+//  val entities = {
+//    val map = new mutable.HashMap[Int, String]
+//    val json = DefaultJSONReader.fromSource( io.Source.fromInputStream(classOf[Command].getResourceAsStream("entities.json")) )
+//
+//    for ((k, v) <- json)
+//      if (map contains k)
+//
+//    println( json )
+//  }
 
   class Const[T] {
     private var set = false
@@ -97,6 +100,70 @@ object Command {
         }
       },
 
+      new Command( "abs", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case List( n: BigDecimal ) => n.abs
+            case List( a ) => problem( pos, s"not a number: $a" )
+          }
+        }
+      },
+
+      new Command( "ceil", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case List( n: BigDecimal ) =>
+              if (n.isWhole)
+                n
+              else if (n > 0)
+                n.toBigInt + 1
+              else
+                n.toBigInt
+            case List( a ) => problem( pos, s"not a number: $a" )
+          }
+        }
+      },
+
+      new Command( "floor", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case List( n: BigDecimal ) =>
+              if (n.isWhole)
+                n
+              else if (n > 0)
+                n.toBigInt
+              else
+                n.toBigInt - 1
+            case List( a ) => problem( pos, s"not a number: $a" )
+          }
+        }
+      },
+
+      new Command( "neg", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case List( n: BigDecimal ) => -n
+            case List( a ) => problem( pos, s"not a number: $a" )
+          }
+        }
+      },
+
+      new Command( "min", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a min b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "max", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a max b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
       new Command( "join", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
           renderer.eval( args ) match  {
@@ -110,8 +177,6 @@ object Command {
           renderer.eval( args ) match  {
             case List( s: String, t: Traversable[_] ) =>
               t.asInstanceOf[Traversable[Map[String, Any]]] map (_(s))
-//            case List( v: VariableAST, t: Traversable[_] ) =>
-//              t.asInstanceOf[Traversable[Map[String, Any]]] map (_(v.name))
             case List( a, b ) => problem( pos, s"expected arguments <variable> <sequence>, given $a, $b" )
           }
       },
@@ -192,6 +257,65 @@ object Command {
           }
       },
 
+      new Command( "head", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s head
+            case List( s: Seq[_] ) => s head
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "last", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s last
+            case List( s: Seq[_] ) => s last
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "tail", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s tail
+            case List( s: Seq[_] ) => s tail
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "distinct", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: Seq[_] ) => s distinct
+            case List( a ) => problem( pos, s"expected sequence argument: $a" )
+          }
+      },
+
+      new Command( "lowercase", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s toLowerCase
+            case List( a ) => problem( pos, s"expected string argument: $a" )
+          }
+      },
+
+      new Command( "trim", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s trim
+            case List( a ) => problem( pos, s"expected string argument: $a" )
+          }
+      },
+
+      new Command( "uppercase", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s toUpperCase
+            case List( a ) => problem( pos, s"expected string argument: $a" )
+          }
+      },
+
       new Command( "size", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
           renderer.eval( args ) match  {
@@ -231,6 +355,9 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( a: BigDecimal, b: BigDecimal ) => a + b
+            case List( a: Seq[_], b: Seq[_] ) => a ++ b
+            case List( a: Seq[_], b: Any ) => a :+ b
+            case List( a: Any, b: Seq[_] ) => a +: b
             case List( a: String, b: String ) => a + b
             case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
           }
@@ -257,6 +384,14 @@ object Command {
           renderer.eval( args ) match  {
             case List( a: BigDecimal, b: BigDecimal ) => a / b
             case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "^", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) if b.isValidInt => a pow b.intValue
+            case List( a, b ) => problem( pos, s"expected arguments <number> <integer>: $a, $b" )
           }
       },
 
