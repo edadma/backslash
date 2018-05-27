@@ -259,6 +259,13 @@ object Command {
       new Command( "sort", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           val on = optional get "on" map (_.toString)
+          val desc = (optional get "order" map (_.toString)) contains "desc"
+
+          def comp( a: Any, b: Any ) =
+            if (desc)
+              !lt( a, b )
+            else
+              lt( a, b )
 
           def lt( a: Any, b: Any ) =
             (a, b) match {
@@ -271,7 +278,7 @@ object Command {
             }
 
           renderer.eval( args ) match {
-            case List( s: Seq[_] ) if on isDefined => s.asInstanceOf[Seq[Map[String, Any]]] sortWith ((a, b) => lt(a(on.get), b(on.get)))
+            case List( s: Seq[_] ) if on isDefined => s.asInstanceOf[Seq[Map[String, Any]]] sortWith ((a, b) => comp(a(on.get), b(on.get)))
             case List( s: Seq[_] ) => s sortWith lt
             case List( a ) => problem( pos, s"expected sequence argument: $a" )
           }

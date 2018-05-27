@@ -10,7 +10,7 @@ object Main extends App {
     )
   val input =
     """
-      |\products | \sort on: name
+      |\products | \sort on: name order: desc
     """.trim.stripMargin
   val assigns =
     Map(
