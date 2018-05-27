@@ -379,6 +379,15 @@ object Command {
           }
       },
 
+      new Command( "append", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer eval args match  {
+            case List( a: Any, b: Seq[_] ) => b :+ a
+            case List( a: String, b: String ) => b + a
+            case List( a, b ) => problem( pos, s"expected arguments <any> <sequence> or <string> <string>: $a, $b" )
+          }
+      },
+
       new Command( "+", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
