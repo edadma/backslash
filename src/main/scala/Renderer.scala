@@ -121,7 +121,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
         else
           statements map deval mkString
       case LiteralAST( v ) => v
-      case CommandAST( pos, c, args, optional ) => c( pos, this, args, optional, null )
+      case CommandAST( pos, c, args, optional ) => c( pos, this, args, optional map {case (k, v) => (k -> eval(v))}, null )
       case ForAST( pos, expr, body, els ) =>
         val buf = new StringBuilder
 
