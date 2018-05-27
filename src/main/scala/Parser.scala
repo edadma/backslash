@@ -512,7 +512,7 @@ class Parser( commands: Map[String, Command] ) {
         case None => (r, args, optional)
         case Some( (r1a, name) ) =>
           matches( r1a, ":" ) match {
-            case None => (r1a, args, optional)
+            case None => (r, args, optional)
             case Some( r2 ) =>
               val (r3, ast) = parseRegularArgument( r2 )
 
