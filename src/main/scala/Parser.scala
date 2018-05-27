@@ -502,15 +502,15 @@ class Parser( commands: Map[String, Command] ) {
     val (r1, args) = parseRegularArguments( r, n )
 
     def parseOptional( r: Input, optional: Map[String, AST] ): (Input, List[AST], Map[String, AST]) =
-      parseName( r1 ) match {
-        case None => (r1, args, optional)
-        case Some( (r2, n) ) =>
-          matches( r2, ":" ) match {
+      parseName( r ) match {
+        case None => (r, args, optional)
+        case Some( (r1, n) ) =>
+          matches( r1, ":" ) match {
             case None => (r1, args, optional)
-            case Some( r3 ) =>
-              val (r4, ast) = parseRegularArgument( r3 )
+            case Some( r2 ) =>
+              val (r3, ast) = parseRegularArgument( r2 )
 
-              parseOptional( r4, optional ++ Map(n -> ast) )
+              parseOptional( r3, optional ++ Map(n -> ast) )
           }
       }
 

@@ -1,14 +1,13 @@
 package xyz.hyperreal.backslash
 
 import java.io.File
-import java.time.ZonedDateTime
+import java.time.{Instant, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 
 import scala.util.parsing.input.Position
 import collection.immutable.IntMap
 import collection.mutable
-
 import xyz.hyperreal.json.DefaultJSONReader
 
 
@@ -262,10 +261,14 @@ object Command {
           val on = optional get "on" map (_.toString)
 
           def lt( a: Any, b: Any ) =
-            if (a.isInstanceOf[BigDecimal])
-              a.asInstanceOf[BigDecimal] < b.asInstanceOf[BigDecimal]
-            else
-              a.toString < b.toString
+            (a, b) match {
+              case (a: BigDecimal, b: BigDecimal) => a < b
+              case (a: Instant, b: Instant) => a isBefore b
+              case (a: ZonedDateTime, b: ZonedDateTime) => a isBefore b
+              case (a: Instant, b: ZonedDateTime) => a isBefore b.toInstant
+              case (a: ZonedDateTime, b: Instant) => a.toInstant isBefore b
+              case _ => a.toString < b.toString
+            }
 
           renderer.eval( args ) match {
             case List( s: Seq[_] ) if on isDefined => s.asInstanceOf[Seq[Map[String, Any]]] sortWith ((a, b) => lt(a(on.get), b(on.get)))
