@@ -149,12 +149,9 @@ class Parser( commands: Map[String, Command] ) {
     if (r atEnd)
       None
     else if (nameFirst( r.first ))
-        consume( r, nameRest )
+        Some( consume(r, nameRest) )
       else
         None
-
-      Some( (skipSpace(r1), s) )
-    }
 
   def parseControlSequenceName( r: Input ) =
     if (r atEnd)
@@ -447,9 +444,9 @@ class Parser( commands: Map[String, Command] ) {
               commands get name match {
                 case None => (r, dotExpression( pos, name ))
                 case Some( c ) =>
-                  val (r1, args) = parseRegularArguments( r, c.arity )
+                  val (r1, args, optional) = parseCommandArguments( r, c.arity )
 
-                  (r1, CommandAST( pos, c, args ))
+                  (r1, CommandAST( pos, c, args, optional ))
               }
             case Some( Macro(parameters, body) ) =>
               if (parameters isEmpty)
@@ -502,10 +499,22 @@ class Parser( commands: Map[String, Command] ) {
   }
 
   def parseCommandArguments( r: Input, n: Int ) = {
-    val (r1, args) = parseRegularArguments
+    val (r1, args) = parseRegularArguments( r, n )
 
+    def parseOptional( r: Input, optional: Map[String, AST] ): (Input, List[AST], Map[String, AST]) =
+      parseName( r1 ) match {
+        case None => (r1, args, optional)
+        case Some( (r2, n) ) =>
+          matches( r2, ":" ) match {
+            case None => (r1, args, optional)
+            case Some( r3 ) =>
+              val (r4, ast) = parseRegularArgument( r3 )
 
-    (r1, args, optional)
+              parseOptional( r4, optional ++ Map(n -> ast) )
+          }
+      }
+
+    parseOptional( r1, Map() )
   }
 
   def parseCases( cs: String, r: Input, cases: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =
