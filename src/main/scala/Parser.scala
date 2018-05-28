@@ -261,9 +261,10 @@ class Parser( commands: Map[String, Command] ) {
         matches( r1, beginDelim ) match {
           case Some( r2 ) => parseGroup( r2 )
           case None =>
-            val (r2, s) = parseLiteralArgument( r1 )
-
-            (r2, LiteralAST( s ))
+            parseLiteralArgument( r1 ) match {
+              case (r2, "_") => (r2, VariableAST( "_" ))
+              case (r2, s) => (r2, LiteralAST( s ))
+            }
         }
       case Some( (r2, name) ) => parseCommand( r1.pos, name, r2, false )
     }
