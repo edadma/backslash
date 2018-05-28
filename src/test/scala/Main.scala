@@ -10,7 +10,7 @@ object Main extends App {
     )
   val input =
     """
-      |\today | + asdf
+      |"zxcv" | default
     """.trim.stripMargin
   val assigns =
     Map(

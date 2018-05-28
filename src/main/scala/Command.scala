@@ -379,6 +379,17 @@ object Command {
           }
       },
 
+      new Command( "default", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer eval args match  {
+            case List( a: Any, b: Any ) =>
+              if (b == nil)
+                a
+              else
+                b
+          }
+      },
+
       new Command( "append", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer eval args match  {
