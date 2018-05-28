@@ -182,15 +182,20 @@ object Command {
       },
 
       new Command( "map", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          val t = renderer.seval( args.tail.head )
-
-          args.head match {
-            case LiteralAST( s: String ) => t.asInstanceOf[Seq[Map[String, Any]]] map (_(s))
-            case lambda => t map (invoke( renderer, lambda, _ ))
-            case List(a, b) => problem(pos, s"expected arguments <variable> <sequence>, given $a, $b")
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          (args.head, renderer.eval( args.tail.head )) match {
+            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_(f))
+            case (lambda, s: Seq[_]) => s map (invoke( renderer, lambda, _ ))
+            case (a, b) => problem( pos, s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b" )
           }
-        }
+      },
+
+      new Command( "filter", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          (args.head, renderer.eval( args.tail.head )) match {
+            case (lambda, s: Seq[_]) => s filter (e => truthy( invoke(renderer, lambda, e)) )
+            case (a, b) => problem( pos, s"expected arguments <lambda <sequence>, given $a, $b" )
+          }
       },
 
       new Command( "take", 2 ) {

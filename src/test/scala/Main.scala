@@ -10,11 +10,11 @@ object Main extends App {
     )
   val input =
     """
-      |\products | map \. \_ name
+      |\l | filter \> \_ 4
     """.trim.stripMargin
   val assigns =
     Map(
-      "l" -> List("a", "bb", "cc"),
+      "l" -> List[BigDecimal]( 3, 4, 5, 6, 7 ),
       "x" -> 3,
       "y" -> 4,
       "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),
