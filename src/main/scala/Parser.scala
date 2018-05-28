@@ -276,8 +276,8 @@ class Parser( commands: Map[String, Command] ) {
         case dot if dot == start + 1 || dot == v.length - 1 => problem( pos, "illegal variable reference" )
         case dot =>
           v.indexOf( '.', dot + 1 ) match {
-            case -1 => DotAST( pos, expr, pos, v.substring(dot + 1) )
-            case idx => fields( idx + 1, DotAST(pos, expr, pos, v.substring(dot + 1, idx)) )
+            case -1 => DotAST( pos, expr, pos, LiteralAST(v.substring(dot + 1)) )
+            case idx => fields( idx + 1, DotAST(pos, expr, pos, LiteralAST(v.substring(dot + 1, idx))) )
           }
       }
 

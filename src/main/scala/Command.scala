@@ -186,7 +186,7 @@ object Command {
           val t = renderer.seval( args.tail.head )
 
           args.head match {
-            case LiteralAST( s: String ) => t.asInstanceOf[Traversable[Map[String, Any]]] map (_(s))
+            case LiteralAST( s: String ) => t.asInstanceOf[Seq[Map[String, Any]]] map (_(s))
             case lambda => t map (invoke( renderer, lambda, _ ))
             case List(a, b) => problem(pos, s"expected arguments <variable> <sequence>, given $a, $b")
           }
