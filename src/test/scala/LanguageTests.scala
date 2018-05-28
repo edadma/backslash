@@ -24,6 +24,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v "'\b\f\n\r\t\\\'\""\v zxvc""", false ) shouldBe "asdf '\b\f\n\r\t\\\'\"zxvc"
+    test( """asdf \set v 123.4\+ \v 1 zxvc""", false ) shouldBe "asdf 124.4 zxvc"
     a [RuntimeException] should be thrownBy {test( """\split "a b" \null""", false )}
     test( """\null""", false ) shouldBe "null"
     a [RuntimeException] should be thrownBy {test( """\split "a b" \true""", false )}
@@ -69,6 +70,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   "filters" in {
     test( """\l | \reverse | \take 2 | \drop 1""", true, "l" -> List("a", "b", "c") ) shouldBe
       """["b"]"""
+    test( """\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7) ) shouldBe
+      """[6, 7, 8]"""
   }
 
   "break" in {
@@ -150,21 +153,21 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     a [RuntimeException] should be thrownBy {test( """3 plus \#super boring""", false )}
   }
 
-//  "raw" in {
-//    test(
-//      """
-//        |\<<<
-//        |\set v 'asdf'
-//        |\v
-//        |\>>> wow
-//      """.stripMargin
-//      , false ) shouldBe
-//      """
-//        |\set v 'asdf'
-//        |\v
-//        |wow
-//      """.stripMargin
-//  }
+  "raw" in {
+    test(
+      """
+        |\<<<
+        |\set v 'asdf'
+        |\v
+        |\>>> wow
+      """.stripMargin
+      , false ) shouldBe
+      """
+        |\set v 'asdf'
+        |\v
+        |wow
+      """.stripMargin
+  }
 
   "delim" in {
     test(
