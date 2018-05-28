@@ -14,17 +14,17 @@ object Main extends App {
 
   val config =
     Map(
-      'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG ),
-      'include -> "."
+      "today" -> "MMM d, y",
+      "include" -> "."
     )
   val assigns = new mutable.HashMap[String, Any]
   var templateFile: File = _
 
   def usage {
     """
-      |Backslash v0.1
+      |Backslash v0.2
       |
-      |Usage:  java -jar backslash-0.1.jar <options> <template>
+      |Usage:  java -jar backslash-0.2.jar <options> <template>
       |
       |Options:  --help              display this help and exit
       |          -s <name> <string>  assign <string> to variable <name>

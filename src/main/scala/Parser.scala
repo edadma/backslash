@@ -42,6 +42,17 @@ class Parser( commands: Map[String, Command] ) {
       case (r1, _) => problem( r1, s"expected end of input: $r1" )
     }
 
+  /*
+        parseStatement( r ) match {
+        case (r1, null) => parseStatements( r1, v )
+        case (r1, s) =>
+          matches( r1, pipeDelim ) match {
+            case None => parseStatements( r1, v :+ s )
+            case Some( r2 ) => stage( r2 )
+          }
+      }
+
+   */
   def parseStatements( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) =
     if (r.atEnd || lookahead( r, endDelim ))
       (r, GroupAST( v ))
@@ -107,7 +118,7 @@ class Parser( commands: Map[String, Command] ) {
 
         macros(name) = Macro( v.tail, body )
         (r3, null)
-      case Some( (r1, name) ) => parseCommand( r.pos, name, r1 )
+      case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
 
   def parseStringArguments( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
@@ -125,25 +136,45 @@ class Parser( commands: Map[String, Command] ) {
 
   def nameRest( c: Char ) = c.isLetterOrDigit || c == '_' || c == '.'
 
+  def parseFilter( r: Input ) =
+    parseControlSequence( r ) match {
+      case None => parseControlSequenceName( r )
+      case cs => cs
+    }
+
   def parseControlSequence( r: Input ): Option[(Input, String)] =
     if (r.atEnd)
       None
     else
       matches( r, csDelim ) match {
-        case Some( r1 ) =>
-          val (r2, s) =
-            if (nameFirst( r1.first ))
-              consume( r1, nameRest )
-            else if (r1.first.isWhitespace)
-              (r1.rest, " ")
-            else if (r1.first.isDigit)
-              problem( r1.pos, s"control sequence name can't start with a digit" )
-            else
-              consume( r1, c => !(c.isLetterOrDigit || c == '_' || c.isWhitespace) )
-
-          Some( (skipSpace(r2), s) )
+        case Some( r1 ) => parseControlSequenceName( r1 )
         case None => None
       }
+
+  def parseName( r: Input ) =
+    if (r atEnd)
+      None
+    else if (nameFirst( r.first ))
+        Some( consume(r, nameRest) )
+      else
+        None
+
+  def parseControlSequenceName( r: Input ) =
+    if (r atEnd)
+      None
+    else {
+      val (r1, s) =
+        if (nameFirst( r.first ))
+          consume( r, nameRest )
+        else if (r.first.isWhitespace)
+          (r.rest, " ")
+        else if (r.first.isDigit)
+          problem( r.pos, s"control sequence name can't start with a digit" )
+        else
+          consume( r, c => !(c.isLetterOrDigit || c == '_' || c.isWhitespace) )
+
+      Some( (skipSpace(r1), s) )
+    }
 
   def matches( r: Input, s: String, idx: Int = 0 ): Option[Input] =
     if (idx == s.length)
@@ -234,7 +265,7 @@ class Parser( commands: Map[String, Command] ) {
 
             (r2, LiteralAST( s ))
         }
-      case Some( (r2, name) ) => parseCommand( r1.pos, name, r2 )
+      case Some( (r2, name) ) => parseCommand( r1.pos, name, r2, false )
     }
   }
 
@@ -288,7 +319,7 @@ class Parser( commands: Map[String, Command] ) {
               (r1, LiteralAST( s ))
             }
         }
-      case Some( (r1, name) ) => parseCommand( r0.pos, name, r1 )
+      case Some( (r1, name) ) => parseCommand( r0.pos, name, r1, false )
     }
   }
 
@@ -324,7 +355,7 @@ class Parser( commands: Map[String, Command] ) {
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
 
-  def parseCommand( pos: Position, name: String, r: Input ): (Input, AST) = {
+  def parseCommand( pos: Position, name: String, r: Input, statement: Boolean ): (Input, AST) = {
     name match {
       case "<<<" =>
         var first = true
@@ -413,25 +444,83 @@ class Parser( commands: Map[String, Command] ) {
       case "break" => (r, BreakAST( pos ))
       case "continue" => (r, ContinueAST( pos ))
       case _ =>
-        macros get name match {
-          case None =>
-            commands get name match {
-              case None => (r, dotExpression( pos, name ))
-              case Some( c ) =>
-                val (r1, args) = parseRegularArguments( r, c.arity )
+        val res@(r2, ast) =
+          macros get name match {
+            case None =>
+              commands get name match {
+                case None => (r, dotExpression( pos, name ))
+                case Some( c ) =>
+                  val (r1, args, optional) = parseCommandArguments( r, c.arity )
 
-                (r1, CommandAST( pos, c, args ))
-            }
-          case Some( Macro(parameters, body) ) =>
-            if (parameters isEmpty)
-              (r, body)
-            else {
-              val (r1, args) = parseRegularArguments( r, parameters.length )
+                  (r1, CommandAST( pos, c, args, optional ))
+              }
+            case Some( Macro(parameters, body) ) =>
+              if (parameters isEmpty)
+                (r, body)
+              else {
+                val (r1, args) = parseRegularArguments( r, parameters.length )
 
-              (r1, MacroAST( body, parameters zip args ))
-            }
-        }
+                (r1, MacroAST( body, parameters zip args ))
+              }
+          }
+
+        def filters( r: Input, ast: AST ): (Input, AST) =
+          matches( skipSpace(r), pipeDelim ) match {
+            case None => (r, ast)
+            case Some( r1 ) =>
+              val r2 = skipSpace( r1 )
+              val (r3, name) =
+                parseFilter( r2 ) match {
+                  case None =>
+                    parseControlSequenceName( r2 ) match {
+                      case None => problem( r2, "expected a command or macro" )
+                      case Some( cs ) => cs
+                    }
+                  case Some( cs ) => cs
+                }
+
+                macros get name match {
+                  case None =>
+                    commands get name match {
+                      case None => problem( r2, "expected a command or macro" )
+                      case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
+                      case Some( c ) =>
+                        val (r4, args, optional) = parseCommandArguments( r3, c.arity - 1 )
+
+                        filters( r4, CommandAST(r2.pos, c, args :+ ast, optional) )
+                    }
+                  case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
+                  case Some( Macro(parameters, body) ) =>
+                    val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
+
+                    filters( r4, MacroAST(body, parameters zip (args :+ ast)) )
+                }
+              }
+
+        if (statement)
+          filters( r2, ast )
+        else
+          res
     }
+  }
+
+  def parseCommandArguments( r: Input, n: Int ) = {
+    val (r1, args) = parseRegularArguments( r, n )
+
+    def parseOptional( r: Input, optional: Map[String, AST] ): (Input, List[AST], Map[String, AST]) =
+      parseName( skipSpace(r) ) match {
+        case None => (r, args, optional)
+        case Some( (r1a, name) ) =>
+          matches( r1a, ":" ) match {
+            case None => (r, args, optional)
+            case Some( r2 ) =>
+              val (r3, ast) = parseRegularArgument( r2 )
+
+              parseOptional( r3, optional ++ Map(name -> ast) )
+          }
+      }
+
+    parseOptional( r1, Map() )
   }
 
   def parseCases( cs: String, r: Input, cases: Vector[(AST, AST)] = Vector() ): (Input, Vector[(AST, AST)]) =

@@ -1,15 +1,13 @@
 //@
 package xyz.hyperreal.backslash
 
-import java.time.format.{DateTimeFormatter, FormatStyle}
-
 
 trait Testing {
 
   val config =
     Map(
-      'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG ),
-      'include -> "."
+      "today" -> "MMM d, y",
+      "include" -> "."
     )
 
 	def test( input: String, collapse: Boolean, assigns: (String, Any)* ) = {

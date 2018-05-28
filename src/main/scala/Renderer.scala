@@ -6,7 +6,7 @@ import java.io.{ByteArrayOutputStream, PrintStream}
 import scala.collection.mutable
 
 
-class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
+class Renderer( val parser: Parser, val config: Map[String, Any] ) {
 
   val globals = new mutable.HashMap[String, Any]
   val scopes = new mutable.ArrayStack[mutable.HashMap[String, Any]]
@@ -56,6 +56,8 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
   def deval( ast: AST ) = display( eval(ast) )
 
   def teval( ast: AST ) = truthy( eval(ast) )
+
+  def eval( l: List[AST] ): List[Any] = l map eval
 
   def eval( ast: AST ): Any =
     ast match {
@@ -119,7 +121,7 @@ class Renderer( val parser: Parser, val config: Map[Symbol, Any] ) {
         else
           statements map deval mkString
       case LiteralAST( v ) => v
-      case CommandAST( pos, c, args ) => c( pos, this, args map eval, null )
+      case CommandAST( pos, c, args, optional ) => c( pos, this, args, optional map {case (k, v) => (k -> eval(v))}, null )
       case ForAST( pos, expr, body, els ) =>
         val buf = new StringBuilder
 

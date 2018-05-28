@@ -66,15 +66,20 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start 123end"
   }
 
+  "filters" in {
+    test( """\l | \reverse | \take 2 | \drop 1""", true, "l" -> List("a", "b", "c") ) shouldBe
+      """["b"]"""
+  }
+
   "break" in {
-    test( """start \for l {\if \> \_idx 1 \break {\_i\ }} \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \> \_idx 1 \break \_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
     test( """start \for l {\if \> \_idx 1 \break {\_i\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
   }
 
   "continue" in {
-    test( """start \for l {\if \= \_idx 1 \continue {\_i\ }} \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \= \_idx 1 \continue \_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c else end"
     test( """start \for l {\if \= \_idx 1 \continue {\_i\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c end"

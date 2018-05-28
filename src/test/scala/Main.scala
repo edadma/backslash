@@ -1,14 +1,12 @@
 package xyz.hyperreal.backslash
 
-import java.time.format.{FormatStyle, DateTimeFormatter}
-
 
 object Main extends App {
 
   val config =
     Map(
-      'today -> DateTimeFormatter.ofLocalizedDate( FormatStyle.LONG ),
-      'include -> "."
+      "today" -> "MMM d, y",
+      "include" -> "."
     )
   val input =
     """
@@ -28,6 +26,7 @@ object Main extends App {
     """.trim.stripMargin
   val assigns =
     Map(
+      "l" -> List("a", "b", "c"),
       "x" -> 3,
       "y" -> 4,
       "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),
