@@ -44,6 +44,16 @@ object Command {
     }
   }
 
+  def invoke( renderer: Renderer, lambda: AST, arg: Any ) = {
+    renderer.enterScope
+    renderer.scopes.top("_") = arg
+
+    val res = renderer.eval( lambda )
+
+    renderer.exitScope
+    res
+  }
+
   val standard =
     List(
 
@@ -172,12 +182,15 @@ object Command {
       },
 
       new Command( "map", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String, t: Traversable[_] ) =>
-              t.asInstanceOf[Traversable[Map[String, Any]]] map (_(s))
-            case List( a, b ) => problem( pos, s"expected arguments <variable> <sequence>, given $a, $b" )
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          val t = renderer.eval( args.tail.head ).asInstanceOf[Traversable[Map[String, Any]]]
+
+          args.head match {
+            case LiteralAST( s: String ) => t map (_(s))
+            case lambda => t map (invoke( renderer, lambda, _ ))
+            case List(a, b) => problem(pos, s"expected arguments <variable> <sequence>, given $a, $b")
           }
+        }
       },
 
       new Command( "take", 2 ) {
