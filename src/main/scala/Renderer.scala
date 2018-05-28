@@ -77,6 +77,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
       case DotAST( epos, expr, kpos, key ) =>
         eval( expr ) match {
           case m: collection.Map[_, _] =>
+            println(m, s"|$key|")
             m.asInstanceOf[collection.Map[Any, Any]] get key match {
               case None => problem( kpos, "field not found" )
               case Some( v ) => v

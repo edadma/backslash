@@ -10,23 +10,11 @@ object Main extends App {
     )
   val input =
     """
-      |<h3>Products</h3>
-      |
-      |<ul>
-      |  \for products {
-      |    <li>\name&emsp;$\price&emsp;
-      |      \if inStock {
-      |        <a href="#">Buy It!</a>
-      |      } \else {
-      |        Out of stock.
-      |      }
-      |    </li>
-      |  }
-      |</ul>
+      |\products | map \. \_ name
     """.trim.stripMargin
   val assigns =
     Map(
-      "l" -> List("a", "b", "c"),
+      "l" -> List("a", "bb", "cc"),
       "x" -> 3,
       "y" -> 4,
       "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),

@@ -183,10 +183,10 @@ object Command {
 
       new Command( "map", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          val t = renderer.eval( args.tail.head ).asInstanceOf[Traversable[Map[String, Any]]]
+          val t = renderer.seval( args.tail.head )
 
           args.head match {
-            case LiteralAST( s: String ) => t map (_(s))
+            case LiteralAST( s: String ) => t.asInstanceOf[Traversable[Map[String, Any]]] map (_(s))
             case lambda => t map (invoke( renderer, lambda, _ ))
             case List(a, b) => problem(pos, s"expected arguments <variable> <sequence>, given $a, $b")
           }
