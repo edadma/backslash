@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\seq {3 4 5}
+      |\obj {three 3 four 4 five 5}
     """.trim.stripMargin
   val assigns =
     Map(

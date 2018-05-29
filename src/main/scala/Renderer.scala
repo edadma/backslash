@@ -92,6 +92,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           case o => problem( epos, s"not indexable: $o" )
         }
       case SeqAST( seq ) => seq map eval
+      case ObjectAST( seq ) => seq map eval grouped 2 map {case Vector( a, b ) => a -> b} toMap
       case NotAST( expr ) => !teval( expr )
       case AndAST( left, right ) => teval( left ) && teval( right )
       case OrAST( left, right ) =>

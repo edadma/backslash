@@ -122,6 +122,13 @@ class Parser( commands: Map[String, Command] ) {
         val (r2, vec) = parseList( r1 )
 
         (r2, SeqAST( vec ))
+      case Some( (r1, "obj") ) =>
+        val (r2, vec) = parseList( r1 )
+
+        if (vec.length % 2 == 1)
+          problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )
+
+        (r2, ObjectAST( vec ))
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
 
@@ -373,7 +380,7 @@ class Parser( commands: Map[String, Command] ) {
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def check( pos: Position, name: String ) =
-    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or", "not" ) contains name)
+    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "obj" ) contains name)
       problem( pos, "illegal variable name, it's a reserved word" )
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
