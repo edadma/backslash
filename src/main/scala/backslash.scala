@@ -36,6 +36,12 @@ package object backslash {
       case _ => None
     }
 
+  def integer( a: Any ) =
+    a match {
+      case x: BigDecimal if x isWhole => Some( x.intValue )
+      case _ => None
+    }
+
   def round( n: BigDecimal, scale: Int, config: Map[String, Any] ) =
     n.setScale( scale, BigDecimal.RoundingMode.withName(config("rounding").toString) )
 

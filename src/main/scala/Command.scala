@@ -1,3 +1,4 @@
+//@
 package xyz.hyperreal.backslash
 
 import java.io.File
@@ -498,6 +499,16 @@ object Command {
             case List( a: Map[_, _], b: String ) => a.asInstanceOf[Map[String, Any]] contains b
             case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
           }
+      },
+
+      new Command( "slice", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args ) match  {
+            case List( s: String, b: String ) => a contains b
+            case List( s: Seq[_], b: String ) => a contains b
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
+          }
+        }
       },
 
       new Command( "default", 2 ) {

@@ -78,13 +78,18 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           case a => problem( epos, s"expected a sequence: $a" )
         }
       case DotAST( epos, expr, kpos, key ) =>
+        val k = eval( key )
+        val idx = integer( k )
+
         eval( expr ) match {
           case m: collection.Map[_, _] =>
-            m.asInstanceOf[collection.Map[Any, Any]] get eval(key) match {
+            m.asInstanceOf[collection.Map[Any, Any]] get k match {
               case None => problem( kpos, "field not found" )
               case Some( v ) => v
             }
-          case o => problem( epos, s"not a map: $o" )
+          case s: String if idx isDefined => s(idx get)
+          case s: Seq[_] if idx isDefined => s(idx get)
+          case o => problem( epos, s"not indexable: $o" )
         }
       case NotAST( expr ) => !teval( expr )
       case AndAST( left, right ) => teval( left ) && teval( right )
