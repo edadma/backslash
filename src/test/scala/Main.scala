@@ -6,11 +6,12 @@ object Main extends App {
   val config =
     Map(
       "today" -> "MMM d, y",
-      "include" -> "."
+      "include" -> ".",
+      "rounding" -> "HALF_EVEN"
     )
   val input =
     """
-      |\escape {a < b}
+      |\round 3.77 scale: 1
     """.trim.stripMargin
   val assigns =
     Map(

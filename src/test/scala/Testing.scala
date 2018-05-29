@@ -7,7 +7,8 @@ trait Testing {
   val config =
     Map(
       "today" -> "MMM d, y",
-      "include" -> "."
+      "include" -> ".",
+      "rounding" -> "HALF_EVEN"
     )
 
 	def test( input: String, collapse: Boolean, assigns: (String, Any)* ) = {

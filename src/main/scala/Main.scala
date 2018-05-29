@@ -15,7 +15,8 @@ object Main extends App {
   val config =
     Map(
       "today" -> "MMM d, y",
-      "include" -> "."
+      "include" -> ".",
+      "rounding" -> "HALF_EVEN"
     )
   val assigns = new mutable.HashMap[String, Any]
   var templateFile: File = _

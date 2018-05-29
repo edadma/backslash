@@ -23,9 +23,6 @@ package object backslash {
 
   def docroot( name: String, settings: Map[Symbol, Any] ) = new File( settings('docroot).toString, name )
 
-  def round( n: BigDecimal, scale: Int, settings: Map[Symbol, Any] ) =
-    n.setScale( scale, settings('roundingMode).asInstanceOf[BigDecimal.RoundingMode.Value] )
-
   def isNumber( a: String ) = numberRegex.pattern.matcher( a ).matches
 
   def number( a: Any ) =
@@ -38,6 +35,9 @@ package object backslash {
       case n: BigDecimal => Some( n )
       case _ => None
     }
+
+  def round( n: BigDecimal, scale: Int, config: Map[String, Any] ) =
+    n.setScale( scale, BigDecimal.RoundingMode.withName(config("rounding").toString) )
 
   def truthy( a: Any ) = a != nil && a != false
 
