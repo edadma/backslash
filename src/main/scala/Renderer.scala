@@ -91,6 +91,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           case s: Seq[_] if idx isDefined => s(idx get)
           case o => problem( epos, s"not indexable: $o" )
         }
+      case SeqAST( seq ) => seq map eval
       case NotAST( expr ) => !teval( expr )
       case AndAST( left, right ) => teval( left ) && teval( right )
       case OrAST( left, right ) =>

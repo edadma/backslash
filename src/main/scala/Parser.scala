@@ -2,7 +2,7 @@
 package xyz.hyperreal.backslash
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import util.parsing.input.{PagedSeq, PagedSeqReader, Position, Reader}
 
 
@@ -118,8 +118,30 @@ class Parser( commands: Map[String, Command] ) {
 
         macros(name) = Macro( v.tail, body )
         (r3, null)
+      case Some( (r1, "seq") ) =>
+        val (r2, vec) = parseList( r1 )
+
+        (r2, SeqAST( vec ))
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
+
+  def parseList( r: Input ) = {
+    def parseList( r: Input, buf: ArrayBuffer[AST] = new ArrayBuffer ): (Input, Vector[AST]) = {
+      val (r1, ast) = parseRegularArgument( r )
+
+      buf += ast
+
+      matches( r1, endDelim ) match {
+        case None => parseList( r1, buf )
+        case Some( r2 ) => (r2, buf.toVector)
+      }
+    }
+
+    matches( r, beginDelim ) match {
+      case None => problem( r.pos, s"expected list" )
+      case Some( r1 ) => parseList( r1 )
+    }
+  }
 
   def parseStringArguments( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
     val r1 = skipSpace( r )
