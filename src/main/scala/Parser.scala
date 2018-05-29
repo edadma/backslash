@@ -111,7 +111,7 @@ class Parser( commands: Map[String, Command] ) {
 
         val name = v.head
 
-        if (r2.atEnd || lookahead( r2, beginDelim ))
+        if (r2.atEnd || !lookahead( r2, beginDelim ))
           problem( r2.pos, s"expected body of definition for $name" )
 
         val (r3, body) = parseRegularArgument( r2 )

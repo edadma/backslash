@@ -11,8 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\slice "abcde" 2 4
-      |\slice \l 2 4
+      |\def asdf {asdf asdf} \asdf
     """.trim.stripMargin
   val assigns =
     Map(
