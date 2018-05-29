@@ -36,7 +36,10 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
 	def exitScope: Unit = scopes pop
 
   def render( ast: AST, assigns: collection.Map[String, Any], out: PrintStream ): Unit = {
-    def output( ast: AST ) = out print deval( ast )
+    def output( ast: AST ) = {
+      out print deval( ast )
+      out.flush
+    }
 
     globals ++= assigns
 
@@ -46,10 +49,10 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
     }
   }
 
-  def capture( ast: AST, assigns: collection.Map[String, Any] ) = {
+  def capture( ast: AST, assigns: collection.Map[String, Any] )( implicit codec: io.Codec ) = {
 		val bytes = new ByteArrayOutputStream
 
-    render( ast, assigns, new PrintStream(bytes) )
+    render( ast, assigns, new PrintStream(bytes, false, codec.name) )
     bytes.toString
   }
 

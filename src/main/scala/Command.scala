@@ -375,8 +375,12 @@ object Command {
       new Command( "include", 1 ) {
         val dir = new Const[String]
 
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( renderer.parser.parse(io.Source.fromFile(new File(dir(renderer.config("include").toString), renderer.eval(args.head).toString))) )
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          val file = new File( dir(renderer.config("include").toString), renderer.eval(args.head).toString )
+          val charset = optional get "charset" map (_.toString)
+
+          renderer.eval( renderer.parser.parse(if (charset.isDefined) io.Source.fromFile(file) else io.Source.fromFile(file)(charset get)) )
+        }
       },
 
       new Command( "rem", 2 ) {
