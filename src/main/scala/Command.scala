@@ -477,12 +477,12 @@ object Command {
           }
       },
 
-      new Command( "slice", 2 ) {
+      new Command( "slice", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args ) match  {
-            case List( s: String, b: String ) => a contains b
-            case List( s: Seq[_], b: String ) => a contains b
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
+            case List( s: String, start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
+            case List( s: Seq[_], start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
+            case List( a, b ) => problem( pos, s"expected arguments <string> <start> <end> or <sequence> <start> <end>: $a, $b" )
           }
         }
       },

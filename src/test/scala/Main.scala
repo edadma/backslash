@@ -11,7 +11,8 @@ object Main extends App {
     )
   val input =
     """
-      |\escape {a < b}
+      |\slice "abcde" 2 4
+      |\slice \l 2 4
     """.trim.stripMargin
   val assigns =
     Map(
