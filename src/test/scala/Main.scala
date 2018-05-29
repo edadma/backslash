@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\round 3.77 scale: 1
+      |\escape {a < b}
     """.trim.stripMargin
   val assigns =
     Map(
