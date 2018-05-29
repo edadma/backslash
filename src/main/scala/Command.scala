@@ -4,6 +4,7 @@ import java.io.File
 import java.time.{Instant, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
+import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
 
@@ -212,6 +213,38 @@ object Command {
             case a => problem( pos, s"not a number: $a" )
           }
         }
+      },
+
+      new Command( "remove", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( l: String, r: String ) => l replace (r, "")
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "removeFirst", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( l: String, r: String ) => l replaceFirst (Matcher.quoteReplacement(r), "")
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "replace", 3 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( l: String, r1: String, r2: String ) => l replace (r1, r2)
+            case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
+          }
+      },
+
+      new Command( "replaceFirst", 3 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( l: String, r1: String, r2: String ) => l replaceFirst (Matcher.quoteReplacement(r1), r2)
+            case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
+          }
       },
 
       new Command( "min", 2 ) {
