@@ -6,9 +6,6 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 
 import scala.util.parsing.input.Position
-import collection.immutable.IntMap
-import collection.mutable
-import xyz.hyperreal.json.DefaultJSONReader
 
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], Map[String, Any], AnyRef) => Any) {
@@ -53,6 +50,32 @@ object Command {
     renderer.exitScope
     res
   }
+
+  val nonWordCharacterRegex = """([^\w _.?])"""r
+
+  def escape( s: String ) =
+    nonWordCharacterRegex.replaceSomeIn( s,
+      { m =>
+        val c = m group 1 head
+
+        val entity =
+          c match {
+            case '<' => "lt"
+            case '>' => "gt"
+            case '&' => "amp"
+            case '"' => "quot"
+            case '\'' => "apos"
+            case '¢' => "cent"
+            case '£' => "pound"
+            case '¥' => "yen"
+            case '€' => "euro"
+            case '©' => "copy"
+            case '®' => "reg"
+            case _ => s"#${c.toInt}"
+          }
+
+        Some(s"&$entity;")
+      } )
 
   val standard =
     List(
@@ -109,11 +132,45 @@ object Command {
         }
       },
 
+      new Command( "escape", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case s: String => escape( s )
+            case a => problem( pos, s"not a string: $a" )
+          }
+        }
+      },
+
+      new Command( "escapeOnce", 1 ) {
+        val regex = """&#?\w+;"""r
+
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case s: String =>
+              val it = regex.findAllIn( s )
+              var last = 0
+              val buf = new StringBuilder
+
+              while (it hasNext) {
+                val m = it.next
+
+                buf ++= escape( s.substring(last, it.start) )
+                buf ++= it.matched
+                last = it.end
+              }
+
+              buf ++= escape( s.substring(last, s.length) )
+              buf.toString
+            case a => problem( pos, s"not a string: $a" )
+          }
+        }
+      },
+
       new Command( "abs", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
-            case List( n: BigDecimal ) => n.abs
-            case List( a ) => problem( pos, s"not a number: $a" )
+            case n: BigDecimal => n.abs
+            case a => problem( pos, s"not a number: $a" )
           }
         }
       },
@@ -121,14 +178,14 @@ object Command {
       new Command( "ceil", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
-            case List( n: BigDecimal ) =>
+            case n: BigDecimal =>
               if (n.isWhole)
                 n
               else if (n > 0)
                 n.toBigInt + 1
               else
                 n.toBigInt
-            case List( a ) => problem( pos, s"not a number: $a" )
+            case a => problem( pos, s"not a number: $a" )
           }
         }
       },
@@ -136,14 +193,14 @@ object Command {
       new Command( "floor", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
-            case List( n: BigDecimal ) =>
+            case n: BigDecimal =>
               if (n.isWhole)
                 n
               else if (n > 0)
                 n.toBigInt
               else
                 n.toBigInt - 1
-            case List( a ) => problem( pos, s"not a number: $a" )
+            case a => problem( pos, s"not a number: $a" )
           }
         }
       },
@@ -151,8 +208,8 @@ object Command {
       new Command( "neg", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
-            case List( n: BigDecimal ) => -n
-            case List( a ) => problem( pos, s"not a number: $a" )
+            case n: BigDecimal => -n
+            case a => problem( pos, s"not a number: $a" )
           }
         }
       },

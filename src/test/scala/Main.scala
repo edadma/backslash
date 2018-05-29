@@ -10,7 +10,7 @@ object Main extends App {
     )
   val input =
     """
-      |\l | filter \> _ 4
+      |\escape {a < b}
     """.trim.stripMargin
   val assigns =
     Map(
