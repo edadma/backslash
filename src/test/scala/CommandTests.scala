@@ -16,4 +16,7 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
   }
 
+  "markdown" in {
+    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
+  }
 }

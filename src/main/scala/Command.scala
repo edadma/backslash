@@ -9,6 +9,8 @@ import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
 
+import xyz.hyperreal.__markdown__._
+
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], Map[String, Any], AnyRef) => Any) {
   override def toString = s"<$name/$arity>"
@@ -117,6 +119,18 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head )
           nil
+        }
+      },
+
+      new Command( "normalize", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ).toString.trim.replaceAll( """\s+""", " " )
+        }
+      },
+
+      new Command( "markdown", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          Markdown( renderer.eval(args.head).toString )
         }
       },
 

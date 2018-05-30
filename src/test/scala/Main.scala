@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\{}
+      |\markdown {this is an __boring__ *test*}
     """.trim.stripMargin
   val assigns =
     Map(
