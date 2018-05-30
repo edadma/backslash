@@ -134,13 +134,13 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseList( r: Input ) = {
     def parseList( r: Input, buf: ArrayBuffer[AST] = new ArrayBuffer ): (Input, Vector[AST]) = {
-      val (r1, ast) = parseRegularArgument( r )
+      matches( r, endDelim ) match {
+        case None =>
+          val (r1, ast) = parseRegularArgument( r )
 
-      buf += ast
-
-      matches( r1, endDelim ) match {
-        case None => parseList( r1, buf )
-        case Some( r2 ) => (r2, buf.toVector)
+          buf += ast
+          parseList( r1, buf )
+        case Some( r1 ) => (r1, buf.toVector)
       }
     }
 

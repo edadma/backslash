@@ -20,6 +20,18 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """3 plus 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
 	}
 
+  "seq" in {
+    test( """\seq {1 2 3}""", false ) shouldBe "[1, 2, 3]"
+    test( """\set v 4\seq {1 2 3 \v}""", false ) shouldBe "[1, 2, 3, 4]"
+    test( """\seq {}""", false ) shouldBe "[]"
+  }
+
+  "obj" in {
+    test( """\obj {three 3 four 4 five 5}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5}"""
+    test( """\set v 6\obj {three 3 four 4 five 5 six \v}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5, "six": 6}"""
+    test( """\obj {}""", false ) shouldBe """{}"""
+  }
+
   "literals" in {
     test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
