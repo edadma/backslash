@@ -20,6 +20,11 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """3 plus 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
 	}
 
+  "dot" in {
+    test( """\. \{a 3} a""", false ) shouldBe "3"
+    test( """\= \nil{} \. \{a 3} b""", false ) shouldBe "true"
+  }
+
   "seq" in {
     test( """\seq {1 2 3}""", false ) shouldBe "[1, 2, 3]"
     test( """\seq {1 2 3} | map \+ _ 3""", false ) shouldBe "[4, 5, 6]"
@@ -69,6 +74,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
 
   "for" in {
     test( """start \for l \_i end""", true, "l" -> List("a", "b", "c") ) shouldBe
+      "start abcend"
+    test( """start \for \in e l \e end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start abcend"
     test( """start \for l {\_i} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start abc end"
