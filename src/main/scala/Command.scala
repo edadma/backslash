@@ -384,7 +384,9 @@ object Command {
           renderer.eval( args ) match  {
             case List( s: String ) => s head
             case List( s: Seq[_] ) => s head
-            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+            case List( a ) =>
+              println( a.getClass)
+              problem( pos, s"expected string or sequence argument: $a" )
           }
       },
 

@@ -118,17 +118,6 @@ class Parser( commands: Map[String, Command] ) {
 
         macros(name) = Macro( v.tail, body )
         (r3, null)
-      case Some( (r1, "seq") ) =>
-        val (r2, vec) = parseList( r1 )
-
-        (r2, SeqAST( vec ))
-      case Some( (r1, "obj") ) =>
-        val (r2, vec) = parseList( r1 )
-
-        if (vec.length % 2 == 1)
-          problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )
-
-        (r2, ObjectAST( vec ))
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
 
@@ -406,6 +395,17 @@ class Parser( commands: Map[String, Command] ) {
         val (r1, s) = consumeCond( r, cond )
 
         (r1, LiteralAST( s ))
+      case "seq" =>
+        val (r1, vec) = parseList( r )
+
+        (r1, SeqAST( vec ))
+      case "obj" =>
+        val (r1, vec) = parseList( r )
+
+        if (vec.length % 2 == 1)
+          problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )
+
+        (r1, ObjectAST( vec ))
       case "." =>
         val (r1, ast) = parseExpressionArgument( r )
         val r2 = skipSpace( r1 )

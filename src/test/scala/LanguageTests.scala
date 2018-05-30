@@ -22,6 +22,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
 
   "seq" in {
     test( """\seq {1 2 3}""", false ) shouldBe "[1, 2, 3]"
+    test( """\seq {1 2 3} | map \+ _ 3""", false ) shouldBe "[4, 5, 6]"
     test( """\set v 4\seq {1 2 3 \v}""", false ) shouldBe "[1, 2, 3, 4]"
     test( """\seq {}""", false ) shouldBe "[]"
   }
