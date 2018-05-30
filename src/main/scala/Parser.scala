@@ -121,7 +121,7 @@ class Parser( commands: Map[String, Command] ) {
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
 
-  def parseList( r: Input ) = {
+  def parseList( r: Input, begin: Boolean ) = {
     def parseList( r: Input, buf: ArrayBuffer[AST] = new ArrayBuffer ): (Input, Vector[AST]) = {
       matches( r, endDelim ) match {
         case None =>
@@ -133,10 +133,13 @@ class Parser( commands: Map[String, Command] ) {
       }
     }
 
-    matches( r, beginDelim ) match {
-      case None => problem( r.pos, s"expected list" )
-      case Some( r1 ) => parseList( r1 )
-    }
+    if (begin)
+      matches( r, beginDelim ) match {
+        case None => problem( r.pos, s"expected list" )
+        case Some( r1 ) => parseList( r1 )
+      }
+    else
+      parseList( r )
   }
 
   def parseStringArguments( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
@@ -397,11 +400,11 @@ class Parser( commands: Map[String, Command] ) {
 
           (r1, LiteralAST( s ))
         case "seq" =>
-          val (r1, vec) = parseList( r )
+          val (r1, vec) = parseList( r, true )
 
           (r1, SeqAST( vec ))
-        case "obj" =>
-          val (r1, vec) = parseList( r )
+        case "{" =>
+          val (r1, vec) = parseList( r, false )
 
           if (vec.length % 2 == 1)
             problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )

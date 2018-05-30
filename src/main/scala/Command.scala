@@ -58,6 +58,16 @@ object Command {
   val standard =
     List(
 
+      new Command( "[]", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          Nil
+      },
+
+      new Command( "{}", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          Map()
+      },
+
       new Command( "n", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           "\n"

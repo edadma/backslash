@@ -28,9 +28,9 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 
   "obj" in {
-    test( """\obj {three 3 four 4 five 5}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5}"""
-    test( """\set v 6\obj {three 3 four 4 five 5 six \v}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5, "six": 6}"""
-    test( """\obj {}""", false ) shouldBe """{}"""
+    test( """\{three 3 four 4 five 5}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5}"""
+    test( """\set v 6\{three 3 four 4 five 5 six \v}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5, "six": 6}"""
+    test( """\{}""", false ) shouldBe """{}"""
   }
 
   "literals" in {
@@ -85,7 +85,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       """["b"]"""
     test( """\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7) ) shouldBe
       """[6, 7, 8]"""
-    test( """\seq {\obj {a 3} \obj {b 4} \obj {a 5}} | map a | filter _""", false ) shouldBe "[3, 5]"
+    test( """\seq {\{a 3} \{b 4} \{a 5}} | map a | filter _""", false ) shouldBe "[3, 5]"
   }
 
   "break" in {
