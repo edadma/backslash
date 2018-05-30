@@ -84,7 +84,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
         eval( expr ) match {
           case m: collection.Map[_, _] =>
             m.asInstanceOf[collection.Map[Any, Any]] get k match {
-              case None => problem( kpos, "field not found" )
+              case None => nil
               case Some( v ) => v
             }
           case s: String if idx isDefined => s(idx get)

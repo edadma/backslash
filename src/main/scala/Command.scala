@@ -260,7 +260,7 @@ object Command {
       new Command( "map", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           (args.head, renderer.eval( args.tail.head )) match {
-            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_(f))
+            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_ getOrElse( f, nil ))
             case (lambda, s: Seq[_]) => s map (invoke( renderer, lambda, _ ))
             case (a, b) => problem( pos, s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b" )
           }

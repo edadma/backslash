@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\l | map \+ _ 3
+      |\products | map name | filter _
     """.trim.stripMargin
   val assigns =
     Map(
@@ -25,7 +25,7 @@ object Main extends App {
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
 
-  println( ast )
+//  println( ast )
 
   val result = renderer.capture( ast, assigns )
 
