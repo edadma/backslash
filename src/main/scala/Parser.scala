@@ -2,7 +2,7 @@
 package xyz.hyperreal.backslash
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import util.parsing.input.{PagedSeq, PagedSeqReader, Position, Reader}
 
 
@@ -120,6 +120,27 @@ class Parser( commands: Map[String, Command] ) {
         (r3, null)
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
+
+  def parseList( r: Input, begin: Boolean ) = {
+    def parseList( r: Input, buf: ArrayBuffer[AST] = new ArrayBuffer ): (Input, Vector[AST]) = {
+      matches( r, endDelim ) match {
+        case None =>
+          val (r1, ast) = parseRegularArgument( r )
+
+          buf += ast
+          parseList( r1, buf )
+        case Some( r1 ) => (r1, buf.toVector)
+      }
+    }
+
+    if (begin)
+      matches( r, beginDelim ) match {
+        case None => problem( r.pos, s"expected list" )
+        case Some( r1 ) => parseList( r1 )
+      }
+    else
+      parseList( r )
+  }
 
   def parseStringArguments( r: Input, v: Vector[String] = Vector() ): (Input, Vector[String]) = {
     val r1 = skipSpace( r )
@@ -351,101 +372,112 @@ class Parser( commands: Map[String, Command] ) {
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def check( pos: Position, name: String ) =
-    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or", "not" ) contains name)
+    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "obj" ) contains name)
       problem( pos, "illegal variable name, it's a reserved word" )
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
 
   def parseCommand( pos: Position, name: String, r: Input, statement: Boolean ): (Input, AST) = {
-    name match {
-      case "<<<" =>
-        var first = true
-        var prev = ' '
+    val res@(rr, ast) =
+      name match {
+        case "<<<" =>
+          var first = true
+          var prev = ' '
 
-        def cond( cr: Input ) = {
-          val res =
-            if (cr atEnd)
-              problem( r, "unclosed raw text" )
-            else
-              !lookahead( cr, csDelim + ">>>" )
+          def cond( cr: Input ) = {
+            val res =
+              if (cr atEnd)
+                problem( r, "unclosed raw text" )
+              else
+                !lookahead( cr, csDelim + ">>>" )
 
-          first = false
-          prev = cr.first
-          res
-        }
+            first = false
+            prev = cr.first
+            res
+          }
 
-        val (r1, s) = consumeCond( r, cond )
+          val (r1, s) = consumeCond( r, cond )
 
-        (r1, LiteralAST( s ))
-      case "." =>
-        val (r1, ast) = parseExpressionArgument( r )
-        val r2 = skipSpace( r1 )
-        val (r3, a) = parseRegularArgument( r1 )
+          (r1, LiteralAST( s ))
+        case "seq" =>
+          val (r1, vec) = parseList( r, true )
 
-        (r3, DotAST( r.pos, ast, r2.pos, a ))
-      case "set" =>
-        val (r1, v) = parseVariableArgument( r )
-        val (r2, ast) = parseExpressionArgument( r1 )
+          (r1, SeqAST( vec ))
+        case "{" =>
+          val (r1, vec) = parseList( r, false )
 
-        (r2, SetAST( v, ast ))
-      case "in" =>
-        val (r1, v) = parseVariableArgument( r )
-        val r2 = skipSpace( r1 )
-        val (r3, ast) = parseExpressionArgument( r2 )
+          if (vec.length % 2 == 1)
+            problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )
 
-        (r3, InAST( pos, v, r2.pos, ast ))
-      case "not" =>
-        val (r1, expr) = parseExpressionArgument( r )
+          (r1, ObjectAST( vec ))
+        case "." =>
+          val (r1, ast) = parseExpressionArgument( r )
+          val r2 = skipSpace( r1 )
+          val (r3, a) = parseRegularArgument( r1 )
 
-        (r1, NotAST( expr ))
-      case "and" =>
-        val (r1, args) = parseExpressionArguments( r, 2 )
+          (r3, DotAST( r.pos, ast, r2.pos, a ))
+        case "set" =>
+          val (r1, v) = parseVariableArgument( r )
+          val (r2, ast) = parseExpressionArgument( r1 )
 
-        (r1, AndAST( args.head, args.tail.head ))
-      case "or" =>
-        val (r1, args) = parseExpressionArguments( r, 2 )
+          (r2, SetAST( v, ast ))
+        case "in" =>
+          val (r1, v) = parseVariableArgument( r )
+          val r2 = skipSpace( r1 )
+          val (r3, ast) = parseExpressionArgument( r2 )
 
-        (r1, OrAST( args.head, args.tail.head ))
-      case " " => (r, LiteralAST( " " ))
-      case "if" =>
-        val (r1, expr) = parseExpressionArgument( r )
-        val (r2, body) = parseRegularArgument( r1 )
-        val (r3, elsifs) = parseCases( "elsif", r2 )
-        val conds = (expr, body) +: elsifs
+          (r3, InAST( pos, v, r2.pos, ast ))
+        case "not" =>
+          val (r1, expr) = parseExpressionArgument( r )
 
-        parseElse( r3 ) match {
-          case Some( (r4, els) ) => (r4, IfAST( conds, Some(els) ))
-          case _ => (r3, IfAST( conds, None ))
-        }
-      case "unless" =>
-        val (r1, expr) = parseExpressionArgument( r )
-        val (r2, body) = parseRegularArgument( r1 )
+          (r1, NotAST( expr ))
+        case "and" =>
+          val (r1, args) = parseExpressionArguments( r, 2 )
 
-        parseElse( r2 ) match {
-          case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
-          case _ => (r2, UnlessAST( expr, body, None ))
-        }
-      case "match" =>
-        val (r1, expr) = parseExpressionArgument( r )
-        val (r2, cases) = parseCases( "case", r1 )
+          (r1, AndAST( args.head, args.tail.head ))
+        case "or" =>
+          val (r1, args) = parseExpressionArguments( r, 2 )
 
-        parseElse( r2 ) match {
-          case Some( (r3, els) ) => (r3, MatchAST( expr, cases, Some(els) ))
-          case _ => (r2, MatchAST( expr, cases, None ))
-        }
-      case "for" =>
-        val r0 = skipSpace( r )
-        val (r1, expr) = parseExpressionArgument( r0 )
-        val (r2, body) = parseRegularArgument( r1 )
+          (r1, OrAST( args.head, args.tail.head ))
+        case " " => (r, LiteralAST( " " ))
+        case "if" =>
+          val (r1, expr) = parseExpressionArgument( r )
+          val (r2, body) = parseRegularArgument( r1 )
+          val (r3, elsifs) = parseCases( "elsif", r2 )
+          val conds = (expr, body) +: elsifs
 
-        parseElse( r2 ) match {
-          case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
-          case _ => (r2, ForAST( r0.pos, expr, body, None ))
-        }
-      case "break" => (r, BreakAST( pos ))
-      case "continue" => (r, ContinueAST( pos ))
-      case _ =>
-        val res@(r2, ast) =
+          parseElse( r3 ) match {
+            case Some( (r4, els) ) => (r4, IfAST( conds, Some(els) ))
+            case _ => (r3, IfAST( conds, None ))
+          }
+        case "unless" =>
+          val (r1, expr) = parseExpressionArgument( r )
+          val (r2, body) = parseRegularArgument( r1 )
+
+          parseElse( r2 ) match {
+            case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
+            case _ => (r2, UnlessAST( expr, body, None ))
+          }
+        case "match" =>
+          val (r1, expr) = parseExpressionArgument( r )
+          val (r2, cases) = parseCases( "case", r1 )
+
+          parseElse( r2 ) match {
+            case Some( (r3, els) ) => (r3, MatchAST( expr, cases, Some(els) ))
+            case _ => (r2, MatchAST( expr, cases, None ))
+          }
+        case "for" =>
+          val r0 = skipSpace( r )
+          val (r1, expr) = parseExpressionArgument( r0 )
+          val (r2, body) = parseRegularArgument( r1 )
+
+          parseElse( r2 ) match {
+            case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
+            case _ => (r2, ForAST( r0.pos, expr, body, None ))
+          }
+        case "break" => (r, BreakAST( pos ))
+        case "continue" => (r, ContinueAST( pos ))
+        case _ =>
           macros get name match {
             case None =>
               commands get name match {
@@ -464,45 +496,45 @@ class Parser( commands: Map[String, Command] ) {
                 (r1, MacroAST( body, parameters zip args ))
               }
           }
+      }
 
-        def filters( r: Input, ast: AST ): (Input, AST) =
-          matches( skipSpace(r), pipeDelim ) match {
-            case None => (r, ast)
-            case Some( r1 ) =>
-              val r2 = skipSpace( r1 )
-              val (r3, name) =
-                parseFilter( r2 ) match {
-                  case None =>
-                    parseControlSequenceName( r2 ) match {
-                      case None => problem( r2, "expected a command or macro" )
-                      case Some( cs ) => cs
-                    }
-                  case Some( cs ) => cs
-                }
-
-                macros get name match {
-                  case None =>
-                    commands get name match {
-                      case None => problem( r2, "expected a command or macro" )
-                      case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
-                      case Some( c ) =>
-                        val (r4, args, optional) = parseCommandArguments( r3, c.arity - 1 )
-
-                        filters( r4, CommandAST(r2.pos, c, args :+ ast, optional) )
-                    }
-                  case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
-                  case Some( Macro(parameters, body) ) =>
-                    val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
-
-                    filters( r4, MacroAST(body, parameters zip (args :+ ast)) )
-                }
+      def filters( r: Input, ast: AST ): (Input, AST) =
+        matches( skipSpace(r), pipeDelim ) match {
+          case None => (r, ast)
+          case Some( r1 ) =>
+            val r2 = skipSpace( r1 )
+            val (r3, name) =
+              parseFilter( r2 ) match {
+                case None =>
+                  parseControlSequenceName( r2 ) match {
+                    case None => problem( r2, "expected a command or macro" )
+                    case Some( cs ) => cs
+                  }
+                case Some( cs ) => cs
               }
 
-        if (statement)
-          filters( r2, ast )
-        else
-          res
-    }
+              macros get name match {
+                case None =>
+                  commands get name match {
+                    case None => problem( r2, "expected a command or macro" )
+                    case Some( c ) if c.arity == 0 => problem( r2, "expected a command with parameters" )
+                    case Some( c ) =>
+                      val (r4, args, optional) = parseCommandArguments( r3, c.arity - 1 )
+
+                      filters( r4, CommandAST(r2.pos, c, args :+ ast, optional) )
+                  }
+                case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
+                case Some( Macro(parameters, body) ) =>
+                  val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
+
+                  filters( r4, MacroAST(body, parameters zip (args :+ ast)) )
+              }
+            }
+
+      if (statement)
+        filters( rr, ast )
+      else
+        res
   }
 
   def parseCommandArguments( r: Input, n: Int ) = {

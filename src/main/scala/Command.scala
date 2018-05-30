@@ -9,6 +9,8 @@ import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
 
+import xyz.hyperreal.__markdown__._
+
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], Map[String, Any], AnyRef) => Any) {
   override def toString = s"<$name/$arity>"
@@ -57,6 +59,16 @@ object Command {
 
   val standard =
     List(
+
+      new Command( "[]", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          Nil
+      },
+
+      new Command( "{}", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          Map()
+      },
 
       new Command( "n", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
@@ -107,6 +119,18 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head )
           nil
+        }
+      },
+
+      new Command( "normalize", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ).toString.trim.replaceAll( """\s+""", " " )
+        }
+      },
+
+      new Command( "markdown", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          Markdown( renderer.eval(args.head).toString )
         }
       },
 
@@ -260,7 +284,7 @@ object Command {
       new Command( "map", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           (args.head, renderer.eval( args.tail.head )) match {
-            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_(f))
+            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_ getOrElse( f, nil ))
             case (lambda, s: Seq[_]) => s map (invoke( renderer, lambda, _ ))
             case (a, b) => problem( pos, s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b" )
           }
@@ -384,7 +408,9 @@ object Command {
           renderer.eval( args ) match  {
             case List( s: String ) => s head
             case List( s: Seq[_] ) => s head
-            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+            case List( a ) =>
+              println( a.getClass)
+              problem( pos, s"expected string or sequence argument: $a" )
           }
       },
 

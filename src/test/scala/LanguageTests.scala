@@ -20,6 +20,19 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """3 plus 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
 	}
 
+  "seq" in {
+    test( """\seq {1 2 3}""", false ) shouldBe "[1, 2, 3]"
+    test( """\seq {1 2 3} | map \+ _ 3""", false ) shouldBe "[4, 5, 6]"
+    test( """\set v 4\seq {1 2 3 \v}""", false ) shouldBe "[1, 2, 3, 4]"
+    test( """\seq {}""", false ) shouldBe "[]"
+  }
+
+  "obj" in {
+    test( """\{three 3 four 4 five 5}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5}"""
+    test( """\set v 6\{three 3 four 4 five 5 six \v}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5, "six": 6}"""
+    test( """\{}""", false ) shouldBe """{}"""
+  }
+
   "literals" in {
     test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
@@ -72,6 +85,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       """["b"]"""
     test( """\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7) ) shouldBe
       """[6, 7, 8]"""
+    test( """\seq {\{a 3} \{b 4} \{a 5}} | map a | filter _""", false ) shouldBe "[3, 5]"
   }
 
   "break" in {

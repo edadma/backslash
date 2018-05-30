@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\def asdf {asdf asdf} \asdf
+      |\markdown {this is an __boring__ *test*}
     """.trim.stripMargin
   val assigns =
     Map(
@@ -19,7 +19,7 @@ object Main extends App {
       "x" -> 3,
       "y" -> 4,
       "m" -> Map( "firstName" -> "Bugs", "lastName" -> "Bunny" ),
-      "products" -> List( Map("name" -> "RCA 32\u2033 ROKU SMART TV", "price" -> BigDecimal("207.00"), "inStock" -> true), Map("name" -> "LG 55UK6300", "price" -> BigDecimal("1098.00"), "inStock" -> false) )
+      "products" -> List( Map("name" -> "RCA 32\u2033 ROKU SMART TV", "price" -> BigDecimal("207.00"), "inStock" -> true), Map("asdf" -> "asdf"), Map("name" -> "LG 55UK6300", "price" -> BigDecimal("1098.00"), "inStock" -> false) )
     )
   val parser = new Parser( Command.standard )
   val ast = parser.parse( io.Source.fromString(input) )
