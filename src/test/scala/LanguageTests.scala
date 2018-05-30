@@ -85,6 +85,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       """["b"]"""
     test( """\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7) ) shouldBe
       """[6, 7, 8]"""
+    test( """\seq {\obj {a 3} \obj {b 4} \obj {a 5}} | map a | filter _""", false ) shouldBe "[3, 5]"
   }
 
   "break" in {
