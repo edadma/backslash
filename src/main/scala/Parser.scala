@@ -186,7 +186,7 @@ class Parser( commands: Map[String, Command] ) {
     else {
       val (r1, s) =
         if (nameFirst( r.first ))
-          consume( r, nameRest )
+          consumeCond( r, r => !r.atEnd && nameRest(r.first) && !(r.first == '.' && (r.rest.atEnd || !nameRest(r.rest.first))) )
         else if (r.first.isWhitespace)
           (r.rest, " ")
         else if (r.first.isDigit)
@@ -295,7 +295,9 @@ class Parser( commands: Map[String, Command] ) {
     def fields( start: Int, expr: AST ): AST =
       v.indexOf( '.', start ) match {
         case -1 => expr
-        case dot if dot == start + 1 || dot == v.length - 1 => problem( pos, "illegal variable reference" )
+        case dot if dot == start || dot == v.length - 1 =>
+          println( dot, start, v.length, s"|$v|" )
+          problem( pos, "illegal variable reference" )
         case dot =>
           v.indexOf( '.', dot + 1 ) match {
             case -1 => DotAST( pos, expr, pos, LiteralAST(v.substring(dot + 1)) )
@@ -372,7 +374,7 @@ class Parser( commands: Map[String, Command] ) {
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def check( pos: Position, name: String ) =
-    if (Set( "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "obj" ) contains name)
+    if (Set( "#", "delim", "def", "{", ".", "elsif", "case", "in", "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "obj" ) contains name)
       problem( pos, "illegal variable name, it's a reserved word" )
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
