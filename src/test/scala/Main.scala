@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\set v \{a 3} \v.a
+      |three plus four is \+ 3 4
       |\markdown {this is a __boring__ *example*}
       |The current time is \now.
     """.trim.stripMargin

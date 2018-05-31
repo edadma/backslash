@@ -83,11 +83,65 @@ Being a macro/templating language, Backslash basically copies input to output, w
 Control Sequences
 -----------------
 
-A *control sequence* is a way of interrupting the normal character copying behaviour in order to tell Backslash to do something else at that point in the character stream. Once the action indicated by the control sequence is complete, character copying resumes with the characters immediately following the control sequence.  Control sequences begin with a `\` (backslash) character (whence the name of this templating language) followed by the name of the control sequence.
+A *control sequence* is a way of interrupting the normal character copying behaviour in order to tell Backslash to do something else at that point in the input stream. Once the action indicated by the control sequence is complete, character copying resumes with the characters immediately following the control sequence, skipping over any which space right after the name of the control sequence.  Control sequences begin with a `\` (backslash) character (whence the name of this language) followed by the name of the control sequence.
 
 There are five categories into which control sequences can be grouped, depending on how they need to be handled during *parsing* and also during *rendering*. *Parsing* refers to how input stream characters are treated, and *rendering* refers to how the output stream is produced.  The five categories are discussed below.
 
 
 ### Regular Commands
 
-*Regular commands* or *functions* constitute the largest category of control sequences and cover a wide range of uses.  They are called *regular* because they are all handled the same way during parsing and rendering.  Some functions need to be supplied with special input, known as *arguments* in order to produce an output, and others can produce their output without requiring any arguments.
+*Regular commands* or *functions* constitute the largest category of control sequences and cover a wide range of uses.  They are called *regular* because they are all handled the same way during parsing and rendering.  Some functions need to be supplied with special input, known as *arguments* in order to produce an output, and others can produce their output without requiring any arguments.  The regular command reference contains information on all the built-in regular commands.
+
+Here are some examples.
+
+#### Without Arguments
+
+Here is an example of a regular command that doesn't take any arguments:
+
+    The current time is \now.
+
+which outputs
+
+    The current time is 2018-05-31T19:39:03.489-04:00[America/Montreal].
+
+The `.` following the `\now` control sequence just gets copied to the output.
+
+
+#### With Arguments
+
+Next is an example of a regular command that takes an argument that is a string of characters and transforms it into another string of characters:
+
+    \markdown {this is a __boring__ *example*}
+
+which outputs
+
+    <p>this is a <strong>boring</strong> <em>example</em></p>
+
+Not all commands take character string arguments.  Here's an example of a command that takes two numerical arguments:
+
+    three plus four is \+ 3 4
+
+which outputs
+
+    three plus four is 7
+
+
+
+### Special Commands
+
+
+Grouping
+--------
+
+
+Commands Arguments
+------------------
+
+### Regular Arguments
+
+### Expression Arguments
+
+### Variable Arguments
+
+
+
