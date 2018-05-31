@@ -6,7 +6,72 @@ title: Reference Manual
 Overview
 ========
 
-Backslash is a string templating language written in Scala. Backslash looks like TeX with the default delimiters (which can be changed), but it's not TeX. Backslash behaves like any other macro/templating language: it copies input text to output. Backslash is an attempt to create a dryer templating language that still allows you to copy HTML (or whatever you're using it for) verbatim. So, although Backslash is somewhat inspired by TeX, it shares very little in common with it except less typing. If your HTML doesn't containing any scripting then the "TeXish" delimiters (\, {, }) are usually fine. However, as in Mustache, delimiters can be changed anywhere in the input stream (except between command arguments).
+Backslash is a string templating language written in Scala. Backslash looks like TeX with the default delimiters (which can be changed), but it's not TeX. Backslash behaves like any other macro/templating language: it copies input text to output. Backslash is an attempt to create a dryer templating language that still allows you to copy HTML (or whatever you're using it for) verbatim. So, although Backslash is somewhat inspired by TeX, it shares very little in common with it except less typing. If your HTML doesn't containing any scripting then the "TeXish" delimiters (`\`, `{`, `}`) are usually fine. However, as in [Mustache](http://mustache.github.io/), delimiters can be changed anywhere in the input stream (except between command arguments).
+
+
+Example
+=======
+
+Here's a typical Backslash template with looping and conditionals.
+
+### Template
+
+```html
+<h3>Products</h3>
+
+<ul>
+  \for products {
+    <li>\name&emsp;$\price&emsp;
+      \if inStock {
+        <a href="#">Buy It!</a>
+      } \else {
+        Out of stock.
+      }
+    </li>
+  }
+</ul>
+```
+
+### Data
+
+```json
+{
+  "products": [
+    {
+      "name": "RCA 32\u2033 ROKU SMART TV",
+      "price": 207.00,
+      "inStock": true
+    },
+    {
+      "name": "LG 55UK6300",
+      "price": 1098.00,
+      "inStock": false
+    }
+  ]
+}
+```
+
+### Output
+
+```html
+<h3>Products</h3>
+
+<ul>
+
+    <li>RCA 32″ ROKU SMART TV&emsp; $207.00&emsp;
+
+        <a href="#">Buy It!</a>
+
+    </li>
+
+    <li>LG 55UK6300&emsp; $1098.00&emsp;
+
+        Out of stock.
+
+    </li>
+
+</ul>
+```
 
 
 Syntax
