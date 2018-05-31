@@ -11,7 +11,9 @@ object Main extends App {
     )
   val input =
     """
-      |\markdown {this is an __boring__ *test*}
+      |\set v \{a 3} \v.a
+      |\markdown {this is a __boring__ *example*}
+      |The current time is \now.
     """.trim.stripMargin
   val assigns =
     Map(

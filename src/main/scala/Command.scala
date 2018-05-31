@@ -18,16 +18,6 @@ abstract class Command( val name: String, var arity: Int ) extends ((Position, R
 
 object Command {
 
-//  val entities = {
-//    val map = new mutable.HashMap[Int, String]
-//    val json = DefaultJSONReader.fromSource( io.Source.fromInputStream(classOf[Command].getResourceAsStream("entities.json")) )
-//
-//    for ((k, v) <- json)
-//      if (map contains k)
-//
-//    println( json )
-//  }
-
   class Const[T] {
     private var set = false
     private var value: T = _
@@ -60,51 +50,150 @@ object Command {
   val standard =
     List(
 
+      new Command( "*", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a * b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "+", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a + b
+            case List( a: Seq[_], b: Seq[_] ) => a ++ b
+            case List( a: Seq[_], b: Any ) => a :+ b
+            case List( a: Any, b: Seq[_] ) => a +: b
+            case List( a: String, b: String ) => a + b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "-", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a - b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "..", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match {
+            case List( start: BigDecimal, end: BigDecimal ) => start to end by 1
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "/", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a / b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "/=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args.head ) != renderer.eval( args.tail.head )
+      },
+
+      new Command( "<", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: String, b: String ) => a < b
+            case List( a: BigDecimal, b: BigDecimal ) => a < b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "<=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: String, b: String ) => a <= b
+            case List( a: BigDecimal, b: BigDecimal ) => a <= b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( "=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args.head ) == renderer.eval( args.tail.head )
+      },
+
+      new Command( ">", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: String, b: String ) => a > b
+            case List( a: BigDecimal, b: BigDecimal ) => a > b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
+      new Command( ">=", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: String, b: String ) => a >= b
+            case List( a: BigDecimal, b: BigDecimal ) => a >= b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
+          }
+      },
+
       new Command( "[]", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           Nil
       },
 
-      new Command( "{}", 0 ) {
+      new Command( "^", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          Map()
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) if b.isValidInt => a pow b.intValue
+            case List( a, b ) => problem( pos, s"expected arguments <number> <integer>: $a, $b" )
+          }
       },
 
-      new Command( "n", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          "\n"
+      new Command( "abs", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case n: BigDecimal => n.abs
+            case a => problem( pos, s"not a number: $a" )
+          }
+        }
       },
 
-      new Command( "t", 0 ) {
+      new Command( "append", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          "\t"
+          renderer eval args match  {
+            case List( a: Any, b: Seq[_] ) => b :+ a
+            case List( a: String, b: String ) => b + a
+            case List( a, b ) => problem( pos, s"expected arguments <any> <sequence> or <string> <string>: $a, $b" )
+          }
       },
 
-      new Command( "true", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          true
+      new Command( "ceil", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ) match {
+            case n: BigDecimal =>
+              if (n.isWhole)
+                n
+              else if (n > 0)
+                n.toBigInt + 1
+              else
+                n.toBigInt
+            case a => problem( pos, s"not a number: $a" )
+          }
+        }
       },
 
-      new Command( "false", 0 ) {
+      new Command( "contains", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          false
-      },
-
-      new Command( "null", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          null
-      },
-
-      new Command( "today", 0 ) {
-        val format = new Const[DateTimeFormatter]
-
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          ZonedDateTime.now.format( format(DateTimeFormatter.ofPattern(renderer.config("today").toString)) )
-      },
-
-      new Command( "now", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          ZonedDateTime.now
+          renderer.eval( args ) match  {
+            case List( a: String, b: String ) => a contains b
+            case List( a: Seq[_], b: String ) => a contains b
+            case List( a: Map[_, _], b: String ) => a.asInstanceOf[Map[String, Any]] contains b
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
+          }
       },
 
       new Command( "date", 2 ) {
@@ -115,23 +204,39 @@ object Command {
           }
       },
 
-      new Command( "nil", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          renderer.eval( args.head )
-          nil
-        }
+      new Command( "default", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer eval args match  {
+            case List( a: Any, b: Any ) =>
+              if (b == nil)
+                a
+              else
+                b
+          }
       },
 
-      new Command( "normalize", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          renderer.eval( args.head ).toString.trim.replaceAll( """\s+""", " " )
-        }
+      new Command( "distinct", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: Seq[_] ) => s distinct
+            case List( a ) => problem( pos, s"expected sequence argument: $a" )
+          }
       },
 
-      new Command( "markdown", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          Markdown( renderer.eval(args.head).toString )
-        }
+      new Command( "downcase", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s toLowerCase
+            case List( a ) => problem( pos, s"expected string argument: $a" )
+          }
+      },
+
+      new Command( "drop", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( n: BigDecimal, s: Seq[_] ) => s drop n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
+          }
       },
 
       new Command( "escape", 1 ) {
@@ -168,28 +273,17 @@ object Command {
         }
       },
 
-      new Command( "abs", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          renderer.eval( args.head ) match {
-            case n: BigDecimal => n.abs
-            case a => problem( pos, s"not a number: $a" )
-          }
-        }
+      new Command( "false", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          false
       },
 
-      new Command( "ceil", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          renderer.eval( args.head ) match {
-            case n: BigDecimal =>
-              if (n.isWhole)
-                n
-              else if (n > 0)
-                n.toBigInt + 1
-              else
-                n.toBigInt
-            case a => problem( pos, s"not a number: $a" )
+      new Command( "filter", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          (args.head, renderer.eval( args.tail.head )) match {
+            case (lambda, s: Seq[_]) => s filter (e => truthy( invoke(renderer, lambda, e)) )
+            case (a, b) => problem( pos, s"expected arguments <lambda <sequence>, given $a, $b" )
           }
-        }
       },
 
       new Command( "floor", 1 ) {
@@ -207,6 +301,89 @@ object Command {
         }
       },
 
+      new Command( "head", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s head
+            case List( s: Seq[_] ) => s head
+            case List( a ) =>
+              println( a.getClass)
+              problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "include", 1 ) {
+        val dir = new Const[String]
+
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          val file = new File( dir(renderer.config("include").toString), renderer.eval(args.head).toString )
+          val charset = optional get "charset" map (_.toString)
+
+          renderer.eval( renderer.parser.parse(if (charset.isDefined) io.Source.fromFile(file) else io.Source.fromFile(file)(charset get)) )
+        }
+      },
+
+      new Command( "join", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( sep: String, s: Seq[_] ) => s mkString sep
+            case List( a, b ) => problem( pos, s"expected arguments <separator> <sequence>, given $a, $b" )
+          }
+      },
+
+      new Command( "join", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: Seq[_], sep: String ) => s mkString sep
+            case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
+          }
+      },
+
+      new Command( "last", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s last
+            case List( s: Seq[_] ) => s last
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "map", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          (args.head, renderer.eval( args.tail.head )) match {
+            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_ getOrElse( f, nil ))
+            case (lambda, s: Seq[_]) => s map (invoke( renderer, lambda, _ ))
+            case (a, b) => problem( pos, s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b" )
+          }
+      },
+
+      new Command( "markdown", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          Markdown( renderer.eval(args.head).toString )
+        }
+      },
+
+      new Command( "max", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a max b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "min", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a min b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
+      },
+
+      new Command( "n", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          "\n"
+      },
+
       new Command( "neg", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
@@ -216,13 +393,55 @@ object Command {
         }
       },
 
-      new Command( "round", 1 ) {
+      new Command( "nil", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          (renderer.eval( args.head ), optional get "scale" getOrElse 0) match {
-            case (n: BigDecimal, scala: Number) => round( n, scala.intValue, renderer.config )
-            case (a, b) => problem( pos, s"not a number: $a, $b" )
-          }
+          renderer.eval( args.head )
+          nil
         }
+      },
+
+      new Command( "normalize", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args.head ).toString.trim.replaceAll( """\s+""", " " )
+        }
+      },
+
+      new Command( "now", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          ZonedDateTime.now
+      },
+
+      new Command( "null", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          null
+      },
+
+      new Command( "number", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) =>
+              number( s ) match {
+                case None => problem( pos, s"not a number: $s" )
+                case Some( n ) => n
+              }
+            case List( a ) => problem( pos, s"expected string argument, given $a" )
+          }
+      },
+
+      new Command( "regex", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s.r
+            case List( a ) => problem( pos, s"expected string argument, given $a" )
+          }
+      },
+
+      new Command( "rem", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: BigDecimal, b: BigDecimal ) => a remainder b
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
       },
 
       new Command( "remove", 2 ) {
@@ -257,114 +476,6 @@ object Command {
           }
       },
 
-      new Command( "min", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a min b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
-      new Command( "max", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a max b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
-      new Command( "join", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( sep: String, s: Seq[_] ) => s mkString sep
-            case List( a, b ) => problem( pos, s"expected arguments <separator> <sequence>, given $a, $b" )
-          }
-      },
-
-      new Command( "map", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          (args.head, renderer.eval( args.tail.head )) match {
-            case (LiteralAST( f: String ), s: Seq[_]) => s.asInstanceOf[Seq[Map[String, Any]]] map (_ getOrElse( f, nil ))
-            case (lambda, s: Seq[_]) => s map (invoke( renderer, lambda, _ ))
-            case (a, b) => problem( pos, s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b" )
-          }
-      },
-
-      new Command( "filter", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          (args.head, renderer.eval( args.tail.head )) match {
-            case (lambda, s: Seq[_]) => s filter (e => truthy( invoke(renderer, lambda, e)) )
-            case (a, b) => problem( pos, s"expected arguments <lambda <sequence>, given $a, $b" )
-          }
-      },
-
-      new Command( "take", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( n: BigDecimal, s: Seq[_] ) => s take n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
-          }
-      },
-
-      new Command( "drop", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( n: BigDecimal, s: Seq[_] ) => s drop n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
-          }
-      },
-
-      new Command( "join", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: Seq[_], sep: String ) => s mkString sep
-            case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
-          }
-      },
-
-      new Command( "split", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( sep: String, s: String ) => s split sep toList
-            case List( sep: String, s: String ) => sep split s toList
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <regex> <string>, given $a, $b" )
-          }
-      },
-
-      new Command( "regex", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) => s.r
-            case List( a ) => problem( pos, s"expected string argument, given $a" )
-          }
-      },
-
-      new Command( "u", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( n: BigDecimal ) if n.isValidChar => n.toChar
-            case List( n: BigDecimal ) => problem( pos, s"number not a valid character: $n" )
-            case List( a ) => problem( pos, s"expected number argument, given $a" )
-          }
-      },
-
-      new Command( "number", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) =>
-              number( s ) match {
-                case None => problem( pos, s"not a number: $s" )
-                case Some( n ) => n
-              }
-            case List( a ) => problem( pos, s"expected string argument, given $a" )
-          }
-      },
-
-      new Command( "string", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          display( renderer.eval(args.head) )
-      },
-
       new Command( "reverse", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
@@ -372,6 +483,35 @@ object Command {
             case List( s: Seq[_] ) => s reverse
             case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
           }
+      },
+
+      new Command( "round", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          (renderer.eval( args.head ), optional get "scale" getOrElse 0) match {
+            case (n: BigDecimal, scala: Number) => round( n, scala.intValue, renderer.config )
+            case (a, b) => problem( pos, s"not a number: $a, $b" )
+          }
+        }
+      },
+
+      new Command( "size", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => s length
+            case List( s: Seq[_] ) => s length
+            case List( s: collection.Map[_, _] ) => s size
+            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "slice", 3 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          renderer.eval( args ) match  {
+            case List( s: String, start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
+            case List( s: Seq[_], start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
+            case List( a, b ) => problem( pos, s"expected arguments <string> <start> <end> or <sequence> <start> <end>: $a, $b" )
+          }
+        }
       },
 
       new Command( "sort", 1 ) {
@@ -403,24 +543,23 @@ object Command {
         }
       },
 
-      new Command( "head", 1 ) {
+      new Command( "split", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( s: String ) => s head
-            case List( s: Seq[_] ) => s head
-            case List( a ) =>
-              println( a.getClass)
-              problem( pos, s"expected string or sequence argument: $a" )
+            case List( sep: String, s: String ) => s split sep toList
+            case List( sep: String, s: String ) => sep split s toList
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <regex> <string>, given $a, $b" )
           }
       },
 
-      new Command( "last", 1 ) {
+      new Command( "string", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) => s last
-            case List( s: Seq[_] ) => s last
-            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
-          }
+          display( renderer.eval(args.head) )
+      },
+
+      new Command( "t", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          "\t"
       },
 
       new Command( "tail", 1 ) {
@@ -432,20 +571,19 @@ object Command {
           }
       },
 
-      new Command( "distinct", 1 ) {
+      new Command( "take", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( s: Seq[_] ) => s distinct
-            case List( a ) => problem( pos, s"expected sequence argument: $a" )
+            case List( n: BigDecimal, s: Seq[_] ) => s take n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
           }
       },
 
-      new Command( "lowercase", 1 ) {
+      new Command( "today", 0 ) {
+        val format = new Const[DateTimeFormatter]
+
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) => s toLowerCase
-            case List( a ) => problem( pos, s"expected string argument: $a" )
-          }
+          ZonedDateTime.now.format( format(DateTimeFormatter.ofPattern(renderer.config("today").toString)) )
       },
 
       new Command( "trim", 1 ) {
@@ -456,7 +594,21 @@ object Command {
           }
       },
 
-      new Command( "uppercase", 1 ) {
+      new Command( "true", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          true
+      },
+
+      new Command( "u", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( n: BigDecimal ) if n.isValidChar => n.toChar
+            case List( n: BigDecimal ) => problem( pos, s"number not a valid character: $n" )
+            case List( a ) => problem( pos, s"expected number argument, given $a" )
+          }
+      },
+
+      new Command( "upcase", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( s: String ) => s toUpperCase
@@ -464,172 +616,10 @@ object Command {
           }
       },
 
-      new Command( "size", 1 ) {
+      new Command( "{}", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) => s length
-            case List( s: Seq[_] ) => s length
-            case List( s: collection.Map[_, _] ) => s size
-            case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
-          }
+          Map()
       },
-
-      new Command( "include", 1 ) {
-        val dir = new Const[String]
-
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          val file = new File( dir(renderer.config("include").toString), renderer.eval(args.head).toString )
-          val charset = optional get "charset" map (_.toString)
-
-          renderer.eval( renderer.parser.parse(if (charset.isDefined) io.Source.fromFile(file) else io.Source.fromFile(file)(charset get)) )
-        }
-      },
-
-      new Command( "rem", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a remainder b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
-      new Command( "contains", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: String, b: String ) => a contains b
-            case List( a: Seq[_], b: String ) => a contains b
-            case List( a: Map[_, _], b: String ) => a.asInstanceOf[Map[String, Any]] contains b
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
-          }
-      },
-
-      new Command( "slice", 3 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          renderer.eval( args ) match  {
-            case List( s: String, start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
-            case List( s: Seq[_], start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
-            case List( a, b ) => problem( pos, s"expected arguments <string> <start> <end> or <sequence> <start> <end>: $a, $b" )
-          }
-        }
-      },
-
-      new Command( "default", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer eval args match  {
-            case List( a: Any, b: Any ) =>
-              if (b == nil)
-                a
-              else
-                b
-          }
-      },
-
-      new Command( "append", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer eval args match  {
-            case List( a: Any, b: Seq[_] ) => b :+ a
-            case List( a: String, b: String ) => b + a
-            case List( a, b ) => problem( pos, s"expected arguments <any> <sequence> or <string> <string>: $a, $b" )
-          }
-      },
-
-      new Command( "+", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a + b
-            case List( a: Seq[_], b: Seq[_] ) => a ++ b
-            case List( a: Seq[_], b: Any ) => a :+ b
-            case List( a: Any, b: Seq[_] ) => a +: b
-            case List( a: String, b: String ) => a + b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
-          }
-      },
-
-      new Command( "-", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a - b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
-      new Command( "*", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a * b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
-      new Command( "/", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) => a / b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
-      new Command( "^", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: BigDecimal, b: BigDecimal ) if b.isValidInt => a pow b.intValue
-            case List( a, b ) => problem( pos, s"expected arguments <number> <integer>: $a, $b" )
-          }
-      },
-
-      new Command( "=", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args.head ) == renderer.eval( args.tail.head )
-      },
-
-      new Command( "/=", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args.head ) != renderer.eval( args.tail.head )
-      },
-
-      new Command( "<", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: String, b: String ) => a < b
-            case List( a: BigDecimal, b: BigDecimal ) => a < b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
-          }
-      },
-
-      new Command( ">", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: String, b: String ) => a > b
-            case List( a: BigDecimal, b: BigDecimal ) => a > b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
-          }
-      },
-
-      new Command( "<=", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: String, b: String ) => a <= b
-            case List( a: BigDecimal, b: BigDecimal ) => a <= b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
-          }
-      },
-
-      new Command( ">=", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: String, b: String ) => a >= b
-            case List( a: BigDecimal, b: BigDecimal ) => a >= b
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number> or <string> <string>: $a, $b" )
-          }
-      },
-
-      new Command( "..", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match {
-            case List( start: BigDecimal, end: BigDecimal ) => start to end by 1
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      }
 
     ) map (c => c.name -> c) toMap
 
