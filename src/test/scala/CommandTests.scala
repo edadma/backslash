@@ -117,4 +117,11 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\[]""", true ) shouldBe "[]"
   }
 
+  "power" in {
+    test( """\^ 3 4""", true ) shouldBe "81"
+    test( """\^ 3 -4""", true ) shouldBe "0.01234567901234567901234567901234568"
+    a [RuntimeException] should be thrownBy {test( """\^ asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\^ 1 asdf""", false )}
+  }
+
 }
