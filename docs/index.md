@@ -90,7 +90,7 @@ There are five categories into which control sequences can be grouped, depending
 
 ### Regular Commands
 
-*Regular commands* or *functions* constitute the largest category of control sequences and cover a wide range of uses.  They are called *regular* because they are all handled the same way during parsing and rendering.  Some functions need to be supplied with special input, known as *arguments* in order to produce an output, and others can produce their output without requiring any arguments.  The regular command reference contains information on all the built-in regular commands.
+*Regular commands* or *functions* constitute the largest category of control sequences and cover a wide range of uses.  They are called *regular* because they are all handled the same way during parsing and rendering.  Some functions need to be supplied with special input, known as *arguments* in order to produce an output, and others can produce their output without requiring any arguments.  The [Regular Command Reference](./regular-command-reference.html) contains information on all the built-in regular commands.
 
 Here are some examples.
 
