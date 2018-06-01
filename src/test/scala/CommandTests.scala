@@ -73,6 +73,8 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\< 3 4""", true ) shouldBe "true"
     test( """\< a b""", true ) shouldBe "true"
     test( """\< ac b""", true ) shouldBe "true"
+    test( """\< 3 3""", true ) shouldBe "false"
+    test( """\< a a""", true ) shouldBe "false"
     a [RuntimeException] should be thrownBy {test( """\< asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\< 1 asdf""", false )}
   }
@@ -81,6 +83,8 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\<= 3 4""", true ) shouldBe "true"
     test( """\<= a b""", true ) shouldBe "true"
     test( """\<= ac b""", true ) shouldBe "true"
+    test( """\<= 3 3""", true ) shouldBe "true"
+    test( """\<= a a""", true ) shouldBe "true"
     a [RuntimeException] should be thrownBy {test( """\<= asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\<= 1 asdf""", false )}
   }
@@ -93,8 +97,20 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\> 3 4""", true ) shouldBe "false"
     test( """\> a b""", true ) shouldBe "false"
     test( """\> ac b""", true ) shouldBe "false"
+    test( """\> 3 3""", true ) shouldBe "false"
+    test( """\> a a""", true ) shouldBe "false"
     a [RuntimeException] should be thrownBy {test( """\> asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\> 1 asdf""", false )}
+  }
+
+  "greater-than-or-equal" in {
+    test( """\>= 3 4""", true ) shouldBe "false"
+    test( """\>= a b""", true ) shouldBe "false"
+    test( """\>= ac b""", true ) shouldBe "false"
+    test( """\>= 3 3""", true ) shouldBe "true"
+    test( """\>= a a""", true ) shouldBe "true"
+    a [RuntimeException] should be thrownBy {test( """\>= asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\>= 1 asdf""", false )}
   }
 
 }
