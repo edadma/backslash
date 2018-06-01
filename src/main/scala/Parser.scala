@@ -304,9 +304,7 @@ class Parser( commands: Map[String, Command] ) {
     def fields( start: Int, expr: AST ): AST =
       v.indexOf( '.', start ) match {
         case -1 => expr
-        case dot if dot == start || dot == v.length - 1 =>
-          println( dot, start, v.length, s"|$v|" )
-          problem( pos, "illegal variable reference" )
+        case dot if dot == start || dot == v.length - 1 => problem( pos, "illegal variable reference" )
         case dot =>
           v.indexOf( '.', dot + 1 ) match {
             case -1 => DotAST( pos, expr, pos, LiteralAST(v.substring(dot + 1)) )
