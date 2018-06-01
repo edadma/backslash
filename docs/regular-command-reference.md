@@ -314,3 +314,31 @@ output
 ### Exceptions
 
 If the arguments are not both numerical or both strings, an exception is thrown.
+
+
+[]
+--
+
+### Description
+
+The empty sequence.
+
+### Input
+
+none
+
+### Output
+
+Returns the empty sequence.
+
+### Example
+
+    \[]
+
+output
+
+    []
+
+### Exceptions
+
+none

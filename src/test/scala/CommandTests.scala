@@ -113,4 +113,8 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\>= 1 asdf""", false )}
   }
 
+  "empty-sequence" in {
+    test( """\[]""", true ) shouldBe "[]"
+  }
+
 }
