@@ -65,4 +65,16 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\/ 1 asdf""", false )}
   }
 
+  "unequal" in {
+    test( """\/= 3 4""", true ) shouldBe "true"
+  }
+
+  "less-than" in {
+    test( """\< 3 4""", true ) shouldBe "true"
+    test( """\< a b""", true ) shouldBe "true"
+    test( """\< ac b""", true ) shouldBe "true"
+    a [RuntimeException] should be thrownBy {test( """\/ asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\/ 1 asdf""", false )}
+  }
+
 }
