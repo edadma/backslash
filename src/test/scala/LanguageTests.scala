@@ -183,9 +183,22 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
         |\set v 'asdf'
         |\v
         |\>>> wow
-      """.stripMargin
-      , false ) shouldBe
+      """.stripMargin, false ) shouldBe
       """
+        |\set v 'asdf'
+        |\v
+        |wow
+      """.stripMargin
+    test(
+      """
+        |\raw {{ }}
+        |\{{
+        |\set v 'asdf'
+        |\v
+        |\}} wow
+      """.stripMargin, false ) shouldBe
+      """
+        |
         |\set v 'asdf'
         |\v
         |wow

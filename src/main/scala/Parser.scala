@@ -14,6 +14,8 @@ class Parser( commands: Map[String, Command] ) {
   var beginDelim = "{"
   var endDelim = "}"
   var pipeDelim = "|"
+  var rawBeginDelim = "<<<"
+  var rawEndDelim = ">>>"
 
   val varRegex = """\.([^.]*)"""r
   val unicodeRegex = "\\\\u[0-9a-fA-F]{4}".r
@@ -103,6 +105,13 @@ class Parser( commands: Map[String, Command] ) {
         beginDelim = b
         endDelim = e
         (r4, null)
+      case Some( (r1, "raw") ) =>
+        val (r2, b) = parseStringArgument( r1 )
+        val (r3, e) = parseStringArgument( r2 )
+
+        rawBeginDelim = b
+        rawEndDelim = e
+        (r3, null)
       case Some( (r1, "def") ) =>
         val (r2, v) = parseStringArguments( r1 )
 
@@ -381,8 +390,7 @@ class Parser( commands: Map[String, Command] ) {
 
   def parseCommand( pos: Position, name: String, r: Input, statement: Boolean ): (Input, AST) = {
     val res@(rr, ast) =
-      name match {
-        case "<<<" =>
+      if (name == rawBeginDelim) {
           var first = true
           var prev = ' '
 
@@ -391,7 +399,7 @@ class Parser( commands: Map[String, Command] ) {
               if (cr atEnd)
                 problem( r, "unclosed raw text" )
               else
-                !lookahead( cr, csDelim + ">>>" )
+                !lookahead( cr, csDelim + rawEndDelim )
 
             first = false
             prev = cr.first
@@ -401,104 +409,106 @@ class Parser( commands: Map[String, Command] ) {
           val (r1, s) = consumeCond( r, cond )
 
           (r1, LiteralAST( s ))
-        case "seq" =>
-          val (r1, vec) = parseList( r, true )
+      } else
+        name match {
+          case "seq" =>
+            val (r1, vec) = parseList( r, true )
 
-          (r1, SeqAST( vec ))
-        case "{" =>
-          val (r1, vec) = parseList( r, false )
+            (r1, SeqAST( vec ))
+          case "{" =>
+            val (r1, vec) = parseList( r, false )
 
-          if (vec.length % 2 == 1)
-            problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )
+            if (vec.length % 2 == 1)
+              problem( r1.pos, s"expected an even number of expressions: ${vec.length}" )
 
-          (r1, ObjectAST( vec ))
-        case "." =>
-          val (r1, ast) = parseExpressionArgument( r )
-          val r2 = skipSpace( r1 )
-          val (r3, a) = parseRegularArgument( r1 )
+            (r1, ObjectAST( vec ))
+          case "." =>
+            val (r1, ast) = parseExpressionArgument( r )
+            val r2 = skipSpace( r1 )
+            val (r3, a) = parseRegularArgument( r1 )
 
-          (r3, DotAST( r.pos, ast, r2.pos, a ))
-        case "set" =>
-          val (r1, v) = parseVariableArgument( r )
-          val (r2, ast) = parseExpressionArgument( r1 )
+            (r3, DotAST( r.pos, ast, r2.pos, a ))
+          case "set" =>
+            val (r1, v) = parseVariableArgument( r )
+            val (r2, ast) = parseExpressionArgument( r1 )
 
-          (r2, SetAST( v, ast ))
-        case "in" =>
-          val (r1, v) = parseVariableArgument( r )
-          val r2 = skipSpace( r1 )
-          val (r3, ast) = parseExpressionArgument( r2 )
+            (r2, SetAST( v, ast ))
+          case "in" =>
+            val (r1, v) = parseVariableArgument( r )
+            val r2 = skipSpace( r1 )
+            val (r3, ast) = parseExpressionArgument( r2 )
 
-          (r3, InAST( pos, v, r2.pos, ast ))
-        case "not" =>
-          val (r1, expr) = parseExpressionArgument( r )
+            (r3, InAST( pos, v, r2.pos, ast ))
+          case "not" =>
+            val (r1, expr) = parseExpressionArgument( r )
 
-          (r1, NotAST( expr ))
-        case "and" =>
-          val (r1, args) = parseExpressionArguments( r, 2 )
+            (r1, NotAST( expr ))
+          case "and" =>
+            val (r1, args) = parseExpressionArguments( r, 2 )
 
-          (r1, AndAST( args.head, args.tail.head ))
-        case "or" =>
-          val (r1, args) = parseExpressionArguments( r, 2 )
+            (r1, AndAST( args.head, args.tail.head ))
+          case "or" =>
+            val (r1, args) = parseExpressionArguments( r, 2 )
 
-          (r1, OrAST( args.head, args.tail.head ))
-        case " " => (r, LiteralAST( " " ))
-        case "if" =>
-          val (r1, expr) = parseExpressionArgument( r )
-          val (r2, body) = parseRegularArgument( r1 )
-          val (r3, elsifs) = parseCases( "elsif", r2 )
-          val conds = (expr, body) +: elsifs
+            (r1, OrAST( args.head, args.tail.head ))
+          case " " => (r, LiteralAST( " " ))
+          case "if" =>
+            val (r1, expr) = parseExpressionArgument( r )
+            val (r2, body) = parseRegularArgument( r1 )
+            val (r3, elsifs) = parseCases( "elsif", r2 )
+            val conds = (expr, body) +: elsifs
 
-          parseElse( r3 ) match {
-            case Some( (r4, els) ) => (r4, IfAST( conds, Some(els) ))
-            case _ => (r3, IfAST( conds, None ))
-          }
-        case "unless" =>
-          val (r1, expr) = parseExpressionArgument( r )
-          val (r2, body) = parseRegularArgument( r1 )
+            parseElse( r3 ) match {
+              case Some( (r4, els) ) => (r4, IfAST( conds, Some(els) ))
+              case _ => (r3, IfAST( conds, None ))
+            }
+          case "unless" =>
+            val (r1, expr) = parseExpressionArgument( r )
+            val (r2, body) = parseRegularArgument( r1 )
 
-          parseElse( r2 ) match {
-            case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
-            case _ => (r2, UnlessAST( expr, body, None ))
-          }
-        case "match" =>
-          val (r1, expr) = parseExpressionArgument( r )
-          val (r2, cases) = parseCases( "case", r1 )
+            parseElse( r2 ) match {
+              case Some( (r3, els) ) => (r3, UnlessAST( expr, body, Some(els) ))
+              case _ => (r2, UnlessAST( expr, body, None ))
+            }
+          case "match" =>
+            val (r1, expr) = parseExpressionArgument( r )
+            val (r2, cases) = parseCases( "case", r1 )
 
-          parseElse( r2 ) match {
-            case Some( (r3, els) ) => (r3, MatchAST( expr, cases, Some(els) ))
-            case _ => (r2, MatchAST( expr, cases, None ))
-          }
-        case "for" =>
-          val r0 = skipSpace( r )
-          val (r1, expr) = parseExpressionArgument( r0 )
-          val (r2, body) = parseRegularArgument( r1 )
+            parseElse( r2 ) match {
+              case Some( (r3, els) ) => (r3, MatchAST( expr, cases, Some(els) ))
+              case _ => (r2, MatchAST( expr, cases, None ))
+            }
+          case "for" =>
+            val r0 = skipSpace( r )
+            val (r1, expr) = parseExpressionArgument( r0 )
+            val (r2, body) = parseRegularArgument( r1 )
 
-          parseElse( r2 ) match {
-            case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
-            case _ => (r2, ForAST( r0.pos, expr, body, None ))
-          }
-        case "break" => (r, BreakAST( pos ))
-        case "continue" => (r, ContinueAST( pos ))
-        case _ =>
-          macros get name match {
-            case None =>
-              commands get name match {
-                case None => (r, dotExpression( pos, name ))
-                case Some( c ) =>
-                  val (r1, args, optional) = parseCommandArguments( r, c.arity )
+            parseElse( r2 ) match {
+              case Some( (r3, els) ) => (r3, ForAST( r0.pos, expr, body, Some(els) ))
+              case _ => (r2, ForAST( r0.pos, expr, body, None ))
+            }
+          case "break" => (r, BreakAST( pos ))
+          case "continue" => (r, ContinueAST( pos ))
+          case _ =>
+            macros get name match {
+              case None =>
+                commands get name match {
+                  case None => (r, dotExpression( pos, name ))
+                  case Some( c ) =>
+                    val (r1, args, optional) = parseCommandArguments( r, c.arity )
 
-                  (r1, CommandAST( pos, c, args, optional ))
-              }
-            case Some( Macro(parameters, body) ) =>
-              if (parameters isEmpty)
-                (r, body)
-              else {
-                val (r1, args) = parseRegularArguments( r, parameters.length )
+                    (r1, CommandAST( pos, c, args, optional ))
+                }
+              case Some( Macro(parameters, body) ) =>
+                if (parameters isEmpty)
+                  (r, body)
+                else {
+                  val (r1, args) = parseRegularArguments( r, parameters.length )
 
-                (r1, MacroAST( body, parameters zip args ))
-              }
-          }
-      }
+                  (r1, MacroAST( body, parameters zip args ))
+                }
+            }
+        }
 
       def filters( r: Input, ast: AST ): (Input, AST) =
         matches( skipSpace(r), pipeDelim ) match {

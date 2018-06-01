@@ -14,7 +14,7 @@ object Main extends App {
 
   val config =
     Map(
-      "today" -> "MMM d, y",
+      "today" -> "MMMM d, y",
       "include" -> ".",
       "rounding" -> "HALF_EVEN"
     )
