@@ -17,7 +17,7 @@ Multiplies two numbers returning the product.
 
 ### Input
 
-Takes 2 numerical arguments.
+Takes two numerical arguments.
 
 ### Output
 
@@ -41,15 +41,15 @@ If the arguments are not numerical, an exception is thrown.
 
 ### Description
 
-Adds two numbers returning the sum, or concatenates two sequences or two strings, or appends or prepends an item to a sequence, or concatenates 2 objects.
+Adds two numbers returning the sum, or concatenates two sequences or two strings or two objects, or appends or prepends an item to a sequence.
 
 ### Input
 
-Takes 2 numerical arguments, or 2 sequences, or 2 objects, or 2 strings, or a non-sequence item and a sequence.
+Takes two numerical arguments, or two sequences, or two objects, or two strings, or a non-sequence item and a sequence.
 
 ### Output
 
-Returns the sum as a numerical result, or concatenation of 2 sequences as a sequence, or concatenation of 2 strings as a string.
+Returns the sum as a numerical result, or concatenation of two sequences or an item and a sequence as a sequence, or concatenation of two strings as a string, or concatenation of two objects as an object.
 
 ### Example
 
@@ -73,7 +73,7 @@ Computes the difference of two numbers.
 
 ### Input
 
-Takes 2 numerical arguments.
+Takes two numerical arguments.
 
 ### Output
 
