@@ -54,12 +54,15 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """\seq {1 2 3} | map \+ _ 3""", false ) shouldBe "[4, 5, 6]"
     test( """\set v 4\seq {1 2 3 \v}""", false ) shouldBe "[1, 2, 3, 4]"
     test( """\seq {}""", false ) shouldBe "[]"
+    test( """\[]""", false ) shouldBe "[]"
+    a [RuntimeException] should be thrownBy {test( """\seq {3 4 5""", false )}
   }
 
   "obj" in {
     test( """\{three 3 four 4 five 5}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5}"""
     test( """\set v 6\{three 3 four 4 five 5 six \v}""", false ) shouldBe """{"three": 3, "four": 4, "five": 5, "six": 6}"""
     test( """\{}""", false ) shouldBe """{}"""
+    a [RuntimeException] should be thrownBy {test( """\{a 3 b 4 c 5""", false )}
   }
 
   "literals" in {
@@ -67,6 +70,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v "'\b\f\n\r\t\\\'\""\v zxvc""", false ) shouldBe "asdf '\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v 123.4\+ \v 1 zxvc""", false ) shouldBe "asdf 124.4 zxvc"
+    test( """asdf \set v -3\+ \v 1 zxvc""", false ) shouldBe "asdf -2 zxvc"
+    test( """asdf \set v -3.4\+ \v 1 zxvc""", false ) shouldBe "asdf -2.4 zxvc"
     a [RuntimeException] should be thrownBy {test( """\split "a b" \null""", false )}
     test( """\null""", false ) shouldBe "null"
     a [RuntimeException] should be thrownBy {test( """\split "a b" \true""", false )}

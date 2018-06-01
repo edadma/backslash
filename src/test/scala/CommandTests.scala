@@ -31,4 +31,38 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\floor 3.1""", true ) shouldBe "3"
     test( """\floor -3.1""", true ) shouldBe "-4"
   }
+
+  "addition" in {
+    test( """\+ 3 4""", true ) shouldBe "7"
+    test( """\+ 3 4""", true ) shouldBe "7"
+    a [RuntimeException] should be thrownBy {test( """\+ asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\+ 1 asdf""", false )}
+  }
+
+  "multiplication" in {
+    test( """\* 3 4""", true ) shouldBe "12"
+    a [RuntimeException] should be thrownBy {test( """\* asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\* 1 asdf""", false )}
+  }
+
+  "subtraction" in {
+    test( """\- 3 4""", true ) shouldBe "-1"
+    a [RuntimeException] should be thrownBy {test( """\- asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\- 1 asdf""", false )}
+  }
+
+  "range" in {
+    test( """\.. 3 6""", true ) shouldBe "[3, 4, 5, 6]"
+    test( """\.. 3.1 6""", true ) shouldBe "[3.1, 4.1, 5.1]"
+    test( """\.. 3 2""", true ) shouldBe "[]"
+    a [RuntimeException] should be thrownBy {test( """\.. 3 asdf""", false )}
+    a [RuntimeException] should be thrownBy {test( """\.. asdf 3""", false )}
+  }
+
+  "division" in {
+    test( """\/ 3 4""", true ) shouldBe "0.75"
+    a [RuntimeException] should be thrownBy {test( """\/ asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\/ 1 asdf""", false )}
+  }
+
 }
