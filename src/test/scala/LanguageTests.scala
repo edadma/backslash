@@ -21,6 +21,28 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """3 plus 4 is {\+ 3 4}.""", false ) shouldBe "3 plus 4 is 7."
 	}
 
+  "def" in {
+    test(
+      """
+        |\def m {asdf}
+        |\m, \m
+      """.stripMargin, true ) shouldBe
+      """
+        |asdf, asdf
+      """.trim.stripMargin
+    test(
+      """
+        |\def m a {as\a df}
+        |\m { blah blah }, \m ***
+      """.stripMargin, true ) shouldBe
+      """
+        |as blah blah df, as***df
+      """.trim.stripMargin
+    a [RuntimeException] should be thrownBy {test( """\def m asdf""", false )}
+    a [RuntimeException] should be thrownBy {test( """\def m {asdf""", false )}
+    a [RuntimeException] should be thrownBy {test( """\def {asdf}""", false )}
+  }
+
   "dot" in {
     test( """\. \{a 3} a""", false ) shouldBe "3"
     test( """\= \nil{} \. \{a 3} b""", false ) shouldBe "true"
