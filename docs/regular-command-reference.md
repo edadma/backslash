@@ -97,7 +97,7 @@ If the arguments are not numerical, an exception is thrown.
 
 ### Description
 
-Creates a sequence ranging from one number to another.
+Creates a sequence ranging from one number to another.  This command does not actually enumerate over all the numbers in the range to create the sequence, it creates an object that behaves as if it were that sequence (i.e. runs in O(1) time).
 
 ### Input
 
