@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
   "xyz.hyperreal" %% "scala-markdown" % "0.3.1"
 )
 
-coverageExcludedPackages := ".*Main;.*nil;.*package;.*Example;*Entity"
+coverageExcludedPackages := ".*Main;.*nil;.*package;.*Example;.*Entity"
 
 mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value.replace('-', '_') + ".Main" )
 
