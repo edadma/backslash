@@ -19,4 +19,16 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "markdown" in {
     test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
   }
+
+  "ceil" in {
+    test( """\+ 0 \ceil 3""", true ) shouldBe "3"
+    test( """\ceil 3.1""", true ) shouldBe "4"
+    test( """\ceil -3.1""", true ) shouldBe "-3"
+  }
+
+  "floor" in {
+    test( """\+ 0 \floor 3""", true ) shouldBe "3"
+    test( """\floor 3.1""", true ) shouldBe "3"
+    test( """\floor -3.1""", true ) shouldBe "-4"
+  }
 }

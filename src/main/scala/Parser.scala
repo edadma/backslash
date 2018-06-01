@@ -264,6 +264,15 @@ class Parser( commands: Map[String, Command] ) {
           case (r1, n) if isNumber( n ) => (r1, BigDecimal( n ))
           case s => s
         }
+      case '-' =>
+        if (r.rest.atEnd)
+          (r.rest, "-")
+        else
+          parseLiteralArgument( r.rest ) match {
+            case (r1, s: String) => (r1, s"-$s")
+            case (r1, n: BigDecimal) => (r1, -n)
+            case _ => problem( r, "something bad happened" )
+          }
       case _ => parseString( r )
     }
 

@@ -175,13 +175,7 @@ object Command {
       new Command( "ceil", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
-            case n: BigDecimal =>
-              if (n.isWhole)
-                n
-              else if (n > 0)
-                n.toBigInt + 1
-              else
-                n.toBigInt
+            case n: BigDecimal => n.setScale( 0, BigDecimal.RoundingMode.CEILING )
             case a => problem( pos, s"not a number: $a" )
           }
         }
@@ -290,13 +284,7 @@ object Command {
       new Command( "floor", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
-            case n: BigDecimal =>
-              if (n.isWhole)
-                n
-              else if (n > 0)
-                n.toBigInt
-              else
-                n.toBigInt - 1
+            case n: BigDecimal => n.setScale( 0, BigDecimal.RoundingMode.FLOOR )
             case a => problem( pos, s"not a number: $a" )
           }
         }
