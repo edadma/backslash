@@ -148,15 +148,31 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           }
 
         try {
+          val len = BigDecimal( seq.length )
+
           seq.zipWithIndex foreach { case (e, idx) =>
             try {
-              scopes.top(if (in isDefined) in.get else "_i") = e
-              scopes.top("_idx") = BigDecimal( idx )
+              val forloop =
+                Map(
+                  "first" -> (idx == 0),
+                  "index" -> (idx + BigDecimal( 1 )),
+                  "index0" -> BigDecimal( idx ),
+                  "last" -> (idx == len - 1),
+                  "length" -> len,
+                  "rindex" -> (len - idx),
+                  "rindex0" -> (len - idx - 1),
+                  "element" -> e
+                )
+              scopes.top("forloop") = forloop
 
-              if (in.isEmpty && e.isInstanceOf[collection.Map[_, _]])
-                e.asInstanceOf[collection.Map[String, Any]] foreach {
-                  case (k, v) => scopes.top(k) = v
-                }
+              in match {
+                case None if e.isInstanceOf[collection.Map[_, _]] =>
+                  e.asInstanceOf[collection.Map[String, Any]] foreach {
+                    case (k, v) => scopes.top(k) = v
+                  }
+                case None =>
+                case Some( v ) => scopes.top(v) = e
+              }
 
               buf ++= deval( body )
             } catch {

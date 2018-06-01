@@ -97,15 +97,15 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 
   "for" in {
-    test( """start \for l \_i end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l \forloop.element end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start abcend"
     test( """start \for \in e l \e end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start abcend"
-    test( """start \for l {\_i} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\forloop.element} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start abc end"
-    test( """start \for l {\_i\ } end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\forloop.element\ } end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b c end"
-    test( """start \for l {\_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b c else end"
     test( """start \for m \f end""", true, "m" -> Map("f" -> 123) ) shouldBe
       "start 123end"
@@ -120,16 +120,16 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 
   "break" in {
-    test( """start \for l {\if \> \_idx 1 \break \_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \> \forloop.index0 1 \break \forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
-    test( """start \for l {\if \> \_idx 1 \break {\_i\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \> \forloop.index0 1 \break {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
   }
 
   "continue" in {
-    test( """start \for l {\if \= \_idx 1 \continue \_i\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \= \forloop.index0 1 \continue \forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c else end"
-    test( """start \for l {\if \= \_idx 1 \continue {\_i\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \= \forloop.index0 1 \continue {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c end"
   }
 

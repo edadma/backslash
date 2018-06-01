@@ -64,12 +64,12 @@ output
 If the arguments do not have the combination of types listed under "Input", an exception is thrown.
 
 
--
--
+..
+--
 
 ### Description
 
-Computes the difference of two numbers.
+Creates a sequence ranging from one number to another.
 
 ### Input
 
@@ -77,15 +77,15 @@ Takes two numerical arguments.
 
 ### Output
 
-Returns the difference as a numerical result.
+Returns the range as a sequence result.
 
 ### Example
 
-    \- 3 4
+    \.. 3 6
 
 output
 
-    -1
+    [3, 4, 5, 6]
 
 ### Exceptions
 
