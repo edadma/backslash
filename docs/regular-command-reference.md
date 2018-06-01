@@ -41,11 +41,11 @@ If the arguments are not numerical, an exception is thrown.
 
 ### Description
 
-Adds two numbers returning the sum.  Concatenates two sequences or two strings.  Appends or prepends an item to a sequence.
+Adds two numbers returning the sum, or concatenates two sequences or two strings, or appends or prepends an item to a sequence, or concatenates 2 objects.
 
 ### Input
 
-Takes 2 numerical arguments, or 2 sequences, or 2 strings, or a non-sequence item and a sequence.
+Takes 2 numerical arguments, or 2 sequences, or 2 objects, or 2 strings, or a non-sequence item and a sequence.
 
 ### Output
 
@@ -63,3 +63,30 @@ output
 
 If the arguments do not have the combination of types listed under "Input", an exception is thrown.
 
+
+-
+-
+
+### Description
+
+Computes the difference of two numbers.
+
+### Input
+
+Takes 2 numerical arguments.
+
+### Output
+
+Returns the difference as a numerical result.
+
+### Example
+
+    \- 3 4
+
+output
+
+    -1
+
+### Exceptions
+
+If the arguments are not numerical, an exception is thrown.

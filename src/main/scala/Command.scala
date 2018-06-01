@@ -62,6 +62,7 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( a: BigDecimal, b: BigDecimal ) => a + b
+            case List( a: Map[_, _], b: Map[_, _] ) => a ++ b
             case List( a: Seq[_], b: Seq[_] ) => a ++ b
             case List( a: Seq[_], b: Any ) => a :+ b
             case List( a: Any, b: Seq[_] ) => a +: b
