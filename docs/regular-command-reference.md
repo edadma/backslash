@@ -10,7 +10,7 @@ This page details all the built-in regular commands in lexicographical order.
 <nav>
 <ul>
 <li>
-[*](#)
+<a href="#">*</a>
 </li>
 <li>
 [+](#-1)
@@ -21,6 +21,7 @@ This page details all the built-in regular commands in lexicographical order.
 <li>
 [..](#-2)
 </li>
+</ul>
 </nav>
 
 *
