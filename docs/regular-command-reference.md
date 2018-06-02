@@ -508,7 +508,7 @@ Takes a string and a date (i.e. [TemporalAccessor](https://docs.oracle.com/javas
 
 ### Output
 
-The second argument formatted according to the pattern given by the first (see [Date Format Patterns](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns)).
+Returns the second argument formatted according to the pattern given by the first (see [Date Format Patterns](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns)).
 
 ### Example
 
