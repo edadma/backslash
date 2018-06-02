@@ -194,4 +194,11 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\floor asdf""", false )}
   }
 
+  "head" in {
+    test( """\seq {3 4 5} | head""", true ) shouldBe "3"
+    test( """\head asdf""", true ) shouldBe "a"
+    a [RuntimeException] should be thrownBy {test( """\head 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\head \[]""", false )}
+  }
+
 }
