@@ -177,4 +177,14 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\drop 123 123""", false )}
   }
 
+  "escape" in {
+    test( """\escape {a < b}""", true ) shouldBe "a &lt; b"
+    a [RuntimeException] should be thrownBy {test( """\escape 123""", false )}
+  }
+
+  "escapeOnce" in {
+    test( """\escapeOnce {a < b &lt; c}""", true ) shouldBe "a &lt; b &lt; c"
+    a [RuntimeException] should be thrownBy {test( """\escapeOnce 123""", false )}
+  }
+
 }
