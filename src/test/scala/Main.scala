@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |0.75
+      |\append ample ex
     """.trim.stripMargin
   val assigns =
     Map(

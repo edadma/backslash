@@ -124,4 +124,17 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\^ 1 asdf""", false )}
   }
 
+  "abs" in {
+    test( """\abs 4""", true ) shouldBe "4"
+    test( """\abs -4""", true ) shouldBe "4"
+    a [RuntimeException] should be thrownBy {test( """\abs asdf""", false )}
+  }
+
+  "append" in {
+    test( """\append ample ex""", true ) shouldBe "example"
+    test( """\append 3 \seq {1 2}""", true ) shouldBe "[1, 2, 3]"
+    a [RuntimeException] should be thrownBy {test( """\append asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\append 1 asdf""", false )}
+  }
+
 }

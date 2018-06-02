@@ -137,11 +137,16 @@ Grouping
 Commands Arguments
 ------------------
 
+
 ### Regular Arguments
 
+
 ### Expression Arguments
+
 
 ### Variable Arguments
 
 
+Piping
+------
 
