@@ -1,6 +1,6 @@
 package xyz.hyperreal.backslash
 
-import java.time.ZonedDateTime
+import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import java.time.format.{DateTimeFormatter, FormatStyle}
 
 import org.scalatest._
@@ -146,6 +146,13 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\contains \{three 3 four 4 five 5} asdf""", true ) shouldBe "false"
     a [RuntimeException] should be thrownBy {test( """\contains asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\contains 1 asdf""", false )}
+  }
+
+  "date" in {
+    val date = LocalDate.parse( "20111203", DateTimeFormatter.BASIC_ISO_DATE )
+
+    test( """\date "MMMM d, y" \d""", true, "d" -> date ) shouldBe "December 3, 2011"
+    a [RuntimeException] should be thrownBy {test( """\date asdf 1""", false )}
   }
 
 }

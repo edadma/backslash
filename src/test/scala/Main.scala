@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\contains {the truth is out there} truth
+      |\now | date "MMMM d, y"
     """.trim.stripMargin
   val assigns =
     Map(
