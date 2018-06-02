@@ -13,13 +13,13 @@ This page details all the built-in regular commands in lexicographical order.
 <a href="#">*</a>
 </li>
 <li>
-[+](#-1)
+<a href="#-1">+</a>
 </li>
 <li>
-[-](#-)
+<a href="#-">-</a>
 </li>
 <li>
-[..](#-2)
+<a href="#-2">..</a>
 </li>
 </ul>
 </nav>
