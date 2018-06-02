@@ -24,7 +24,7 @@ Summary
 
 ### Description
 
-Multiplies two numbers returning the product.
+Multiplies two numbers.
 
 ### Input
 
@@ -52,7 +52,7 @@ If the arguments are not numerical, an exception is thrown.
 
 ### Description
 
-Adds two numbers returning the sum, or concatenates two sequences or two strings or two objects, or appends or prepends an item to a sequence.
+Adds two numbers, or concatenates two sequences or two strings or two objects, or appends or prepends an item to a sequence.
 
 ### Input
 
@@ -108,7 +108,7 @@ If the arguments are not numerical, an exception is thrown.
 
 ### Description
 
-Creates a sequence ranging from one number to another.  This command does not actually enumerate over all the numbers in the range to create the sequence, it creates an object that behaves as if it were that sequence (i.e. runs in O(1) time).
+Creates a sequence ranging from one number to the other.  This command does not actually enumerate over all the numbers in the range to create the sequence, it creates an object that behaves as if it were that sequence (i.e. runs in O(1) time).
 
 ### Input
 
@@ -164,7 +164,7 @@ If the arguments are not numerical, an exception is thrown.
 
 ### Description
 
-Test for inequality.
+Tests for inequality.
 
 ### Input
 
@@ -192,7 +192,7 @@ none
 
 ### Description
 
-Test whether one argument is less than the other.
+Tests whether one argument is less than the other.
 
 ### Input
 
@@ -220,7 +220,7 @@ If the arguments are not both numerical or both strings, an exception is thrown.
 
 ### Description
 
-Test whether one argument is less than or equal to the other.
+Tests whether one argument is less than or equal to the other.
 
 ### Input
 
@@ -248,7 +248,7 @@ If the arguments are not both numerical or both strings, an exception is thrown.
 
 ### Description
 
-Test for equality.
+Tests for equality.
 
 ### Input
 
@@ -276,7 +276,7 @@ none
 
 ### Description
 
-Test whether one argument is greater than the other.
+Tests whether one argument is greater than the other.
 
 ### Input
 
@@ -304,7 +304,7 @@ If the arguments are not both numerical or both strings, an exception is thrown.
 
 ### Description
 
-Test whether one argument is greater than or equal to the other.
+Tests whether one argument is greater than or equal to the other.
 
 ### Input
 
@@ -360,7 +360,7 @@ none
 
 ### Description
 
-Raises one number to the power of another.
+Raises one number to the power of the other.
 
 ### Input
 
@@ -388,7 +388,7 @@ abs
 
 ### Description
 
-Computes the absolute value.
+Absolute value function.
 
 ### Input
 
@@ -444,7 +444,7 @@ ceil
 
 ### Description
 
-Computes the *ceiling function*, maps the argument to the least integer greater than or equal to it.
+Ceiling function.  Maps the argument to the least integer greater than or equal to it.
 
 ### Input
 
@@ -504,7 +504,7 @@ Formats a date.
 
 ### Input
 
-Takes a string and a date (`java.time.temporal.TemporalAccessor`).
+Takes a string and a date (i.e. [TemporalAccessor](https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAccessor.html)).
 
 ### Output
 
