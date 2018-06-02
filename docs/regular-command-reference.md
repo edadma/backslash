@@ -520,3 +520,83 @@ If the arguments are not strings or the first is not a sequence or an object, an
 
 default
 -------
+
+### Description
+
+Provides a default as a fallback in case a value doesn't exit.
+
+### Input
+
+Takes two arguments of any kind.
+
+### Output
+
+Returns the second argument (unchanged), unless it is `nil` in which case the "default" first value is returned.
+
+### Example
+
+    \price | default 2.99
+
+output (assuming the variable `price` is *not* defined)
+
+    2.99
+
+### Exceptions
+
+none
+
+
+distinct
+--------
+
+### Description
+
+Removes duplicates from a sequence.
+
+### Input
+
+Takes one sequence argument.
+
+### Output
+
+Returns a new sequence containing only distinct values.
+
+### Example
+
+    \seq {1 2 3 2 4 3 5} | distinct
+
+output
+
+    [1, 2, 3, 4, 5]
+
+### Exceptions
+
+If the argument is not a sequence, an exception is thrown.
+
+
+downcase
+--------
+
+### Description
+
+Makes all characters in a string lower case.
+
+### Input
+
+Takes one string argument.
+
+### Output
+
+Returns a new string containing only lower case characters.
+
+### Example
+
+    \downcase {Hello World!}
+
+output
+
+    hello world!
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.

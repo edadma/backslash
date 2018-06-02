@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\now | date "MMMM d, y"
+      |\downcase {Hello World!}
     """.trim.stripMargin
   val assigns =
     Map(

@@ -306,6 +306,15 @@ object Command {
         }
       },
 
+      new Command( "integer", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( a: String ) =>
+            case List( n: BigDecimal ) if n isValidInt => n
+            case List( a, b ) => problem( pos, s"not an integer: $a" )
+          }
+      },
+
       new Command( "join", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {

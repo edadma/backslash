@@ -155,4 +155,19 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\date asdf 1""", false )}
   }
 
+  "default" in {
+    test( """\default 3 \v""", true ) shouldBe "3"
+    test( """\default 3 \v""", true, "v" -> 4 ) shouldBe "4"
+  }
+
+  "distinct" in {
+    test( """\seq {1 2 3 2 4 3 5} | distinct""", true ) shouldBe "[1, 2, 3, 4, 5]"
+    a [RuntimeException] should be thrownBy {test( """\distinct asdf""", false )}
+  }
+
+  "downcase" in {
+    test( """\downcase {Hello World!}""", true ) shouldBe "hello world!"
+    a [RuntimeException] should be thrownBy {test( """\downcase 123""", false )}
+  }
+
 }

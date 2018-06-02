@@ -45,6 +45,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
 
   "dot" in {
     test( """\. \{a 3} a""", false ) shouldBe "3"
+    test( """\. "asdf" 2""", false ) shouldBe "d"
+    test( """\. "asdf" 2""", false ) shouldBe "d"
     test( """\= \nil{} \. \{a 3} b""", false ) shouldBe "true"
     test( """\set v \{a 3} v.a=\v.a\ and v=\v.""", false ) shouldBe """ v.a=3 and v={"a": 3}."""
   }
