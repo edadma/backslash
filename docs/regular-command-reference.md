@@ -271,7 +271,7 @@ output
 none
 
 
-<
+&gt;
 -
 
 ### Description
@@ -299,7 +299,7 @@ output
 If the arguments are not both numerical or both strings, an exception is thrown.
 
 
->=
+&gt;=
 --
 
 ### Description
