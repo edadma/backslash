@@ -7,14 +7,21 @@ Regular Commands
 
 This page details all the built-in regular commands in lexicographical order.
 
+<nav>
+<ul>
+<li>
 [*](#)
-
+</li>
+<li>
 [+](#-1)
-
+</li>
+<li>
 [-](#-)
-
+</li>
+<li>
 [..](#-2)
-
+</li>
+</nav>
 
 *
 -
