@@ -7,7 +7,6 @@ Regular Commands
 
 This page details all the built-in regular commands in lexicographical order.
 
-<nav>
 <ul>
 <li>
 <a href="#">*</a>
@@ -22,7 +21,6 @@ This page details all the built-in regular commands in lexicographical order.
 <a href="#-2">..</a>
 </li>
 </ul>
-</nav>
 
 *
 -
