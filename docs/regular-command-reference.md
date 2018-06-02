@@ -525,3 +525,167 @@ If the arguments are not strings or the first is not a sequence or an object, an
 
 default
 -------
+
+### Description
+
+Provides a default as a fallback in case a value doesn't exit.
+
+### Input
+
+Takes two arguments of any kind.
+
+### Output
+
+Returns the second argument (unchanged), unless it is `nil` in which case the "default" first value is returned.
+
+### Example
+
+    \price | default 2.99
+
+output (assuming the variable `price` is *not* defined)
+
+    2.99
+
+### Exceptions
+
+none
+
+
+distinct
+--------
+
+### Description
+
+Removes duplicates from a sequence.
+
+### Input
+
+Takes one sequence argument.
+
+### Output
+
+Returns a new sequence containing only distinct values.
+
+### Example
+
+    \seq {1 2 3 2 4 3 5} | distinct
+
+output
+
+    [1, 2, 3, 4, 5]
+
+### Exceptions
+
+If the argument is not a sequence, an exception is thrown.
+
+
+downcase
+--------
+
+### Description
+
+Makes all characters in a string lower case.
+
+### Input
+
+Takes one string argument.
+
+### Output
+
+Returns a new string containing only lower case characters.
+
+### Example
+
+    \downcase {Hello World!}
+
+output
+
+    hello world!
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.
+
+
+drop
+----
+
+### Description
+
+Drops items from the head of a sequence or string.
+
+### Input
+
+Takes an integer argument and a string or sequence argument.
+
+### Output
+
+If the second argument is a string, returns a new string skipping over the number of characters given by the first argument.  If the second argument is a sequence, returns a new sequence skipping over the number of items given by the first argument.
+
+### Example
+
+    \drop 2 \seq {3 4 5 6 7}
+
+output
+
+    [5, 6, 7]
+
+### Exceptions
+
+If the first argument is not a number and the second is not a string or a sequence, an exception is thrown.
+
+
+escape
+------
+
+### Description
+
+Replaces characters in a string with HTML entity equivalents.
+
+### Input
+
+Takes one string argument.
+
+### Output
+
+Returns a new string with certain characters changed to their HTML entity equivalents.
+
+### Example
+
+    \escape {a < b}
+
+output
+
+    hello world!
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.
+
+
+escapeOnce
+----------
+
+### Description
+
+Replaces characters in a string with HTML entity equivalents while avoiding any HTML entities that may already be present.
+
+### Input
+
+Takes one string argument.
+
+### Output
+
+Returns a new string with certain characters changed to their HTML entity equivalents leaving existing HTML entities unchanged.
+
+### Example
+
+    \escapeOnce {a < b &lt; c}
+
+output
+
+    a &lt; b &lt; c
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.

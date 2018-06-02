@@ -76,18 +76,15 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           case a => problem( epos, s"expected a sequence: $a" )
         }
       case DotAST( epos, expr, kpos, key ) =>
-        val k = eval( key )
-        val idx = integer( k )
-
-        eval( expr ) match {
-          case m: collection.Map[_, _] =>
+        (eval( expr ), eval( key )) match {
+          case (m: collection.Map[_, _], k) =>
             m.asInstanceOf[collection.Map[Any, Any]] get k match {
               case None => nil
               case Some( v ) => v
             }
-          case s: String if idx isDefined => s(idx get)
-          case s: Seq[_] if idx isDefined => s(idx get)
-          case o => problem( epos, s"not indexable: $o" )
+          case (s: String, idx: BigDecimal) if idx isValidInt => s(idx.intValue)
+          case (s: Seq[_], idx: BigDecimal) if idx isValidInt => s(idx.intValue)
+          case (o, k) => problem( epos, s"not indexable: $o[$k]" )
         }
       case SeqAST( seq ) => seq map eval
       case ObjectAST( seq ) => seq map eval grouped 2 map {case Vector( a, b ) => a -> b} toMap

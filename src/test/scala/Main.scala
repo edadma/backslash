@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\now | date "MMMM d, y"
+      |\escapeOnce {a < b &lt; c}
     """.trim.stripMargin
   val assigns =
     Map(
