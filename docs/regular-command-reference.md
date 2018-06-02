@@ -689,3 +689,87 @@ output
 ### Exceptions
 
 If the argument is not a string, an exception is thrown.
+
+
+false
+-----
+
+### Description
+
+False.
+
+### Input
+
+none
+
+### Output
+
+Returns `false`.
+
+### Example
+
+    \false
+
+output
+
+    `false`
+
+### Exceptions
+
+none
+
+
+filter
+------
+
+### Description
+
+Selects all elements of the sequence that satisfy the lambda expression.
+
+### Input
+
+Takes a lambda expression and a sequence as arguments.
+
+### Output
+
+Returns a new sequence with elements that satisfy the predicate.
+
+### Example
+
+    \seq {1 2 3 4} | filter \> _ 2
+
+output
+
+    [3, 4]
+
+### Exceptions
+
+If the second argument is not a sequence, an exception is thrown.
+
+
+floor
+-----
+
+### Description
+
+Floor function.  Maps the argument to the greatest integer less than or equal to it.
+
+### Input
+
+Takes one numerical argument.
+
+### Output
+
+Returns the floor of the argument.
+
+### Example
+
+    \floor -5.1
+
+output
+
+    -6
+
+### Exceptions
+
+If the argument is not numerical, an exception is thrown.

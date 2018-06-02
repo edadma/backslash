@@ -20,12 +20,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
   }
 
-  "floor" in {
-    test( """\+ 0 \floor 3""", true ) shouldBe "3"
-    test( """\floor 3.1""", true ) shouldBe "3"
-    test( """\floor -3.1""", true ) shouldBe "-4"
-  }
-
   "addition" in {
     test( """\+ 3 4""", true ) shouldBe "7"
     test( """\+ 3 4""", true ) shouldBe "7"
@@ -135,6 +129,7 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\+ 0 \ceil 3""", true ) shouldBe "3"
     test( """\ceil 3.1""", true ) shouldBe "4"
     test( """\ceil -3.1""", true ) shouldBe "-3"
+    a [RuntimeException] should be thrownBy {test( """\ceil asdf""", false )}
   }
 
   "contains" in {
@@ -185,6 +180,18 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "escapeOnce" in {
     test( """\escapeOnce {a < b &lt; c}""", true ) shouldBe "a &lt; b &lt; c"
     a [RuntimeException] should be thrownBy {test( """\escapeOnce 123""", false )}
+  }
+
+  "filter" in {
+    test( """\seq {1 2 3 4} | filter \> _ 2""", true ) shouldBe "[3, 4]"
+    a [RuntimeException] should be thrownBy {test( """\filter 123 123""", false )}
+  }
+
+  "floor" in {
+    test( """\+ 0 \floor 3""", true ) shouldBe "3"
+    test( """\floor 3.1""", true ) shouldBe "3"
+    test( """\floor -3.1""", true ) shouldBe "-4"
+    a [RuntimeException] should be thrownBy {test( """\floor asdf""", false )}
   }
 
 }
