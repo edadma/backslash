@@ -202,11 +202,7 @@ object Command {
       new Command( "default", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer eval args match  {
-            case List( a: Any, b: Any ) =>
-              if (b == nil)
-                a
-              else
-                b
+            case List( a: Any, b: Any ) => if (b == nil) a else b
           }
       },
 
@@ -229,8 +225,8 @@ object Command {
       new Command( "drop", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( n: BigDecimal, s: Seq[_] ) => s drop n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
+            case List( n: BigDecimal, s: Seq[_] ) if n.isValidInt => s drop n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <integer> <sequence>, given $a, $b" )
           }
       },
 
@@ -318,14 +314,6 @@ object Command {
           }
       },
 
-      new Command( "join", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: Seq[_], sep: String ) => s mkString sep
-            case List( a, b ) => problem( pos, s"expected arguments <sequence> <separator>, given $a, $b" )
-          }
-      },
-
       new Command( "last", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
@@ -371,7 +359,7 @@ object Command {
           "\n"
       },
 
-      new Command( "neg", 1 ) {
+      new Command( "negate", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args.head ) match {
             case n: BigDecimal => -n
@@ -411,7 +399,8 @@ object Command {
                 case None => problem( pos, s"not a number: $s" )
                 case Some( n ) => n
               }
-            case List( a ) => problem( pos, s"expected string argument, given $a" )
+            case List( n: BigDecimal ) => n
+            case List( a ) => problem( pos, s"expected a string or number argument, given $a" )
           }
       },
 
@@ -494,8 +483,8 @@ object Command {
       new Command( "slice", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args ) match  {
-            case List( s: String, start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
-            case List( s: Seq[_], start: BigDecimal, end: BigDecimal ) if start.isWhole && end.isWhole => s.slice( start.intValue, end.intValue )
+            case List( s: String, start: BigDecimal, end: BigDecimal ) if start.isValidInt && end.isValidInt => s.slice( start.intValue, end.intValue )
+            case List( s: Seq[_], start: BigDecimal, end: BigDecimal ) if start.isValidInt && end.isValidInt => s.slice( start.intValue, end.intValue )
             case List( a, b ) => problem( pos, s"expected arguments <string> <start> <end> or <sequence> <start> <end>: $a, $b" )
           }
         }
@@ -506,11 +495,7 @@ object Command {
           val on = optional get "on" map (_.toString)
           val desc = (optional get "order" map (_.toString)) contains "desc"
 
-          def comp( a: Any, b: Any ) =
-            if (desc)
-              !lt( a, b )
-            else
-              lt( a, b )
+          def comp( a: Any, b: Any ) = if (desc) !lt( a, b ) else lt( a, b )
 
           def lt( a: Any, b: Any ) =
             (a, b) match {
@@ -561,8 +546,8 @@ object Command {
       new Command( "take", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( n: BigDecimal, s: Seq[_] ) => s take n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <number> <sequence>, given $a, $b" )
+            case List( n: BigDecimal, s: Seq[_] ) if n.isValidInt => s take n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <integer> <sequence>, given $a, $b" )
           }
       },
 

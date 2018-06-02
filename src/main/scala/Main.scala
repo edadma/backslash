@@ -23,9 +23,9 @@ object Main extends App {
 
   def usage {
     """
-      |Backslash v0.4.3
+      |Backslash v0.4.4
       |
-      |Usage:  java -jar backslash-0.4.3.jar <options> <template>
+      |Usage:  java -jar backslash-0.4.4.jar <options> <template>
       |
       |Options:  --help              display this help and exit
       |          -s <name> <string>  assign <string> to variable <name>
