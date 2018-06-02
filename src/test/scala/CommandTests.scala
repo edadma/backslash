@@ -20,12 +20,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
   }
 
-  "ceil" in {
-    test( """\+ 0 \ceil 3""", true ) shouldBe "3"
-    test( """\ceil 3.1""", true ) shouldBe "4"
-    test( """\ceil -3.1""", true ) shouldBe "-3"
-  }
-
   "floor" in {
     test( """\+ 0 \floor 3""", true ) shouldBe "3"
     test( """\floor 3.1""", true ) shouldBe "3"
@@ -135,6 +129,23 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\append 3 \seq {1 2}""", true ) shouldBe "[1, 2, 3]"
     a [RuntimeException] should be thrownBy {test( """\append asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\append 1 asdf""", false )}
+  }
+
+  "ceil" in {
+    test( """\+ 0 \ceil 3""", true ) shouldBe "3"
+    test( """\ceil 3.1""", true ) shouldBe "4"
+    test( """\ceil -3.1""", true ) shouldBe "-3"
+  }
+
+  "contains" in {
+    test( """\contains {the truth is out there} truth""", true ) shouldBe "true"
+    test( """\contains \seq {1 2 3} 3""", true ) shouldBe "true"
+    test( """\contains \{three 3 four 4 five 5} four""", true ) shouldBe "true"
+    test( """\contains {the truth is out there} asdf""", true ) shouldBe "false"
+    test( """\contains \seq {1 2 3} 4""", true ) shouldBe "false"
+    test( """\contains \{three 3 four 4 five 5} asdf""", true ) shouldBe "false"
+    a [RuntimeException] should be thrownBy {test( """\contains asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\contains 1 asdf""", false )}
   }
 
 }

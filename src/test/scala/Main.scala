@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\append ample ex
+      |\contains {the truth is out there} truth
     """.trim.stripMargin
   val assigns =
     Map(

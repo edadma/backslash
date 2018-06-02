@@ -185,9 +185,9 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( a: String, b: String ) => a contains b
-            case List( a: Seq[_], b: String ) => a contains b
-            case List( a: Map[_, _], b: String ) => a.asInstanceOf[Map[String, Any]] contains b
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <string>: $a, $b" )
+            case List( a: Seq[_], b ) => a contains b
+            case List( a: Map[_, _], b ) => a.asInstanceOf[Map[Any, Any]] contains b
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <sequence> <any> or <object> <any>: $a, $b" )
           }
       },
 

@@ -427,3 +427,59 @@ output
 ### Exceptions
 
 If the arguments are not strings or the second is not a sequence, an exception is thrown.
+
+
+ceil
+----
+
+### Description
+
+Computes the *ceiling function*, maps the argument to the least integer greater than or equal to it.
+
+### Input
+
+Takes one numerical argument.
+
+### Output
+
+Returns the ceiling of the argument.
+
+### Example
+
+    \ceil -5.1
+
+output
+
+    -5
+
+### Exceptions
+
+If the argument is not numerical, an exception is thrown.
+
+
+contains
+--------
+
+### Description
+
+Tests whether one value is contained within another.
+
+### Input
+
+Takes either two string arguments, or a sequence or object and an argument of any kind.
+
+### Output
+
+Returns `true` if the first argument is contained within the second, `false` otherwise.
+
+### Example
+
+    \contains {the truth is out there} truth
+
+output
+
+    true
+
+### Exceptions
+
+If the arguments are not strings or the first is not a sequence or an object, an exception is thrown.
