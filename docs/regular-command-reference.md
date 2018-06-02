@@ -5,6 +5,11 @@ title: Regular Command Reference
 Regular Commands
 ================
 
+<nav>
+  <h4>Table of Contents</h4>
+  * this unordered seed list will be replaced by toc as unordered list
+  {:toc}
+</nav>
 
 This page details all the built-in regular commands in lexicographical order.
 
@@ -511,3 +516,7 @@ output
 ### Exceptions
 
 If the arguments are not strings or the first is not a sequence or an object, an exception is thrown.
+
+
+default
+-------

@@ -1,2 +1,4 @@
 theme: jekyll-theme-midnight
 title: Backslash
+kramdown:
+  parse_block_html: true
