@@ -307,12 +307,15 @@ object Command {
       },
 
       new Command( "integer", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( a: String ) =>
-            case List( n: BigDecimal ) if n isValidInt => n
-            case List( a, b ) => problem( pos, s"not an integer: $a" )
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          val x = renderer.eval( args.head )
+
+          number( x ) match {
+            case None => problem( pos, s"not a number: $x" )
+            case Some( n: BigDecimal ) if n.isWhole => n
+            case Some( n: BigDecimal ) => n.setScale( 0, BigDecimal.RoundingMode.DOWN )
           }
+        }
       },
 
       new Command( "join", 2 ) {
@@ -401,16 +404,14 @@ object Command {
       },
 
       new Command( "number", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) =>
-              number( s ) match {
-                case None => problem( pos, s"not a number: $s" )
-                case Some( n ) => n
-              }
-            case List( n: BigDecimal ) => n
-            case List( a ) => problem( pos, s"expected a string or number argument, given $a" )
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+          val x = renderer.eval( args.head )
+
+          number( x ) match  {
+            case None => problem( pos, s"not a number: $x" )
+            case Some( n ) => n
           }
+        }
       },
 
       new Command( "regex", 1 ) {

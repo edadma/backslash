@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\downcase {Hello World!}
+      |\integer 123.6 | + 5
     """.trim.stripMargin
   val assigns =
     Map(
