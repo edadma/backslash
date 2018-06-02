@@ -170,4 +170,11 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\downcase 123""", false )}
   }
 
+  "drop" in {
+    test( """\drop 2 \seq {3 4 5 6 7}""", true ) shouldBe "[5, 6, 7]"
+    test( """\drop 2 asdf""", true ) shouldBe "df"
+    a [RuntimeException] should be thrownBy {test( """\drop asdf 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\drop 123 123""", false )}
+  }
+
 }

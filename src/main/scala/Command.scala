@@ -226,7 +226,8 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( n: BigDecimal, s: Seq[_] ) if n.isValidInt => s drop n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <integer> <sequence>, given $a, $b" )
+            case List( n: BigDecimal, s: String ) if n.isValidInt => s drop n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b" )
           }
       },
 
@@ -557,7 +558,8 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( n: BigDecimal, s: Seq[_] ) if n.isValidInt => s take n.toInt
-            case List( a, b ) => problem( pos, s"expected arguments <integer> <sequence>, given $a, $b" )
+            case List( n: BigDecimal, s: String ) if n.isValidInt => s take n.toInt
+            case List( a, b ) => problem( pos, s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b" )
           }
       },
 
