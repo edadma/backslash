@@ -857,7 +857,7 @@ output
 
 ### Exceptions
 
-If the argument is not numerical, an exception is thrown.
+If the argument is not a string or numerical, an exception is thrown.
 
 
 join
@@ -996,3 +996,227 @@ output
 ### Exceptions
 
 If the arguments are not numerical, an exception is thrown.
+
+
+min
+---
+
+### Description
+
+Returns the lesser of two numbers.
+
+### Input
+
+Takes two numerical arguments.
+
+### Output
+
+Returns the lesser of the two arguments.
+
+### Example
+
+    \min 3 4
+
+output
+
+    3
+
+### Exceptions
+
+If the arguments are not numerical, an exception is thrown.
+
+
+n
+-
+
+### Description
+
+The newline character (\u000A).
+
+### Input
+
+none
+
+### Output
+
+Returns a string containing only the newline character.
+
+### Example
+
+    \n
+
+output
+
+
+
+### Exceptions
+
+none
+
+
+negate
+------
+
+### Description
+
+Negation.
+
+### Input
+
+Takes one numerical argument.
+
+### Output
+
+Returns the negative of the argument.
+
+### Example
+
+    \negate -5
+
+output
+
+    5
+
+### Exceptions
+
+If the argument is not numerical, an exception is thrown.
+
+
+nil
+---
+
+### Description
+
+Evaluates it's argument discarding the result and returning a `nil`.
+
+### Input
+
+One argument of any kind.
+
+### Output
+
+Returns a `nil` after evaluating the argument.
+
+### Example
+
+    \nil {\do_something}
+
+output
+
+    `nil`
+
+### Exceptions
+
+none
+
+
+normalize
+---------
+
+### Description
+
+Normalizes a string by removing whitespace from both ends of the string and converting any stretches of whitespace within the string to a single space character.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns the normalized argument.
+
+### Example
+
+    \normalize { this   is a     boring  test }
+
+output
+
+    this is a boring test
+
+### Exceptions
+
+none
+
+
+now
+---
+
+### Description
+
+The current time as a [ZonedDateTime](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html).
+
+### Input
+
+none
+
+### Output
+
+Returns the current time.
+
+### Example
+
+    \now
+
+output
+
+    2018-06-03T11:32:50.875-04:00[America/Montreal]
+
+### Exceptions
+
+none
+
+
+null
+----
+
+### Description
+
+The `null`.
+
+### Input
+
+none
+
+### Output
+
+Returns a `null`.
+
+### Example
+
+    \null
+
+output
+
+    `null`
+
+### Exceptions
+
+none
+
+
+number
+------
+
+### Description
+
+Conversion to a number.
+
+### Input
+
+Takes a numerical or string argument.
+
+### Output
+
+If the argument is a string, parses it as a number and returns a numerical result.  If the argument is a number, it is returned as is.
+
+### Example
+
+    \+ \number "123" 1
+
+output
+
+    124
+
+### Exceptions
+
+If the argument is not a string or numerical, an exception is thrown.

@@ -12,11 +12,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
 
   val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
-  "number" in {
-    test( """\set int "3."\set frac "5"\+ 1 \number \+ \int \frac""", false ) shouldBe "4.5"
-    a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
-  }
-
   "addition" in {
     test( """\+ 3 4""", true ) shouldBe "7"
     test( """\+ as df""", true ) shouldBe "asdf"
@@ -232,6 +227,39 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\max 3 4""", true ) shouldBe "4"
     a [RuntimeException] should be thrownBy {test( """\max asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\max 1 asdf""", false )}
+  }
+
+  "min" in {
+    test( """\min 3 4""", true ) shouldBe "3"
+    a [RuntimeException] should be thrownBy {test( """\min asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\min 1 asdf""", false )}
+  }
+
+  "newline" in {
+    test( """\n""", false ) shouldBe "\n"
+  }
+
+  "negate" in {
+    test( """\negate 4""", true ) shouldBe "-4"
+    test( """\negate -4""", true ) shouldBe "4"
+    a [RuntimeException] should be thrownBy {test( """\negate asdf""", false )}
+  }
+
+  "nil" in {
+    test( """\nil{}""", false ) shouldBe ""
+  }
+
+  "normalize" in {
+    test( """\normalize { this   is a     boring  test }""", false ) shouldBe "this is a boring test"
+  }
+
+  "number" in {
+    test( """\set int "3."\set frac "5"\+ 1 \number \+ \int \frac""", false ) shouldBe "4.5"
+    a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
+  }
+
+  "null" in {
+    test( """\null""", false ) shouldBe "null"
   }
 
 }

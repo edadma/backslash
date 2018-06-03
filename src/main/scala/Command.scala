@@ -388,9 +388,8 @@ object Command {
       },
 
       new Command( "normalize", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args.head ).toString.trim.replaceAll( """\s+""", " " )
-        }
       },
 
       new Command( "now", 0 ) {
