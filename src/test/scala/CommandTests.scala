@@ -201,4 +201,16 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\head \[]""", false )}
   }
 
+  "integer" in {
+    test( """\+ 0 \integer -3""", true ) shouldBe "-3"
+    test( """\integer 3.1""", true ) shouldBe "3"
+    test( """\integer -3.1""", true ) shouldBe "-3"
+    a [RuntimeException] should be thrownBy {test( """\integer asdf""", false )}
+  }
+
+  "join" in {
+    test( """\join " - " \seq {1 2 3}""", true ) shouldBe "1 - 2 - 3"
+    a [RuntimeException] should be thrownBy {test( """\join asdf asdf""", false )}
+  }
+
 }

@@ -801,3 +801,87 @@ output
 ### Exceptions
 
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
+
+
+include
+-------
+
+### Description
+
+Reads a file as a Backslash template.
+
+### Input
+
+Takes a string argument as the path to the file to be included.  The path is relative to the `include` configuration property.
+
+### Output
+
+Returns the rendered Backslash file.
+
+### Example
+
+    \include "sections/header.bac"
+
+output
+
+
+
+### Exceptions
+
+An exception may be thrown during the rendering of the included file.
+
+
+integer
+-------
+
+### Description
+
+Conversion to integer.
+
+### Input
+
+Takes a numerical or string argument.
+
+### Output
+
+If the argument is a string, parses it as a number and converts it to an integer.  If the argument is a number, converts it to an integer.
+
+### Example
+
+    \integer -5.1
+
+output
+
+    -5
+
+### Exceptions
+
+If the argument is not numerical, an exception is thrown.
+
+
+join
+----
+
+### Description
+
+Concatenates all elements of a sequence into a string.
+
+### Input
+
+Takes a string and a sequence.
+
+### Output
+
+Returns the concatenation of all elements of a sequence into a string, placing the given separator between each element.
+
+### Example
+
+    \join " - " \seq {1 2 3}
+
+output
+
+    1 - 2 - 3
+
+### Exceptions
+
+If the first argument is not a string and the second is not a sequence, an exception is thrown.
