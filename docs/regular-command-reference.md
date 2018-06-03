@@ -19,6 +19,7 @@ Summary
   </ul>
 </nav>
 
+
 *
 -
 
@@ -885,3 +886,59 @@ output
 ### Exceptions
 
 If the first argument is not a string and the second is not a sequence, an exception is thrown.
+
+
+markdown
+--------
+
+### Description
+
+Processes a string as a Markdown, transforming it into HTML.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns the HTML corresponding to the Markdown text.
+
+### Example
+
+    \markdown {this is a __boring__ *test*}
+
+output
+
+    <p>this is a <strong>boring</strong> <em>test</em></p>
+
+### Exceptions
+
+none
+
+
+max
+---
+
+### Description
+
+Returns the greater of two numbers.
+
+### Input
+
+Takes two numerical arguments.
+
+### Output
+
+Returns the greater of the two arguments.
+
+### Example
+
+    \max 3 4
+
+output
+
+    4
+
+### Exceptions
+
+If the arguments are not numerical, an exception is thrown.

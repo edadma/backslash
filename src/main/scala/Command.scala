@@ -346,9 +346,8 @@ object Command {
       },
 
       new Command( "markdown", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           Markdown( renderer.eval(args.head).toString )
-        }
       },
 
       new Command( "max", 2 ) {

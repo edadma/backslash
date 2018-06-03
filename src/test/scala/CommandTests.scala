@@ -16,13 +16,11 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
   }
 
-  "markdown" in {
-    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
-  }
-
   "addition" in {
     test( """\+ 3 4""", true ) shouldBe "7"
-    test( """\+ 3 4""", true ) shouldBe "7"
+    test( """\+ as df""", true ) shouldBe "asdf"
+    test( """\+ \seq {3 4} \seq {5 6}""", true ) shouldBe "[3, 4, 5, 6]"
+    test( """\+ \{a 3 b 4} \{c 5 d 6}""", true ) shouldBe """{"a": 3, "b": 4, "c": 5, "d": 6}"""
     a [RuntimeException] should be thrownBy {test( """\+ asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\+ 1 asdf""", false )}
   }
@@ -211,6 +209,16 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "join" in {
     test( """\join " - " \seq {1 2 3}""", true ) shouldBe "1 - 2 - 3"
     a [RuntimeException] should be thrownBy {test( """\join asdf asdf""", false )}
+  }
+
+  "markdown" in {
+    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
+  }
+
+  "max" in {
+    test( """\max 3 4""", true ) shouldBe "4"
+    a [RuntimeException] should be thrownBy {test( """\max asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\max 1 asdf""", false )}
   }
 
 }
