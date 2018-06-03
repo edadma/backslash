@@ -1,6 +1,6 @@
 package xyz.hyperreal.backslash
 
-import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
+import java.time.{LocalDate, ZonedDateTime}
 import java.time.format.{DateTimeFormatter, FormatStyle}
 
 import org.scalatest._
@@ -211,6 +211,18 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "join" in {
     test( """\join " - " \seq {1 2 3}""", true ) shouldBe "1 - 2 - 3"
     a [RuntimeException] should be thrownBy {test( """\join asdf asdf""", false )}
+  }
+
+  "last" in {
+    test( """\seq {3 4 5} | last""", true ) shouldBe "5"
+    test( """\last asdf""", true ) shouldBe "f"
+    a [RuntimeException] should be thrownBy {test( """\last 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\last \[]""", false )}
+  }
+
+  "map" in {
+    test( """\seq {3 4 5} | map \+ _ 2""", true ) shouldBe "[5, 6, 7]"
+    a [RuntimeException] should be thrownBy {test( """\map 123 123""", false )}
   }
 
 }
