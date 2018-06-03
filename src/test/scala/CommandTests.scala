@@ -262,4 +262,15 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\null""", false ) shouldBe "null"
   }
 
+  "regex" in {
+    test( """\set sep \regex ",\\s+"\split \sep "a, b, c"""", false ) shouldBe """["a", "b", "c"]"""
+    a [RuntimeException] should be thrownBy {test( """\regex 123""", false )}
+  }
+
+  "rem" in {
+    test( """\rem 8 3""", true ) shouldBe "2"
+    a [RuntimeException] should be thrownBy {test( """\rem asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\rem 1 asdf""", false )}
+  }
+
 }

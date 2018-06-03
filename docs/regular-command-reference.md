@@ -153,7 +153,7 @@ Returns the quotient as a numerical result.
 
 output
 
-    -1
+    0.75
 
 ### Exceptions
 
@@ -1220,3 +1220,60 @@ output
 ### Exceptions
 
 If the argument is not a string or numerical, an exception is thrown.
+
+
+regex
+-----
+
+### Description
+
+Regular expression.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns a [Regex](https://www.scala-lang.org/api/current/scala/util/matching/Regex.html) from the string argument.
+
+### Example
+
+    \set sep \regex ",\\s+"
+    \split \sep "a, b, c"
+
+output
+
+    ["a", "b", "c"]
+
+### Exceptions
+
+If the argument is not a string or numerical, an exception is thrown.
+
+
+rem
+---
+
+### Description
+
+Computes the remainder of two numbers.
+
+### Input
+
+Takes two numerical arguments.
+
+### Output
+
+Returns the remainder as a numerical result.
+
+### Example
+
+    \rem 8 3
+
+output
+
+    2
+
+### Exceptions
+
+If the arguments are not numerical, an exception is thrown.

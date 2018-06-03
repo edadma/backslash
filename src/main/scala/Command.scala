@@ -8,8 +8,9 @@ import java.time.temporal.TemporalAccessor
 import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
-
 import xyz.hyperreal.__markdown__._
+
+import scala.util.matching.Regex
 
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], Map[String, Any], AnyRef) => Any) {
@@ -528,7 +529,7 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
             case List( sep: String, s: String ) => s split sep toList
-            case List( sep: String, s: String ) => sep split s toList
+            case List( sep: Regex, s: String ) => sep split s toList
             case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <regex> <string>, given $a, $b" )
           }
       },
