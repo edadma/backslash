@@ -916,28 +916,28 @@ output
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
 
 
-markdown
---------
+lit
+---
 
 ### Description
 
-Processes a string as a Markdown, transforming it into HTML.
+The identity function (`lit` is short for "literal").
 
 ### Input
 
-Takes a string argument.
+One argument of any kind.
 
 ### Output
 
-Returns the HTML corresponding to the Markdown text.
+Returns the argument.
 
 ### Example
 
-    \markdown {this is a __boring__ *test*}
+    \lit {this is a test} | replace 'is' '**'
 
 output
 
-    <p>this is a <strong>boring</strong> <em>test</em></p>
+    th** ** a test
 
 ### Exceptions
 
@@ -968,6 +968,34 @@ output
 ### Exceptions
 
 If the second argument is not a sequence, an exception is thrown.
+
+
+markdown
+--------
+
+### Description
+
+Processes a string as a Markdown, transforming it into HTML.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns the HTML corresponding to the Markdown text.
+
+### Example
+
+    \markdown {this is a __boring__ *test*}
+
+output
+
+    <p>this is a <strong>boring</strong> <em>test</em></p>
+
+### Exceptions
+
+none
 
 
 max

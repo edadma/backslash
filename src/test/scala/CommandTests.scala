@@ -214,13 +214,18 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\last \[]""", false )}
   }
 
-  "markdown" in {
-    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
+  "lit" in {
+    test( """\lit -123 | abs""", true ) shouldBe "123"
+    test( """\lit {this is a test} | replace 'is' '**'""", true ) shouldBe "th** ** a test"
   }
 
   "map" in {
     test( """\seq {3 4 5} | map \+ _ 2""", true ) shouldBe "[5, 6, 7]"
     a [RuntimeException] should be thrownBy {test( """\map 123 123""", false )}
+  }
+
+  "markdown" in {
+    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
   }
 
   "max" in {

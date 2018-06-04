@@ -335,6 +335,11 @@ object Command {
           }
       },
 
+      new Command( "lit", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args.head )
+      },
+
       new Command( "map", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           (args.head, renderer.eval( args.tail.head )) match {
