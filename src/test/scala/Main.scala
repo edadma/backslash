@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\{}
+      |\seq {\{a 3} \{a 5} \{a 4} \{a 7} \{a 6} \{a 2} \{a 1}} | sort on: a order: desc
     """.trim.stripMargin
   val assigns =
     Map(
