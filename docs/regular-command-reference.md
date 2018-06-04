@@ -916,28 +916,28 @@ output
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
 
 
-markdown
---------
+lit
+---
 
 ### Description
 
-Processes a string as a Markdown, transforming it into HTML.
+The identity function (`lit` is short for "literal").
 
 ### Input
 
-Takes a string argument.
+One argument of any kind.
 
 ### Output
 
-Returns the HTML corresponding to the Markdown text.
+Returns the argument.
 
 ### Example
 
-    \markdown {this is a __boring__ *test*}
+    \lit {this is a test} | replace 'is' '**'
 
 output
 
-    <p>this is a <strong>boring</strong> <em>test</em></p>
+    th** ** a test
 
 ### Exceptions
 
@@ -968,6 +968,34 @@ output
 ### Exceptions
 
 If the second argument is not a sequence, an exception is thrown.
+
+
+markdown
+--------
+
+### Description
+
+Processes a string as a Markdown, transforming it into HTML.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns the HTML corresponding to the Markdown text.
+
+### Example
+
+    \markdown {this is a __boring__ *test*}
+
+output
+
+    <p>this is a <strong>boring</strong> <em>test</em></p>
+
+### Exceptions
+
+none
 
 
 max
@@ -1222,35 +1250,6 @@ output
 If the argument is not a string or numerical, an exception is thrown.
 
 
-regex
------
-
-### Description
-
-Regular expression.
-
-### Input
-
-Takes a string argument.
-
-### Output
-
-Returns a [Regex](https://www.scala-lang.org/api/current/scala/util/matching/Regex.html) from the string argument.
-
-### Example
-
-    \set sep \regex ",\\s+"
-    \split \sep "a, b, c"
-
-output
-
-    ["a", "b", "c"]
-
-### Exceptions
-
-If the argument is not a string or numerical, an exception is thrown.
-
-
 rem
 ---
 
@@ -1277,3 +1276,143 @@ output
 ### Exceptions
 
 If the arguments are not numerical, an exception is thrown.
+
+
+remove
+------
+
+### Description
+
+Removes every occurrence of a substring from a string.
+
+### Input
+
+Takes two string arguments.
+
+### Output
+
+Returns the second string with every occurrence of the first removed.
+
+### Example
+
+    \remove "rain" "I strained to see the train through the rain"
+
+output
+
+    I sted to see the t through the
+
+### Exceptions
+
+If the arguments are not strings, an exception is thrown.
+
+
+removeFirst
+-----------
+
+### Description
+
+Removes the first occurrence of a substring from a string.
+
+### Input
+
+Takes two string arguments.
+
+### Output
+
+Returns the second string with the first occurrence of the first removed.
+
+### Example
+
+    \removeFirst "rain" "I strained to see the train through the rain"
+
+output
+
+    I sted to see the train through the rain
+
+### Exceptions
+
+If the arguments are not strings, an exception is thrown.
+
+
+replace
+-------
+
+### Description
+
+Replaces every occurrence of a substring from a string.
+
+### Input
+
+Takes three string arguments.
+
+### Output
+
+Returns the third argument with every occurrence of the first replaced with the second.
+
+### Example
+
+    \replace "my" "your" "Take my protein pills and put my helmet on"
+
+output
+
+    Take your protein pills and put your helmet on
+
+### Exceptions
+
+If the arguments are not strings, an exception is thrown.
+
+
+replaceFirst
+------------
+
+### Description
+
+Replaces the first occurrence of a substring from a string.
+
+### Input
+
+Takes three string arguments.
+
+### Output
+
+Returns the third argument with the first occurrence of the first replaced with the second.
+
+### Example
+
+    \replaceFirst "my" "your" "Take my protein pills and put my helmet on"
+
+output
+
+    Take your protein pills and put my helmet on
+
+### Exceptions
+
+If the arguments are not strings, an exception is thrown.
+
+
+reverse
+-------
+
+### Description
+
+Reverses a sequence or string.
+
+### Input
+
+Takes a sequence or string argument.
+
+### Output
+
+Returns the sequence or string with all elements in reverse order.
+
+### Example
+
+    \seq {3 4 5} | reverse
+
+output
+
+    [5, 4, 3]
+
+### Exceptions
+
+If the argument is not a sequence or string, an exception is thrown.

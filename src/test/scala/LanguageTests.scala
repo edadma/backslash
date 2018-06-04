@@ -120,6 +120,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 
   "filters" in {
+    test( """\lit {this is a test} | replace 'is' '**' | remove test | size""", true ) shouldBe
+      "10"
     test( """\l | \reverse | \take 2 | \drop 1""", true, "l" -> List("a", "b", "c") ) shouldBe
       """["b"]"""
     test( """\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7) ) shouldBe

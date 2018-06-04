@@ -10,8 +10,6 @@ import java.util.regex.Matcher
 import scala.util.parsing.input.Position
 import xyz.hyperreal.__markdown__._
 
-import scala.util.matching.Regex
-
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], Map[String, Any], AnyRef) => Any) {
   override def toString = s"<$name/$arity>"
@@ -337,6 +335,11 @@ object Command {
           }
       },
 
+      new Command( "lit", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args.head )
+      },
+
       new Command( "map", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           (args.head, renderer.eval( args.tail.head )) match {
@@ -414,14 +417,6 @@ object Command {
         }
       },
 
-      new Command( "regex", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) => s.r
-            case List( a ) => problem( pos, s"expected string argument, given $a" )
-          }
-      },
-
       new Command( "rem", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
@@ -433,7 +428,7 @@ object Command {
       new Command( "remove", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r: String ) => l replace (r, "")
+            case List( l: String, r: String ) => r replace (l, "")
             case List( a, b ) => problem( pos, s"expected arguments <string> <string>: $a, $b" )
           }
       },
@@ -441,7 +436,7 @@ object Command {
       new Command( "removeFirst", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r: String ) => l replaceFirst (Matcher.quoteReplacement(r), "")
+            case List( l: String, r: String ) => r replaceFirst (Matcher.quoteReplacement(l), "")
             case List( a, b ) => problem( pos, s"expected arguments <string> <string>: $a, $b" )
           }
       },
@@ -449,7 +444,7 @@ object Command {
       new Command( "replace", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r1: String, r2: String ) => l replace (r1, r2)
+            case List( l1: String, l2: String, r: String ) => r.replace( l1, l2 )
             case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
           }
       },
@@ -457,7 +452,7 @@ object Command {
       new Command( "replaceFirst", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r1: String, r2: String ) => l replaceFirst (Matcher.quoteReplacement(r1), r2)
+            case List( l1: String, l2: String, r: String ) => r replaceFirst (Matcher.quoteReplacement(l1), l2)
             case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
           }
       },
@@ -473,7 +468,7 @@ object Command {
 
       new Command( "round", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          (renderer.eval( args.head ), optional get "scale" getOrElse 0) match {
+          (renderer.eval( args.head ), optional.getOrElse( "scale", 0 )) match {
             case (n: BigDecimal, scala: Number) => round( n, scala.intValue, renderer.config )
             case (a, b) => problem( pos, s"not a number: $a, $b" )
           }
@@ -528,9 +523,8 @@ object Command {
       new Command( "split", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( sep: String, s: String ) => s split sep toList
-            case List( sep: Regex, s: String ) => sep split s toList
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <regex> <string>, given $a, $b" )
+            case List( sep: String, s: String ) => s split sep toVector
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string>, given $a, $b" )
           }
       },
 

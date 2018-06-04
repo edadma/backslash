@@ -214,13 +214,18 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\last \[]""", false )}
   }
 
-  "markdown" in {
-    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
+  "lit" in {
+    test( """\lit -123 | abs""", true ) shouldBe "123"
+    test( """\lit {this is a test} | replace 'is' '**'""", true ) shouldBe "th** ** a test"
   }
 
   "map" in {
     test( """\seq {3 4 5} | map \+ _ 2""", true ) shouldBe "[5, 6, 7]"
     a [RuntimeException] should be thrownBy {test( """\map 123 123""", false )}
+  }
+
+  "markdown" in {
+    test( """\markdown {this is a __boring__ *test*}""", false ) shouldBe "<p>this is a <strong>boring</strong> <em>test</em></p>"
   }
 
   "max" in {
@@ -262,15 +267,42 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\null""", false ) shouldBe "null"
   }
 
-  "regex" in {
-    test( """\set sep \regex ",\\s+"\split \sep "a, b, c"""", false ) shouldBe """["a", "b", "c"]"""
-    a [RuntimeException] should be thrownBy {test( """\regex 123""", false )}
-  }
-
   "rem" in {
     test( """\rem 8 3""", true ) shouldBe "2"
     a [RuntimeException] should be thrownBy {test( """\rem asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\rem 1 asdf""", false )}
+  }
+
+  "remove" in {
+    test( """\remove "rain" "I strained to see the train through the rain"""", false ) shouldBe """I sted to see the t through the """
+    a [RuntimeException] should be thrownBy {test( """\remove asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\remove 1 asdf""", false )}
+  }
+
+  "removeFirst" in {
+    test( """\removeFirst "rain" "I strained to see the train through the rain"""", false ) shouldBe """I sted to see the train through the rain"""
+    a [RuntimeException] should be thrownBy {test( """\removeFirst asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\removeFirst 1 asdf""", false )}
+  }
+
+  "replace" in {
+    test( """\replace "my" "your" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take your protein pills and put your helmet on"""
+    a [RuntimeException] should be thrownBy {test( """\replace asdf 1 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replace 1 asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replace 1 1 asdf""", false )}
+  }
+
+  "replaceFirst" in {
+    test( """\replaceFirst "my" "your" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take your protein pills and put my helmet on"""
+    a [RuntimeException] should be thrownBy {test( """\replaceFirst asdf 1 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replaceFirst 1 asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replaceFirst 1 1 asdf""", false )}
+  }
+
+  "reverse" in {
+    test( """\seq {3 4 5} | reverse""", true ) shouldBe "[5, 4, 3]"
+    test( """\reverse asdf""", true ) shouldBe "fdsa"
+    a [RuntimeException] should be thrownBy {test( """\reverse 123""", false )}
   }
 
 }
