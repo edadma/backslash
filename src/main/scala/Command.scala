@@ -469,7 +469,7 @@ object Command {
       new Command( "round", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           (renderer.eval( args.head ), optional.getOrElse( "scale", 0 )) match {
-            case (n: BigDecimal, scala: Number) => round( n, scala.intValue, renderer.config )
+            case (n: BigDecimal, scale: Number) => round( n, scale.intValue, renderer.config )
             case (a, b) => problem( pos, s"not a number: $a, $b" )
           }
         }
@@ -488,9 +488,9 @@ object Command {
       new Command( "slice", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
           renderer.eval( args ) match  {
-            case List( s: String, start: BigDecimal, end: BigDecimal ) if start.isValidInt && end.isValidInt => s.slice( start.intValue, end.intValue )
-            case List( s: Seq[_], start: BigDecimal, end: BigDecimal ) if start.isValidInt && end.isValidInt => s.slice( start.intValue, end.intValue )
-            case List( a, b ) => problem( pos, s"expected arguments <string> <start> <end> or <sequence> <start> <end>: $a, $b" )
+            case List( start: BigDecimal, end: BigDecimal, s: String ) if start.isValidInt && end.isValidInt => s.slice( start.intValue, end.intValue )
+            case List( start: BigDecimal, end: BigDecimal, s: Seq[_] ) if start.isValidInt && end.isValidInt => s.slice( start.intValue, end.intValue )
+            case List( a, b, c ) => problem( pos, s"expected arguments <start> <end> <string> or <start> <end> <sequence>: $a, $b, $c" )
           }
         }
       },

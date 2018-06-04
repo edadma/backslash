@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\lit {this is a test} | replace 'is' '**' | remove test | size
+      |\{}
     """.trim.stripMargin
   val assigns =
     Map(
