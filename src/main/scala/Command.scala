@@ -449,8 +449,9 @@ object Command {
       new Command( "replace", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l1: String, l2: String, r: String ) => r replace (l1, l2)
-            case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
+            case List( l1: String, l2: String, r: String ) => r.replaceAll( l1, l2 )
+            case List( l1: Regex, l2: String, r: String ) => l1.replaceAllIn( r, l2 )
+            case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string> or <regex> <string> <string>: $a, $b, $c" )
           }
       },
 
