@@ -285,4 +285,12 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\removeFirst 1 asdf""", false )}
   }
 
+  "replace" in {
+    test( """\replace "my" "your" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take your protein pills and put your helmet on"""
+    test( """\replace "p\\w+" "---" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take my --- --- and --- my helmet on"""
+    a [RuntimeException] should be thrownBy {test( """\replace asdf 1 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replace 1 asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replace 1 1 asdf""", false )}
+  }
+
 }
