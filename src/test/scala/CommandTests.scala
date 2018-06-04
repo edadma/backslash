@@ -323,4 +323,10 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\slice 123 123 123""", false )}
   }
 
+  "sort" in {
+    test( """\seq {3 5 4 7 6 2 1} | sort""", true ) shouldBe "[1, 2, 3, 4, 5, 6, 7]"
+    test( """\seq {\{a 3} \{a 5} \{a 4} \{a 7} \{a 6} \{a 2} \{a 1}} | sort on: a order: desc""", true ) shouldBe """[{"a": 7}, {"a": 6}, {"a": 5}, {"a": 4}, {"a": 3}, {"a": 2}, {"a": 1}]"""
+    a [RuntimeException] should be thrownBy {test( """\sort 123""", false )}
+  }
+
 }
