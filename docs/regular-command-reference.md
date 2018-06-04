@@ -1347,16 +1347,44 @@ Takes three string arguments.
 
 ### Output
 
-Returns the third argument with every occurrence of the first replaced with the second.
+Returns the third argument with the first occurrence of the first replaced with the second.
 
 ### Example
 
-    \replace "my" "your" "Take my protein pills and put my helmet on"
+    \replaceFirst "my" "your" "Take my protein pills and put my helmet on"
 
 output
 
-    Take your protein pills and put your helmet on
+    Take your protein pills and put my helmet on
 
 ### Exceptions
 
 If the arguments are not strings, an exception is thrown.
+
+
+reverse
+-------
+
+### Description
+
+Reverses a sequence or string.
+
+### Input
+
+Takes a sequence or string argument.
+
+### Output
+
+Returns the sequence or string with all elements in reverse order.
+
+### Example
+
+    \seq {3 4 5} | reverse
+
+output
+
+    [5, 4, 3]
+
+### Exceptions
+
+If the argument is not a sequence or string, an exception is thrown.

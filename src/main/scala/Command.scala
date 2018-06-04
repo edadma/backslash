@@ -463,7 +463,7 @@ object Command {
 
       new Command( "round", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any = {
-          (renderer.eval( args.head ), optional get "scale" getOrElse 0) match {
+          (renderer.eval( args.head ), optional.getOrElse( "scale", 0 )) match {
             case (n: BigDecimal, scala: Number) => round( n, scala.intValue, renderer.config )
             case (a, b) => problem( pos, s"not a number: $a, $b" )
           }

@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\remove "rain" "I strained to see the train through the rain"
+      |\seq {3 4 5} | reverse
     """.trim.stripMargin
   val assigns =
     Map(

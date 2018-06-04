@@ -287,4 +287,17 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\replace 1 1 asdf""", false )}
   }
 
+  "replaceFirst" in {
+    test( """\replaceFirst "my" "your" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take your protein pills and put my helmet on"""
+    a [RuntimeException] should be thrownBy {test( """\replaceFirst asdf 1 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replaceFirst 1 asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\replaceFirst 1 1 asdf""", false )}
+  }
+
+  "reverse" in {
+    test( """\seq {3 4 5} | reverse""", true ) shouldBe "[5, 4, 3]"
+    test( """\reverse asdf""", true ) shouldBe "fdsa"
+    a [RuntimeException] should be thrownBy {test( """\reverse 123""", false )}
+  }
+
 }
