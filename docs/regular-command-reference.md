@@ -1444,3 +1444,59 @@ output
 ### Exceptions
 
 If the argument is not numerical, an exception is thrown.
+
+
+size
+----
+
+### Description
+
+The size of a sequence, object or string.
+
+### Input
+
+Takes a sequence, object or string argument.
+
+### Output
+
+Returns the number of elements in the sequence, or the number of properties in the object, or the number of characters in the string.
+
+### Example
+
+    \seq {3 4 5} | size
+
+output
+
+    3
+
+### Exceptions
+
+If the argument is not a sequence or string, an exception is thrown.
+
+
+slice
+-----
+
+### Description
+
+A slice from a sequence or string.
+
+### Input
+
+Takes a numerical argument giving the start index of the slice, a numerical argument giving the end index of the slice (exclusive), and a sequence or string argument.
+
+### Output
+
+Returns a sub-sequence from a sequence or substring from a string.
+
+### Example
+
+    \seq {3 4 5 6 7} | slice 2 4
+
+output
+
+    [5, 6]
+
+### Exceptions
+
+If the argument is not a sequence or string, an exception is thrown.

@@ -310,4 +310,17 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\round asdf""", false )}
   }
 
+  "size" in {
+    test( """\seq {3 4 5} | size""", true ) shouldBe "3"
+    test( """\{a 3 b 4} | size""", true ) shouldBe "2"
+    test( """\size asdf""", true ) shouldBe "4"
+    a [RuntimeException] should be thrownBy {test( """\size 123""", false )}
+  }
+
+  "slice" in {
+    test( """\seq {3 4 5 6 7} | slice 2 4""", true ) shouldBe "[5, 6]"
+    test( """\slice 2 4 asdf""", true ) shouldBe "df"
+    a [RuntimeException] should be thrownBy {test( """\slice 123 123 123""", false )}
+  }
+
 }
