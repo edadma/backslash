@@ -433,7 +433,7 @@ object Command {
       new Command( "remove", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r: String ) => l replace (r, "")
+            case List( l: String, r: String ) => r replace (l, "")
             case List( a, b ) => problem( pos, s"expected arguments <string> <string>: $a, $b" )
           }
       },
@@ -441,7 +441,7 @@ object Command {
       new Command( "removeFirst", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r: String ) => l replaceFirst (Matcher.quoteReplacement(r), "")
+            case List( l: String, r: String ) => r replaceFirst (Matcher.quoteReplacement(l), "")
             case List( a, b ) => problem( pos, s"expected arguments <string> <string>: $a, $b" )
           }
       },
@@ -449,7 +449,7 @@ object Command {
       new Command( "replace", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r1: String, r2: String ) => l replace (r1, r2)
+            case List( l1: String, l2: String, r: String ) => r replace (l1, l2)
             case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
           }
       },
@@ -457,7 +457,7 @@ object Command {
       new Command( "replaceFirst", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l: String, r1: String, r2: String ) => l replaceFirst (Matcher.quoteReplacement(r1), r2)
+            case List( l1: String, l2: String, r: String ) => r replaceFirst (Matcher.quoteReplacement(l1), l2)
             case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
           }
       },

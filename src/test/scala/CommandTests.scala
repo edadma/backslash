@@ -273,4 +273,10 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\rem 1 asdf""", false )}
   }
 
+  "remove" in {
+    test( """\remove "rain" "I strained to see the train through the rain"""", false ) shouldBe """I sted to see the t through the """
+    a [RuntimeException] should be thrownBy {test( """\remove asdf 1""", false )}
+    a [RuntimeException] should be thrownBy {test( """\remove 1 asdf""", false )}
+  }
+
 }

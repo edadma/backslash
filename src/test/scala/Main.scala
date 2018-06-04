@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\rem 8 3
+      |\remove "rain" "I strained to see the train through the rain"
     """.trim.stripMargin
   val assigns =
     Map(
