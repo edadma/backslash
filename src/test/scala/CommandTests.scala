@@ -305,4 +305,9 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\reverse 123""", false )}
   }
 
+  "round" in {
+    test( """\round 5.2 \round 5.6 \round 1.23 scale: 1 \round 1.26 scale: 1""", true ) shouldBe "5 6 1.2 1.3"
+    a [RuntimeException] should be thrownBy {test( """\round asdf""", false )}
+  }
+
 }
