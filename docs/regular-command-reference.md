@@ -1222,35 +1222,6 @@ output
 If the argument is not a string or numerical, an exception is thrown.
 
 
-regex
------
-
-### Description
-
-Regular expression.
-
-### Input
-
-Takes a string argument.
-
-### Output
-
-Returns a [Regex](https://www.scala-lang.org/api/current/scala/util/matching/Regex.html) from the string argument.
-
-### Example
-
-    \set sep \regex ",\\s+"
-    \split \sep "a, b, c"
-
-output
-
-    ["a", "b", "c"]
-
-### Exceptions
-
-If the argument is not a string or numerical, an exception is thrown.
-
-
 rem
 ---
 
@@ -1340,51 +1311,51 @@ replace
 
 ### Description
 
-Replaces every occurrence of a regular expression from a string.
+Replaces every occurrence of a substring from a string.
 
 ### Input
 
-Takes two string arguments.
+Takes three string arguments.
 
 ### Output
 
-Returns the second argument with the first occurrence of the first (regular expression) removed.
+Returns the third argument with every occurrence of the first replaced with the second.
 
 ### Example
 
-    \removeFirst "rain" "I strained to see the train through the rain"
+    \replace "my" "your" "Take my protein pills and put my helmet on"
 
 output
 
-    I sted to see the train through the rain
+    Take your protein pills and put your helmet on
 
 ### Exceptions
 
 If the arguments are not strings, an exception is thrown.
 
 
-replace
--------
+replaceFirst
+------------
 
 ### Description
 
-Replaces every occurrence of a regular expression from a string.
+Replaces the first occurrence of a substring from a string.
 
 ### Input
 
-Takes two string arguments.
+Takes three string arguments.
 
 ### Output
 
-Returns the second argument with the first occurrence of the first (regular expression) removed.
+Returns the third argument with every occurrence of the first replaced with the second.
 
 ### Example
 
-    \removeFirst "rain" "I strained to see the train through the rain"
+    \replace "my" "your" "Take my protein pills and put my helmet on"
 
 output
 
-    I sted to see the train through the rain
+    Take your protein pills and put your helmet on
 
 ### Exceptions
 

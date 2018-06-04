@@ -10,8 +10,6 @@ import java.util.regex.Matcher
 import scala.util.parsing.input.Position
 import xyz.hyperreal.__markdown__._
 
-import scala.util.matching.Regex
-
 
 abstract class Command( val name: String, var arity: Int ) extends ((Position, Renderer, List[AST], Map[String, Any], AnyRef) => Any) {
   override def toString = s"<$name/$arity>"
@@ -414,14 +412,6 @@ object Command {
         }
       },
 
-      new Command( "regex", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
-          renderer.eval( args ) match  {
-            case List( s: String ) => s.r
-            case List( a ) => problem( pos, s"expected string argument, given $a" )
-          }
-      },
-
       new Command( "rem", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
@@ -449,9 +439,8 @@ object Command {
       new Command( "replace", 3 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( l1: String, l2: String, r: String ) => r.replaceAll( l1, l2 )
-            case List( l1: Regex, l2: String, r: String ) => l1.replaceAllIn( r, l2 )
-            case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string> or <regex> <string> <string>: $a, $b, $c" )
+            case List( l1: String, l2: String, r: String ) => r.replace( l1, l2 )
+            case List( a, b, c ) => problem( pos, s"expected arguments <string> <string> <string>: $a, $b, $c" )
           }
       },
 
@@ -529,9 +518,8 @@ object Command {
       new Command( "split", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
           renderer.eval( args ) match  {
-            case List( sep: String, s: String ) => s split sep toList
-            case List( sep: Regex, s: String ) => sep split s toList
-            case List( a, b ) => problem( pos, s"expected arguments <string> <string> or <regex> <string>, given $a, $b" )
+            case List( sep: String, s: String ) => s split sep toVector
+            case List( a, b ) => problem( pos, s"expected arguments <string> <string>, given $a, $b" )
           }
       },
 

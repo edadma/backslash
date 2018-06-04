@@ -262,11 +262,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\null""", false ) shouldBe "null"
   }
 
-  "regex" in {
-    test( """\set sep \regex ",\\s+"\split \sep "a, b, c"""", false ) shouldBe """["a", "b", "c"]"""
-    a [RuntimeException] should be thrownBy {test( """\regex 123""", false )}
-  }
-
   "rem" in {
     test( """\rem 8 3""", true ) shouldBe "2"
     a [RuntimeException] should be thrownBy {test( """\rem asdf 1""", false )}
@@ -287,7 +282,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
 
   "replace" in {
     test( """\replace "my" "your" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take your protein pills and put your helmet on"""
-    test( """\replace "p\\w+" "---" "Take my protein pills and put my helmet on"""", false ) shouldBe """Take my --- --- and --- my helmet on"""
     a [RuntimeException] should be thrownBy {test( """\replace asdf 1 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\replace 1 asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\replace 1 1 asdf""", false )}
