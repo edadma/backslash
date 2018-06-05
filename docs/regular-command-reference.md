@@ -657,7 +657,7 @@ Returns a new string with certain characters changed to their HTML entity equiva
 
 output
 
-    hello world!
+    a &lt; b
 
 ### Exceptions
 
@@ -1528,3 +1528,31 @@ output
 ### Exceptions
 
 If the argument is not a sequence, an exception is thrown.
+
+
+split
+-----
+
+### Description
+
+Splits a string into a sequence of substrings around a separator.
+
+### Input
+
+Takes two string arguments: the separator, and the string to be split.
+
+### Output
+
+Returns the second string with every occurrence of the first removed.
+
+### Example
+
+    \remove "rain" "I strained to see the train through the rain"
+
+output
+
+    I sted to see the t through the
+
+### Exceptions
+
+If the arguments are not strings, an exception is thrown.
