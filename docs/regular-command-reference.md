@@ -657,7 +657,7 @@ Returns a new string with certain characters changed to their HTML entity equiva
 
 output
 
-    hello world!
+    a &lt; b
 
 ### Exceptions
 
