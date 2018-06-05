@@ -258,6 +258,10 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\normalize { this   is a     boring  test }""", false ) shouldBe "this is a boring test"
   }
 
+  "now" in {
+    test( """\now | date "MMMM d, y"""", false ) shouldBe today
+  }
+
   "number" in {
     test( """\set int "3."\set frac "5"\+ 1 \number \+ \int \frac""", false ) shouldBe "4.5"
     a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
@@ -339,6 +343,40 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\tail asdf""", true ) shouldBe "sdf"
     a [RuntimeException] should be thrownBy {test( """\tail 123""", false )}
     a [RuntimeException] should be thrownBy {test( """\tail \[]""", false )}
+  }
+
+  "take" in {
+    test( """\take 2 \seq {3 4 5 6 7}""", true ) shouldBe "[3, 4]"
+    test( """\take 2 asdf""", true ) shouldBe "as"
+    a [RuntimeException] should be thrownBy {test( """\take asdf 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\take 123 123""", false )}
+  }
+
+  "today" in {
+    test( """\today""", false ) shouldBe today
+  }
+
+  "trim" in {
+    test( """>>\trim {  Hello World!   }<<""", true ) shouldBe ">>Hello World!<<"
+    a [RuntimeException] should be thrownBy {test( """\trim 123""", false )}
+  }
+
+  "true" in {
+    test( """\true""", false ) shouldBe "true"
+  }
+
+  "u" in {
+    test( "\\u 0x61", true ) shouldBe "a"
+    a [RuntimeException] should be thrownBy {test( "\\u asdf", false )}
+  }
+
+  "upcase" in {
+    test( "\\upcase {Hello World!}", true ) shouldBe "HELLO WORLD!"
+    a [RuntimeException] should be thrownBy {test( "\\upcase 123", false )}
+  }
+
+  "empty-object" in {
+    test( """\{}""", true ) shouldBe "{}"
   }
 
 }

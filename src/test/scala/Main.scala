@@ -10,9 +10,7 @@ object Main extends App {
       "rounding" -> "HALF_EVEN"
     )
   val input =
-    """
-      |\seq {3 4 5} | tail
-    """.trim.stripMargin
+    "\\upcase {Hello World!}".trim.stripMargin
   val assigns =
     Map(
       "l" -> List[BigDecimal]( 3, 4, 5, 6, 7 ),

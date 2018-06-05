@@ -556,6 +556,15 @@ object Command {
           }
       },
 
+      new Command( "timestamp", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[AST], optional: Map[String, Any], context: AnyRef ): Any =
+          renderer.eval( args ) match  {
+            case List( s: String ) => ZonedDateTime parse s
+            case List( millis: BigDecimal ) if millis isValidLong => Instant ofEpochMilli millis.longValue
+            case List( a ) => problem( pos, s"expected string or integer argument: $a" )
+          }
+      },
+
       new Command( "today", 0 ) {
         val format = new Const[DateTimeFormatter]
 

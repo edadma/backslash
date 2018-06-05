@@ -713,7 +713,7 @@ Returns `false`.
 
 output
 
-    `false`
+    false
 
 ### Exceptions
 
@@ -1640,3 +1640,227 @@ output
 ### Exceptions
 
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
+
+
+take
+----
+
+### Description
+
+Takes a specified number of items from the head of a sequence or string.
+
+### Input
+
+Takes an integer argument and a string or sequence argument.
+
+### Output
+
+If the second argument is a string, returns a new string containing only the number of characters given by the first argument.  If the second argument is a sequence, returns a new sequence containing only the number of items given by the first argument.
+
+### Example
+
+    \take 2 \seq {3 4 5 6 7}
+
+output
+
+    [3, 4]
+
+### Exceptions
+
+If the first argument is not a number and the second is not a string or a sequence, an exception is thrown.
+
+
+timestamp
+---------
+
+### Description
+
+Converts a string containing a valid .
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+If the argument is a string, returns a [ZonedDateTime](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) object corresponding to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp (date and time representation) input string.  If the argument is an integer, returns an [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html) corresponding to the Unix epoch time in milliseconds given by the integer argument.
+
+### Example
+
+    \timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"
+
+output
+
+    June 5, 2018
+
+### Exceptions
+
+If the argument is not a string or an integer, an exception is thrown.
+
+
+today
+-----
+
+### Description
+
+The current date.
+
+### Input
+
+none
+
+### Output
+
+Returns a string representing the current date formatted according to the `today` configuration property.
+
+### Example
+
+    \today
+
+output
+
+    June 5, 2018
+
+### Exceptions
+
+none
+
+
+trim
+----
+
+### Description
+
+Removes all whitespace characters from both ends of a string.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns a new string with all whitespace characters from both ends of the input string.
+
+### Example
+
+    >>\trim {  Hello World!   }<<
+
+output
+
+    >>Hello World!<<
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.
+
+
+true
+----
+
+### Description
+
+True.
+
+### Input
+
+none
+
+### Output
+
+Returns `true`.
+
+### Example
+
+    \true
+
+output
+
+    true
+
+### Exceptions
+
+none
+
+
+u
+-
+
+### Description
+
+Unicode character.
+
+### Input
+
+Takes one numerical argument.
+
+### Output
+
+Returns the Unicode character corresponding to the value of the argument.
+
+### Example
+
+    \u 0x61
+
+output
+
+    a
+
+### Exceptions
+
+If the argument is not numerical, an exception is thrown.
+
+
+upcase
+------
+
+### Description
+
+Makes all characters in a string upper case.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns a new string containing only upper case characters.
+
+### Example
+
+    \upcase {Hello World!}
+
+output
+
+    HELLO WORLD!
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.
+
+
+{}
+--
+
+### Description
+
+The empty object.
+
+### Input
+
+none
+
+### Output
+
+Returns the empty object.
+
+### Example
+
+    \{}
+
+output
+
+    {}
+
+### Exceptions
+
+none
