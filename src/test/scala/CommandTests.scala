@@ -341,4 +341,11 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\tail \[]""", false )}
   }
 
+  "take" in {
+    test( """\take 2 \seq {3 4 5 6 7}""", true ) shouldBe "[3, 4]"
+    test( """\take 2 asdf""", true ) shouldBe "as"
+    a [RuntimeException] should be thrownBy {test( """\take asdf 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\take 123 123""", false )}
+  }
+
 }
