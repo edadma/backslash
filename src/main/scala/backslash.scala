@@ -53,6 +53,9 @@ package object backslash {
   def qdisplay( a: Any ): String =
     a match {
       case s: String => '"' + s + '"'
+      case true => "<true>"
+      case false => "<false>"
+      case null => "<null>"
       case `nil` => "<nil>"
       case _ => display( a )
     }
