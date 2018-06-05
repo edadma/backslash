@@ -329,4 +329,9 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\sort 123""", false )}
   }
 
+  "split" in {
+    test( """\split "\\s+" "This is a sentence"""", true ) shouldBe """["This", "is", "a", "sentence"]"""
+    a [RuntimeException] should be thrownBy {test( """\split 123 123""", false )}
+  }
+
 }

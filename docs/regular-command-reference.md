@@ -589,7 +589,7 @@ Makes all characters in a string lower case.
 
 ### Input
 
-Takes one string argument.
+Takes a string argument.
 
 ### Output
 
@@ -1543,16 +1543,44 @@ Takes two string arguments: the separator, and the string to be split.
 
 ### Output
 
-Returns the second string with every occurrence of the first removed.
+Returns the second string split into a sequence using the first as a separator.
 
 ### Example
 
-    \remove "rain" "I strained to see the train through the rain"
+    \split "\\s+" "This is a sentence"
 
 output
 
-    I sted to see the t through the
+    ["This", "is", "a", "sentence"]
 
 ### Exceptions
 
 If the arguments are not strings, an exception is thrown.
+
+
+string
+------
+
+### Description
+
+Converts to a *display* string.  A *display* string is a readable string representation of something that's not a string.
+
+### Input
+
+Takes one argument of any kind.
+
+### Output
+
+Returns a new string displaying the contents of the argument in a readable manner.  argument is already a string, it is left unchanged.  Numbers appear as expected.
+
+### Example
+
+    \{a 3 b 4} | string
+
+output
+
+    {"a": 3, "b": 4}
+
+### Exceptions
+
+none
