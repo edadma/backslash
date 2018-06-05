@@ -1668,3 +1668,59 @@ output
 ### Exceptions
 
 If the first argument is not a number and the second is not a string or a sequence, an exception is thrown.
+
+
+timestamp
+---------
+
+### Description
+
+Converts a string containing a valid .
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+If the argument is a string, returns a [ZonedDateTime](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) object corresponding to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp (date and time representation) input string.  If the argument is an integer, returns an [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html) corresponding to the Unix epoch time in milliseconds given by the integer argument.
+
+### Example
+
+    \timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"
+
+output
+
+    June 5, 2018
+
+### Exceptions
+
+If the argument is not a string or an integer, an exception is thrown.
+
+
+today
+-----
+
+### Description
+
+The current date.
+
+### Input
+
+none
+
+### Output
+
+Returns a string representing the current date formatted according to the `today` configuration property.
+
+### Example
+
+    \today
+
+output
+
+    June 5, 2018
+
+### Exceptions
+
+none

@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"
+      |\today
     """.trim.stripMargin
   val assigns =
     Map(

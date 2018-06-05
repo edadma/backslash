@@ -258,6 +258,10 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\normalize { this   is a     boring  test }""", false ) shouldBe "this is a boring test"
   }
 
+  "now" in {
+    test( """\now | date "MMMM d, y"""", false ) shouldBe today
+  }
+
   "number" in {
     test( """\set int "3."\set frac "5"\+ 1 \number \+ \int \frac""", false ) shouldBe "4.5"
     a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
@@ -346,6 +350,10 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\take 2 asdf""", true ) shouldBe "as"
     a [RuntimeException] should be thrownBy {test( """\take asdf 123""", false )}
     a [RuntimeException] should be thrownBy {test( """\take 123 123""", false )}
+  }
+
+  "today" in {
+    test( """\today""", false ) shouldBe today
   }
 
 }
