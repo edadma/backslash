@@ -86,7 +86,7 @@ Control Sequences
 A *control sequence* is a way of interrupting the normal character copying behaviour in order to tell Backslash to do something else at that point in the input stream. Once the action indicated by the control sequence is complete, character copying resumes with the characters immediately following the control sequence, skipping over any which space right after the name of the control sequence.  Control sequences begin with a `\` (backslash) character (whence the name of this language) followed by the name of the control sequence.
 
 There are five categories into which control sequences can be grouped, depending on how they need to be handled during *parsing* and also during *rendering*. *Parsing* refers to how input stream characters are treated, and *rendering* refers to how the output stream is produced.  The five categories are discussed below.
-2
+
 
 ### Regular Commands
 
