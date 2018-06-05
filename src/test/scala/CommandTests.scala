@@ -334,4 +334,11 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\split 123 123""", false )}
   }
 
+  "tail" in {
+    test( """\seq {3 4 5} | tail""", true ) shouldBe "[4, 5]"
+    test( """\tail asdf""", true ) shouldBe "sdf"
+    a [RuntimeException] should be thrownBy {test( """\tail 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\tail \[]""", false )}
+  }
+
 }
