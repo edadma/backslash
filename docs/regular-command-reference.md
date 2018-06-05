@@ -713,7 +713,7 @@ Returns `false`.
 
 output
 
-    `false`
+    false
 
 ### Exceptions
 
@@ -1720,6 +1720,146 @@ Returns a string representing the current date formatted according to the `today
 output
 
     June 5, 2018
+
+### Exceptions
+
+none
+
+
+trim
+----
+
+### Description
+
+Removes all whitespace characters from both ends of a string.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns a new string with all whitespace characters from both ends of the input string.
+
+### Example
+
+    >>\trim {  Hello World!   }<<
+
+output
+
+    >>Hello World!<<
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.
+
+
+true
+----
+
+### Description
+
+True.
+
+### Input
+
+none
+
+### Output
+
+Returns `true`.
+
+### Example
+
+    \true
+
+output
+
+    true
+
+### Exceptions
+
+none
+
+
+u
+-
+
+### Description
+
+Unicode character.
+
+### Input
+
+Takes one numerical argument.
+
+### Output
+
+Returns the Unicode character corresponding to the value of the argument.
+
+### Example
+
+    \u 0x61
+
+output
+
+    a
+
+### Exceptions
+
+If the argument is not numerical, an exception is thrown.
+
+
+upcase
+------
+
+### Description
+
+Makes all characters in a string upper case.
+
+### Input
+
+Takes a string argument.
+
+### Output
+
+Returns a new string containing only upper case characters.
+
+### Example
+
+    \upcase {Hello World!}
+
+output
+
+    HELLO WORLD!
+
+### Exceptions
+
+If the argument is not a string, an exception is thrown.
+
+
+{}
+--
+
+### Description
+
+The empty object.
+
+### Input
+
+none
+
+### Output
+
+Returns the empty object.
+
+### Example
+
+    \{}
+
+output
+
+    {}
 
 ### Exceptions
 

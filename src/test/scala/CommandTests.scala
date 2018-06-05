@@ -356,4 +356,27 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\today""", false ) shouldBe today
   }
 
+  "trim" in {
+    test( """>>\trim {  Hello World!   }<<""", true ) shouldBe ">>Hello World!<<"
+    a [RuntimeException] should be thrownBy {test( """\trim 123""", false )}
+  }
+
+  "true" in {
+    test( """\true""", false ) shouldBe "true"
+  }
+
+  "u" in {
+    test( "\\u 0x61", true ) shouldBe "a"
+    a [RuntimeException] should be thrownBy {test( "\\u asdf", false )}
+  }
+
+  "upcase" in {
+    test( "\\upcase {Hello World!}", true ) shouldBe "HELLO WORLD!"
+    a [RuntimeException] should be thrownBy {test( "\\upcase 123", false )}
+  }
+
+  "empty-object" in {
+    test( """\{}""", true ) shouldBe "{}"
+  }
+
 }
