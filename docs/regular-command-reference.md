@@ -1597,7 +1597,9 @@ Returns a string containing only the tab character.
 
 output
 
+```
 
+```
 
 ### Exceptions
 
