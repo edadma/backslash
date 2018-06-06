@@ -561,7 +561,7 @@ object Command {
           args match  {
             case List( s: String ) => ZonedDateTime parse s
             case List( millis: BigDecimal ) if millis isValidLong =>
-              Instant ofEpochMilli millis.longValue atOffset ZoneOffset.UTC
+              Instant ofEpochMilli millis.longValue atOffset ZoneOffset.UTC toZonedDateTime
             case List( a ) => problem( pos, s"expected string or integer argument: $a" )
           }
       },
