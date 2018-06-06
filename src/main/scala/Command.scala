@@ -2,7 +2,7 @@
 package xyz.hyperreal.backslash
 
 import java.io.File
-import java.time.{Instant, ZonedDateTime}
+import java.time.{Instant, ZoneOffset, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 import java.util.regex.Matcher
@@ -560,7 +560,8 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {
             case List( s: String ) => ZonedDateTime parse s
-            case List( millis: BigDecimal ) if millis isValidLong => Instant ofEpochMilli millis.longValue
+            case List( millis: BigDecimal ) if millis isValidLong =>
+              Instant ofEpochMilli millis.longValue atOffset ZoneOffset.UTC
             case List( a ) => problem( pos, s"expected string or integer argument: $a" )
           }
       },

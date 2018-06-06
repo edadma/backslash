@@ -11,13 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\def h level heading {<h\level>\heading</h\level>}
-      |
-      |\h1 Overview
-      |<p>This is the overview.</p>
-      |
-      |\h2 {First Subsection}
-      |<p>Let's read something else now.</p>
+      |\timestamp 1528314399243
     """.trim.stripMargin
   val assigns =
     Map(

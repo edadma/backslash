@@ -338,6 +338,10 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\split 123 123""", false )}
   }
 
+  "string" in {
+    test( """\{a 3 b 4} | string""", true ) shouldBe """{"a": 3, "b": 4}"""
+  }
+
   "tail" in {
     test( """\seq {3 4 5} | tail""", true ) shouldBe "[4, 5]"
     test( """\tail asdf""", true ) shouldBe "sdf"
@@ -350,6 +354,12 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\take 2 asdf""", true ) shouldBe "as"
     a [RuntimeException] should be thrownBy {test( """\take asdf 123""", false )}
     a [RuntimeException] should be thrownBy {test( """\take 123 123""", false )}
+  }
+
+  "timestamp" in {
+    test( """\timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"""", true ) shouldBe """June 5, 2018"""
+    test( """\timestamp 1528314399243 | date "MMMM d, y"""", true ) shouldBe """June 6, 2018"""
+    a [RuntimeException] should be thrownBy {test( """\split 123 123""", false )}
   }
 
   "today" in {
