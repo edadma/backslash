@@ -1064,6 +1064,7 @@ Returns a string containing only the newline character.
 output
 
 ```
+
 ```
 
 ### Exceptions
