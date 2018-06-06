@@ -1663,7 +1663,7 @@ timestamp
 
 ### Description
 
-Converts a string containing a valid .
+Converts a string or number into a timestamp.
 
 ### Input
 
