@@ -115,7 +115,9 @@ Next is an example of a regular command that takes an argument that is a string 
 
 which outputs
 
-    <p>this is a <strong>boring</strong> <em>example</em></p>
+```html
+<p>this is a <strong>boring</strong> <em>example</em></p>
+```
 
 Not all commands take character string arguments.  Here's an example of a command that takes two numerical arguments:
 
@@ -132,7 +134,7 @@ A snippet of a template that is used in multiple places within the same file can
 
 Here's typical macro definition
 
-```backslash
+```
 \def h level heading {<h\level>\heading</h\level>}
 
 \h1 Overview
