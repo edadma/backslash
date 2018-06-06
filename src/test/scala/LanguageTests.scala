@@ -46,9 +46,10 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   "dot" in {
     test( """\. \{a 3} a""", false ) shouldBe "3"
     test( """\. "asdf" 2""", false ) shouldBe "d"
-    test( """\. "asdf" 2""", false ) shouldBe "d"
+    test( """\. \seq {3 4 5 6} 2""", false ) shouldBe "5"
     test( """\= \nil{} \. \{a 3} b""", false ) shouldBe "true"
     test( """\set v \{a 3} v.a=\v.a\ and v=\v.""", false ) shouldBe """ v.a=3 and v={"a": 3}."""
+    a [RuntimeException] should be thrownBy {test( """\. 123 123""", false )}
   }
 
   "seq" in {
@@ -102,6 +103,11 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( "start \\unless v undefined end", true, "v" -> 123 ) shouldBe "start end"
     test( "start \\unless v undefined \\else defined end", true ) shouldBe "start undefined end"
     test( "start \\unless v undefined \\else defined end", true, "v" -> 123 ) shouldBe "start defined end"
+  }
+
+  "in" in {
+    a [RuntimeException] should be thrownBy {test( """\in e l""", true, "l" -> List("a", "b", "c") )}
+    a [RuntimeException] should be thrownBy {test( """\in e l""", true )}
   }
 
   "for" in {

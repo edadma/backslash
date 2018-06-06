@@ -60,8 +60,6 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
 
   def teval( ast: AST ) = truthy( eval(ast) )
 
-  def eval( l: List[AST] ): List[Any] = l map eval
-
   def eval( ast: AST ): Any =
     ast match {
       case SetAST( v, expr ) =>

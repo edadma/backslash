@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\seq {\timestamp 5 \timestamp 4 \timestamp 3} | sort
+      |asdf
     """.trim.stripMargin
   val assigns =
     Map(
@@ -25,7 +25,7 @@ object Main extends App {
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
 
-//  println( ast )
+  println( ast )
 
   val result = renderer.capture( ast, assigns )
 
