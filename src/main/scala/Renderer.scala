@@ -128,7 +128,8 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
         else
           statements map deval mkString
       case LiteralAST( v ) => v
-      case CommandAST( pos, c, args, optional ) => c( pos, this, args, optional map {case (k, v) => (k -> eval(v))}, null )
+      case CommandAST( pos, c, args, optional ) =>
+        c( pos, this, if (c.eval) args map eval else args, optional map {case (k, v) => (k -> eval(v))}, null )
       case ForAST( pos, expr, body, els ) =>
         val buf = new StringBuilder
 
@@ -151,11 +152,11 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
                 Map(
                   "first" -> (idx == 0),
                   "index" -> (idx + BigDecimal( 1 )),
-                  "index0" -> BigDecimal( idx ),
+                  "indexz" -> BigDecimal( idx ),
                   "last" -> (idx == len - 1),
                   "length" -> len,
                   "rindex" -> (len - idx),
-                  "rindex0" -> (len - idx - 1),
+                  "rindexz" -> (len - idx - 1),
                   "element" -> e
                 )
               scopes.top("forloop") = forloop

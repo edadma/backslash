@@ -164,7 +164,7 @@ class Parser( commands: Map[String, Command] ) {
 
   def nameFirst( c : Char ) = c.isLetter || c == '_'
 
-  def nameRest( c: Char ) = c.isLetterOrDigit || c == '_' || c == '.'
+  def nameRest( c: Char ) = c.isLetter || c == '_' || c == '.'
 
   def parseFilter( r: Input ) =
     parseControlSequence( r ) match {

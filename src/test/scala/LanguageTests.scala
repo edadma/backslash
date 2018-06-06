@@ -130,16 +130,16 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 
   "break" in {
-    test( """start \for l {\if \> \forloop.index0 1 \break \forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \> \forloop.indexz 1 \break \forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
-    test( """start \for l {\if \> \forloop.index0 1 \break {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \> \forloop.indexz 1 \break {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
   }
 
   "continue" in {
-    test( """start \for l {\if \= \forloop.index0 1 \continue \forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \= \forloop.indexz 1 \continue \forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c else end"
-    test( """start \for l {\if \= \forloop.index0 1 \continue {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
+    test( """start \for l {\if \= \forloop.indexz 1 \continue {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c end"
   }
 

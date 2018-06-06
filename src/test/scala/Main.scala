@@ -10,7 +10,15 @@ object Main extends App {
       "rounding" -> "HALF_EVEN"
     )
   val input =
-    "\\upcase {Hello World!}".trim.stripMargin
+    """
+      |\def h level heading {<h\level>\heading</h\level>}
+      |
+      |\h1 Overview
+      |<p>This is the overview.</p>
+      |
+      |\h2 {First Subsection}
+      |<p>Let's read something else now.</p>
+    """.trim.stripMargin
   val assigns =
     Map(
       "l" -> List[BigDecimal]( 3, 4, 5, 6, 7 ),

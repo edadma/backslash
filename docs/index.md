@@ -126,8 +126,39 @@ which outputs
     three plus four is 7
 
 
+### Macros
+
+A snippet of a template that is used in multiple places within the same file can be given a name and formal parameters so that it can be reused by simply referring to it as a control sequence.  These are called macro definitions.
+
+Here's typical macro definition
+
+```backslash
+\def h level heading {<h\level>\heading</h\level>}
+
+\h1 Overview
+<p>This is the overview.</p>
+
+\h2 {First Subsection}
+<p>Let's read something else now.</p>
+```
+
+output
+
+```html
+<h1>Overview</h1>
+<p>This is the overview.</p>
+
+<h2>First Subsection</h2>
+<p>Let's read something else now.</p>
+```
+
+After the `\def` is the name of the macro followed by zero or more parameters.  The parameters are referenced within the body of the definition as if they were variables, though their existence is local to the macro.  The body of a macro definition must be surrounded by [group](./#grouping) delimiters.
 
 ### Special Commands
+
+### Parser Directives
+
+### Variable References
 
 
 Grouping
