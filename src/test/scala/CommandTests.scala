@@ -17,6 +17,8 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\+ as df""", true ) shouldBe "asdf"
     test( """\+ \seq {3 4} \seq {5 6}""", true ) shouldBe "[3, 4, 5, 6]"
     test( """\+ \{a 3 b 4} \{c 5 d 6}""", true ) shouldBe """{"a": 3, "b": 4, "c": 5, "d": 6}"""
+    test( """\+ \seq {3 4} 5""", true ) shouldBe "[3, 4, 5]"
+    test( """\+ 4 \seq {5 6}""", true ) shouldBe "[4, 5, 6]"
     a [RuntimeException] should be thrownBy {test( """\+ asdf 1""", false )}
     a [RuntimeException] should be thrownBy {test( """\+ 1 asdf""", false )}
   }
@@ -328,6 +330,7 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   }
 
   "sort" in {
+    test( """\seq {\timestamp 5 \timestamp 4 \timestamp 3} | sort""", true ) shouldBe "[1970-01-01T00:00:00.003Z, 1970-01-01T00:00:00.004Z, 1970-01-01T00:00:00.005Z]"
     test( """\seq {3 5 4 7 6 2 1} | sort""", true ) shouldBe "[1, 2, 3, 4, 5, 6, 7]"
     test( """\seq {\{a 3} \{a 5} \{a 4} \{a 7} \{a 6} \{a 2} \{a 1}} | sort on: a order: desc""", true ) shouldBe """[{"a": 7}, {"a": 6}, {"a": 5}, {"a": 4}, {"a": 3}, {"a": 2}, {"a": 1}]"""
     a [RuntimeException] should be thrownBy {test( """\sort 123""", false )}
@@ -359,7 +362,7 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "timestamp" in {
     test( """\timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"""", true ) shouldBe """June 5, 2018"""
     test( """\timestamp 1528314399243 | date "MMMM d, y"""", true ) shouldBe """June 6, 2018"""
-    a [RuntimeException] should be thrownBy {test( """\split 123 123""", false )}
+    a [RuntimeException] should be thrownBy {test( """\timestamp \[]""", false )}
   }
 
   "today" in {
@@ -378,6 +381,7 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "u" in {
     test( "\\u 0x61", true ) shouldBe "a"
     a [RuntimeException] should be thrownBy {test( "\\u asdf", false )}
+    a [RuntimeException] should be thrownBy {test( "\\u 123456789", false )}
   }
 
   "upcase" in {

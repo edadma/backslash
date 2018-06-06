@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\timestamp 1528314399243
+      |\seq {\timestamp 5 \timestamp 4 \timestamp 3} | sort
     """.trim.stripMargin
   val assigns =
     Map(

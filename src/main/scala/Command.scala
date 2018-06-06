@@ -504,11 +504,7 @@ object Command {
 
           def lt( a: Any, b: Any ) =
             (a, b) match {
-              case (a: BigDecimal, b: BigDecimal) => a < b
-              case (a: Instant, b: Instant) => a isBefore b
-              case (a: ZonedDateTime, b: ZonedDateTime) => a isBefore b
-              case (a: Instant, b: ZonedDateTime) => a isBefore b.toInstant
-              case (a: ZonedDateTime, b: Instant) => a.toInstant isBefore b
+              case (a: Comparable[Any], b: Comparable[_]) => (a compareTo b) < 0
               case _ => a.toString < b.toString
             }
 
