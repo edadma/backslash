@@ -15,7 +15,7 @@ install:
 build_script:
   - sbt clean compile
 test_script:
-  - sbt "test-only * -- -n windows"
+  - sbt test
   - sbt "scripted universal/dist universal/stage windows/*"
 cache:
   - C:\sbt\
