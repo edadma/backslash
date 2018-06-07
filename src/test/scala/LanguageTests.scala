@@ -140,6 +140,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start a b end"
     test( """start \for l {\if \> \forloop.indexz 1 \break {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a b end"
+    a [RuntimeException] should be thrownBy {test( """\break""", true )}
   }
 
   "continue" in {
@@ -147,6 +148,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "start a c else end"
     test( """start \for l {\if \= \forloop.indexz 1 \continue {\forloop.element\ }} end""", true, "l" -> List("a", "b", "c") ) shouldBe
       "start a c end"
+    a [RuntimeException] should be thrownBy {test( """\continue""", true )}
   }
 
   "connectives" in {
@@ -165,6 +167,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """start {\or v \false} end""", true ) shouldBe
       "start false end"
     test( """start {\or v \false} end""", true, "v" -> 123 ) shouldBe
+      "start 123 end"
+    test( """start {\or \false v} end""", true, "v" -> 123 ) shouldBe
       "start 123 end"
     test( """start {\not \true} end""", true ) shouldBe
       "start false end"
