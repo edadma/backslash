@@ -59,6 +59,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """\seq {}""", false ) shouldBe "[]"
     test( """\[]""", false ) shouldBe "[]"
     a [RuntimeException] should be thrownBy {test( """\seq {3 4 5""", false )}
+    a [RuntimeException] should be thrownBy {test( """\seq 123""", false )}
   }
 
   "obj" in {
@@ -70,6 +71,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
 
   "literals" in {
     test( """\+ 0x12 1""", false ) shouldBe "19"
+    test( "\\set v '\\u0061'\\v", false ) shouldBe "a"
     test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v "'\b\f\n\r\t\\\'\""\v zxvc""", false ) shouldBe "asdf '\b\f\n\r\t\\\'\"zxvc"
@@ -133,6 +135,10 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7) ) shouldBe
       """[6, 7, 8]"""
     test( """\seq {\{a 3} \{b 4} \{a 5}} | map a | filter _""", false ) shouldBe "[3, 5]"
+    test( """\def m {asdf}\m | upcase""", false ) shouldBe "ASDF"
+    a [RuntimeException] should be thrownBy {test( """\seq {1} | \n""", true )}
+    a [RuntimeException] should be thrownBy {test( """\seq {1} | \asdf""", true )}
+    a [RuntimeException] should be thrownBy {test( """\def m {asdf} \seq {1} | \m""", true )}
   }
 
   "break" in {
@@ -183,6 +189,8 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
       "have a nice day"
     test( """\set v \+ 3 4\v""", true ) shouldBe
       "7"
+    a [RuntimeException] should be thrownBy {test( """\set set asdf""", true )}
+    a [RuntimeException] should be thrownBy {test( """\set map asdf""", true )}
   }
 
   "match" in {

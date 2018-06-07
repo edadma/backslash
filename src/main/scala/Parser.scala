@@ -44,17 +44,6 @@ class Parser( commands: Map[String, Command] ) {
       case (r1, _) => problem( r1, s"expected end of input: $r1" )
     }
 
-  /*
-        parseStatement( r ) match {
-        case (r1, null) => parseStatements( r1, v )
-        case (r1, s) =>
-          matches( r1, pipeDelim ) match {
-            case None => parseStatements( r1, v :+ s )
-            case Some( r2 ) => stage( r2 )
-          }
-      }
-
-   */
   def parseStatements( r: Input, v: Vector[AST] = Vector() ): (Input, GroupAST) =
     if (r.atEnd || lookahead( r, endDelim ))
       (r, GroupAST( v ))
@@ -390,7 +379,7 @@ class Parser( commands: Map[String, Command] ) {
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def check( pos: Position, name: String ) =
-    if (Set( "#", "delim", "def", "{", ".", "elsif", "case", "in", "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "obj" ) contains name)
+    if (Set( "#", "delim", "def", "{", ".", "elsif", "case", "in", "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "raw", " ", "break", "continue" ) contains name)
       problem( pos, "illegal variable name, it's a reserved word" )
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )
