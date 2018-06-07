@@ -1205,7 +1205,7 @@ Returns a `null`.
 
 output
 
-    `null`
+    null
 
 ### Exceptions
 
@@ -1529,11 +1529,11 @@ Splits a string into a sequence of substrings around a separator.
 
 ### Input
 
-Takes two string arguments: the separator, and the string to be split.
+Takes two string arguments: the separator (a regular expression), and the string to be split.
 
 ### Output
 
-Returns the second string split into a sequence using the first as a separator.
+Returns the second string split into a sequence using the first as a separator regular expression.
 
 ### Example
 
@@ -1561,7 +1561,7 @@ Takes one argument of any kind.
 
 ### Output
 
-Returns a new string displaying the contents of the argument in a readable manner.  argument is already a string, it is left unchanged.  Numbers appear as expected.
+Returns a new string displaying the contents of the argument in a readable manner.  If the argument is already a string, it is left unchanged.  Numbers appear as expected.
 
 ### Example
 
