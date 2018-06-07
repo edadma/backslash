@@ -13,10 +13,9 @@ install:
   - cmd: SET PATH=C:\sbt\sbt\bin;%JAVA_HOME%\bin;%PATH%
   - cmd: SET SBT_OPTS=-XX:MaxPermSize=2g -Xmx4g
 build_script:
-  - sbt clean compile
+  - sbt clean test:compile
 test_script:
   - sbt test
-  - sbt "scripted universal/dist universal/stage windows/*"
 cache:
   - C:\sbt\
   - C:\Users\appveyor\.m2
