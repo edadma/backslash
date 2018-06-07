@@ -162,6 +162,29 @@ After the `\def` is the name of the macro followed by zero or more parameters.  
 
 ### Variable References
 
+Backslash has a facility for assigning names to data of any kind so that the data can then be inserted into the output stream or used as an argument to a command at a later point.  These are called *variables*.  A variable reference is a way of recalling the contents of a variable.  This is done by referring to the variable name in a control sequence.  Here's an example of a variable being assigned and then used.
+
+    \set UnixEpoch {\timestamp 0 | date "MMMM d, y 'at' HH:mm O"}
+
+    The Unix Epoch begins on \UnixEpoch.
+
+output
+
+    The Unix Epoch begins on January 1, 1970 at 00:00 GMT.
+
+In the above example, the variable `UnixEpoch` is assigned a string representing the start of what is known as the "Unix Epoch" which is later which used in a sentence.
+
+A variable may contain an object which means that there needs to be a way of accessing the properties within the object.  Variable reference can, therefore, make use of the well known "dotted" notation.  For example,
+
+    \set product \{name "Nice TV" price 1049.00}
+
+    The product name is \product.name.
+
+output
+
+    The product name is Nice TV.
+
+A dot at the end of a variable reference is not considered to be part of it, it just get's copied to the output stream.  A variable reference may not begin with a dot nor can there be two dots in a row.  A variable reference may begin with an underscore (`_`) or letter, and may continue with any combination of underscores, letters and dots.  A variable reference may not contain any digits.
 
 Grouping
 --------

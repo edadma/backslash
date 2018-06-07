@@ -11,7 +11,9 @@ object Main extends App {
     )
   val input =
     """
-      |asdf
+      |\set product \{name "Nice TV" price 1049.00}
+      |
+      |The product name is \product.name.
     """.trim.stripMargin
   val assigns =
     Map(
@@ -25,7 +27,7 @@ object Main extends App {
   val ast = parser.parse( io.Source.fromString(input) )
   val renderer = new Renderer( parser, config )
 
-  println( ast )
+//  println( ast )
 
   val result = renderer.capture( ast, assigns )
 
