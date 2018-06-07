@@ -1205,7 +1205,7 @@ Returns a `null`.
 
 output
 
-    `null`
+    null
 
 ### Exceptions
 
