@@ -2,6 +2,7 @@ Backslash
 =========
 
 [![Build Status](https://www.travis-ci.org/edadma/backslash.svg?branch=master)](https://www.travis-ci.org/edadma/backslash)
+[![Build status](https://ci.appveyor.com/api/projects/status/h5b23n2vd0k4oh9q/branch/master?svg=true)](https://ci.appveyor.com/project/edadma/backslash/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/edadma/backslash/badge.svg?branch=master)](https://coveralls.io/github/edadma/backslash?branch=master)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://github.com/edadma/backslash/blob/master/LICENSE)
 [![Version](https://img.shields.io/badge/latest_release-v0.4.10-orange.svg)](https://github.com/edadma/backslash/releases/tag/v0.4.10)
