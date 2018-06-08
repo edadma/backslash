@@ -78,12 +78,10 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
     test( """asdf \set v 123.4\+ \v 1 zxvc""", false ) shouldBe "asdf 124.4 zxvc"
     test( """asdf \set v -3\+ \v 1 zxvc""", false ) shouldBe "asdf -2 zxvc"
     test( """asdf \set v -3.4\+ \v 1 zxvc""", false ) shouldBe "asdf -2.4 zxvc"
-    a [RuntimeException] should be thrownBy {test( """\split "a b" \null""", false )}
-    test( """\null""", false ) shouldBe "null"
-    a [RuntimeException] should be thrownBy {test( """\split "a b" \true""", false )}
-    test( """\true""", false ) shouldBe "true"
-    a [RuntimeException] should be thrownBy {test( """\split "a b" \false""", false )}
-    test( """\false""", false ) shouldBe "false"
+    test( """\seq {true false null}""", false ) shouldBe "[<true>, <false>, <null>]"
+    a [RuntimeException] should be thrownBy {test( """\split "a b" null""", false )}
+    a [RuntimeException] should be thrownBy {test( """\split "a b" true""", false )}
+    a [RuntimeException] should be thrownBy {test( """\split "a b" false""", false )}
     a [RuntimeException] should be thrownBy {test( """asdf \set v "'\b\f\n\r\t\\\'\"""", false )}
   }
 
@@ -158,25 +156,25 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   }
 
   "connectives" in {
-    test( """start {\and \true \true} end""", true ) shouldBe
+    test( """start {\and true true} end""", true ) shouldBe
       "start true end"
-    test( """start {\and \true \false} end""", true ) shouldBe
+    test( """start {\and true false} end""", true ) shouldBe
       "start false end"
-    test( """start {\and \true v} end""", true, "v" -> 123 ) shouldBe
+    test( """start {\and true v} end""", true, "v" -> 123 ) shouldBe
       "start true end"
-    test( """start {\and \true v} end""", true ) shouldBe
+    test( """start {\and true v} end""", true ) shouldBe
       "start false end"
-    test( """start {\or \true \true} end""", true ) shouldBe
+    test( """start {\or true true} end""", true ) shouldBe
       "start true end"
-    test( """start {\or \true \false} end""", true ) shouldBe
+    test( """start {\or true false} end""", true ) shouldBe
       "start true end"
-    test( """start {\or v \false} end""", true ) shouldBe
+    test( """start {\or v false} end""", true ) shouldBe
       "start false end"
-    test( """start {\or v \false} end""", true, "v" -> 123 ) shouldBe
+    test( """start {\or v false} end""", true, "v" -> 123 ) shouldBe
       "start 123 end"
-    test( """start {\or \false v} end""", true, "v" -> 123 ) shouldBe
+    test( """start {\or false v} end""", true, "v" -> 123 ) shouldBe
       "start 123 end"
-    test( """start {\not \true} end""", true ) shouldBe
+    test( """start {\not true} end""", true ) shouldBe
       "start false end"
     test( """start {\not v} end""", true ) shouldBe
       "start true end"

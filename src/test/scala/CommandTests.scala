@@ -269,10 +269,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
   }
 
-  "null" in {
-    test( """\null""", false ) shouldBe "null"
-  }
-
   "rem" in {
     test( """\rem 8 3""", true ) shouldBe "2"
     a [RuntimeException] should be thrownBy {test( """\rem asdf 1""", false )}
@@ -372,10 +368,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "trim" in {
     test( """>>\trim {  Hello World!   }<<""", true ) shouldBe ">>Hello World!<<"
     a [RuntimeException] should be thrownBy {test( """\trim 123""", false )}
-  }
-
-  "true" in {
-    test( """\true""", false ) shouldBe "true"
   }
 
   "u" in {
