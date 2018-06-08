@@ -403,7 +403,7 @@ class Parser( commands: Map[String, Command] ) {
   def skip( r: Input, cond: Input => Boolean ): Input = if (r.atEnd || cond( r )) r else skip( r.rest, cond )
 
   def check( pos: Position, name: String ) =
-    if (Set( "#", "delim", "def", "{", ".", "elsif", "case", "in", "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "raw", " ", "break", "continue" ) contains name)
+    if (Set( "#", "delim", "def", "{", ".", "elsif", "case", "in", "if", "for", "unless", "match", "set", "in", "and", "or", "not", "seq", "raw", " ", "break", "continue", "true", "false", "null" ) contains name)
       problem( pos, "illegal variable name, it's a reserved word" )
     else if (commands contains name)
       problem( pos, "illegal variable name, it's a command" )

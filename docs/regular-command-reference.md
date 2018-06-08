@@ -680,34 +680,6 @@ output
 If the argument is not a string, an exception is thrown.
 
 
-false
------
-
-### Description
-
-False.
-
-### Input
-
-none
-
-### Output
-
-Returns `false`.
-
-### Example
-
-    \false
-
-output
-
-    false
-
-### Exceptions
-
-none
-
-
 filter
 ------
 
@@ -1178,34 +1150,6 @@ Returns the current time.
 output
 
     2018-06-03T11:32:50.875-04:00[America/Montreal]
-
-### Exceptions
-
-none
-
-
-null
-----
-
-### Description
-
-The `null`.
-
-### Input
-
-none
-
-### Output
-
-Returns a `null`.
-
-### Example
-
-    \null
-
-output
-
-    null
 
 ### Exceptions
 
@@ -1744,34 +1688,6 @@ output
 ### Exceptions
 
 If the argument is not a string, an exception is thrown.
-
-
-true
-----
-
-### Description
-
-True.
-
-### Input
-
-none
-
-### Output
-
-Returns `true`.
-
-### Example
-
-    \true
-
-output
-
-    true
-
-### Exceptions
-
-none
 
 
 u

@@ -264,11 +264,6 @@ object Command {
         }
       },
 
-      new Command( "false", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          false
-      },
-
       new Command( "filter", 2, false ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           (args.head, renderer eval args.tail.head.asInstanceOf[AST]) match {
@@ -399,11 +394,6 @@ object Command {
       new Command( "now", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           ZonedDateTime.now
-      },
-
-      new Command( "null", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          null
       },
 
       new Command( "number", 1 ) {
@@ -575,11 +565,6 @@ object Command {
             case List( s: String ) => s trim
             case List( a ) => problem( pos, s"expected string argument: $a" )
           }
-      },
-
-      new Command( "true", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          true
       },
 
       new Command( "u", 1 ) {
