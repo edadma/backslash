@@ -326,19 +326,18 @@ class Parser( commands: Map[String, Command] ) {
     def fields( start: Int, expr: AST ): AST =
       v.indexOf( '.', start ) match {
         case -1 => expr
-        case dot if dot == start || dot == v.length - 1 => problem( pos, "illegal variable reference" )
         case dot =>
           v.indexOf( '.', dot + 1 ) match {
             case -1 => DotAST( pos, expr, pos, LiteralAST(v.substring(dot + 1)) )
-            case idx => fields( idx + 1, DotAST(pos, expr, pos, LiteralAST(v.substring(dot + 1, idx))) )
+            case idx => fields( idx, DotAST(pos, expr, pos, LiteralAST(v.substring(dot + 1, idx))) )
           }
       }
 
-    fields( 0, VariableAST(
-      v indexOf '.' match {
-        case -1 => v
-        case dot => v.substring( 0, dot )
-      }) )
+    v indexOf '.' match {
+      case -1 => VariableAST( v )
+//      case 0 => problem( pos, "illegal variable reference" )
+      case dot => fields( dot, VariableAST(v.substring(0, dot)) )
+    }
   }
 
   def parseVariableArgument( r: Input ) = {

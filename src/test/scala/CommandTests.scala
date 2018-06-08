@@ -329,6 +329,7 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\seq {\timestamp 5 \timestamp 4 \timestamp 3} | sort""", true ) shouldBe "[1970-01-01T00:00:00.003Z, 1970-01-01T00:00:00.004Z, 1970-01-01T00:00:00.005Z]"
     test( """\seq {3 5 4 7 6 2 1} | sort""", true ) shouldBe "[1, 2, 3, 4, 5, 6, 7]"
     test( """\seq {\{a 3} \{a 5} \{a 4} \{a 7} \{a 6} \{a 2} \{a 1}} | sort on: a order: desc""", true ) shouldBe """[{"a": 7}, {"a": 6}, {"a": 5}, {"a": 4}, {"a": 3}, {"a": 2}, {"a": 1}]"""
+    test( """\seq {\{a 3} \{a 5} \{a 4}} | sort""", true ) shouldBe """[{"a": 3}, {"a": 4}, {"a": 5}]"""
     a [RuntimeException] should be thrownBy {test( """\sort 123""", false )}
   }
 
