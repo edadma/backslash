@@ -12,6 +12,14 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
 
   val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
+  "space" in {
+    test(
+      """
+        |\set firstName John \set lastName Doe
+        |\firstName\ \lastName
+      """.stripMargin, true ) shouldBe "John Doe"
+  }
+
   "addition" in {
     test( """\+ 3 4""", true ) shouldBe "7"
     test( """\+ as df""", true ) shouldBe "asdf"
