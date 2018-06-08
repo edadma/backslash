@@ -504,7 +504,7 @@ object Command {
 
           args match {
             case List( s: Seq[_] ) if on isDefined => s.asInstanceOf[Seq[Map[String, Any]]] sortWith ((a, b) => comp(a(on.get), b(on.get)))
-            case List( s: Seq[_] ) => s sortWith lt
+            case List( s: Seq[_] ) => s sortWith comp
             case List( a ) => problem( pos, s"expected sequence argument: $a" )
           }
         }
