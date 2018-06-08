@@ -19,6 +19,7 @@ class Parser( commands: Map[String, Command] ) {
 
   val varRegex = """\.([^.]*)"""r
   val unicodeRegex = "\\\\u[0-9a-fA-F]{4}".r
+  val keywords = List( "true", "false", "null" )
 
   def escapes( s: String ) =
     unicodeRegex.replaceAllIn(
@@ -195,6 +196,20 @@ class Parser( commands: Map[String, Command] ) {
       Some( (skipSpace(r1), s) )
     }
 
+  def keyword( r: Input, words: List[String] ): Option[(Input, String)] =
+    words match {
+      case Nil => None
+      case h :: t =>
+        matches( r, h ) match {
+          case None => keyword( r, t )
+          case Some( r1 ) =>
+            if (r1.atEnd || !r1.first.isLetter && r1.first != '_')
+              Some( (r1, h) )
+            else
+              keyword( r, t )
+        }
+    }
+
   def matches( r: Input, s: String, idx: Int = 0 ): Option[Input] =
     if (idx == s.length)
       Some( r )
@@ -262,7 +277,16 @@ class Parser( commands: Map[String, Command] ) {
             case (r1, n: BigDecimal) => (r1, -n)
             case _ => problem( r, "something bad happened" )
           }
-      case _ => parseString( r )
+      case _ =>
+        keyword( r, keywords ) match {
+          case None => parseString( r )
+          case Some( (r1, k) ) =>
+            (r1, k match {
+              case "true" => true
+              case "false" => false
+              case "null" => null
+            })
+        }
     }
 
   def parseString( r: Input ) = consumeCond( r, r => !r.atEnd && !r.first.isWhitespace && !lookahead(r, endDelim) )
@@ -338,7 +362,7 @@ class Parser( commands: Map[String, Command] ) {
         matches( r0, beginDelim ) match {
           case Some( r1 ) => parseGroup( r1 )
           case None =>
-            if (nameFirst( r0 first )) {
+            if (keyword( r0, keywords ).isEmpty && nameFirst( r0.first )) {
               val (r1, s) = parseVariableArgument( r0 )
 
               (r1, dotExpression( r0.pos, s ))

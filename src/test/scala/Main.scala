@@ -11,9 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\set product \{name "Nice TV" price 1049.00}
-      |
-      |The product name is \product.name.
+      |\seq {true false null}
     """.trim.stripMargin
   val assigns =
     Map(
