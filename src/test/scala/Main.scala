@@ -11,7 +11,8 @@ object Main extends App {
     )
   val input =
     """
-      |\set v \{a \{b \{c 3}}}\v.a.b.c
+      |\set firstName John \set lastName Doe
+      |\firstName\ \lastName
     """.trim.stripMargin
   val assigns =
     Map(

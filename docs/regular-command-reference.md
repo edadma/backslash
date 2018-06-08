@@ -8,6 +8,35 @@ Regular Commands
 This page details all the built-in regular commands in lexicographical order.
 
 
+` `
+---
+
+### Description
+
+The space character (\u0020).
+
+### Input
+
+none
+
+### Output
+
+Returns a string containing only the space character.
+
+### Example
+
+    \set firstName John \set lastName Doe
+    \firstName\ \lastName
+
+output
+
+    John Doe
+
+### Exceptions
+
+none
+
+
 *
 -
 

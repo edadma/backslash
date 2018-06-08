@@ -49,6 +49,10 @@ object Command {
   val standard =
     List(
 
+      new Command( " ", 0 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = " "
+      },
+
       new Command( "*", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {

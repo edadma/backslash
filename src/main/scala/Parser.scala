@@ -449,7 +449,7 @@ class Parser( commands: Map[String, Command] ) {
             (r3, DotAST( r.pos, ast, r2.pos, a ))
           case "set" =>
             val (r1, v) = parseVariableArgument( r )
-            val (r2, ast) = parseExpressionArgument( r1 )
+            val (r2, ast) = parseRegularArgument( r1 )
 
             (r2, SetAST( v, ast ))
           case "in" =>
@@ -470,7 +470,6 @@ class Parser( commands: Map[String, Command] ) {
             val (r1, args) = parseExpressionArguments( r, 2 )
 
             (r1, OrAST( args.head, args.tail.head ))
-          case " " => (r, LiteralAST( " " ))
           case "if" =>
             val (r1, expr) = parseExpressionArgument( r )
             val (r2, body) = parseRegularArgument( r1 )

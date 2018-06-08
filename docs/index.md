@@ -158,6 +158,12 @@ After the `\def` is the name of the macro followed by zero or more parameters.  
 
 ### Special Commands
 
+[Flow Control Commands](./flow-control-commands.html)
+
+[Logical Connectives](./logical-connectives.html)
+
+
+
 ### Parser Directives
 
 ### Variable References
