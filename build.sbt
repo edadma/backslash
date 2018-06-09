@@ -1,6 +1,6 @@
 name := "backslash"
 
-version := "0.4.11"
+version := "0.4.12"
 
 scalaVersion := "2.12.6"
 
