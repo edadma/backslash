@@ -7,8 +7,10 @@ Regular Commands
 
 This page details all the built-in regular commands in lexicographical order.
 
+[TOC levels=2]
 
-` `
+
+\\&#x2423; (space)
 ---
 
 ### Description
@@ -37,8 +39,8 @@ output
 none
 
 
-*
--
+\\* (times)
+---
 
 ### Description
 
@@ -65,7 +67,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-+
+\\+ (plus)
 -
 
 ### Description
@@ -93,7 +95,7 @@ output
 If the arguments do not have the combination of types listed under "Input", an exception is thrown.
 
 
--
+\\- (minus)
 -
 
 ### Description
@@ -121,7 +123,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-..
+\\.. (range)
 --
 
 ### Description
@@ -149,7 +151,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-/
+\\/ (divide)
 -
 
 ### Description
@@ -177,7 +179,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-/=
+\\/= (not equal)
 --
 
 ### Description
@@ -205,7 +207,7 @@ output
 none
 
 
-<
+\\&lt; (less than)
 -
 
 ### Description
@@ -233,7 +235,7 @@ output
 If the arguments are not both numerical or both strings, an exception is thrown.
 
 
-<=
+\\<= (less than or equal)
 --
 
 ### Description
@@ -261,7 +263,7 @@ output
 If the arguments are not both numerical or both strings, an exception is thrown.
 
 
-=
+\\= (equal)
 -
 
 ### Description
@@ -289,7 +291,7 @@ output
 none
 
 
-&gt;
+\\&gt; (greater than)
 -
 
 ### Description
@@ -317,7 +319,7 @@ output
 If the arguments are not both numerical or both strings, an exception is thrown.
 
 
-&gt;=
+\\&gt;= (greater than or equal)
 --
 
 ### Description
@@ -345,7 +347,7 @@ output
 If the arguments are not both numerical or both strings, an exception is thrown.
 
 
-[]
+\\[] (nil)
 --
 
 ### Description
@@ -373,7 +375,7 @@ output
 none
 
 
-^
+\\^ (exponential)
 -
 
 ### Description
@@ -401,7 +403,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-abs
+\\abs
 ---
 
 ### Description
@@ -429,7 +431,7 @@ output
 If the argument is not numerical, an exception is thrown.
 
 
-append
+\\append
 ------
 
 ### Description
@@ -457,7 +459,7 @@ output
 If the arguments are not strings or the second is not a sequence, an exception is thrown.
 
 
-ceil
+\\ceil
 ----
 
 ### Description
@@ -485,7 +487,7 @@ output
 If the argument is not numerical, an exception is thrown.
 
 
-contains
+\\contains
 --------
 
 ### Description
@@ -513,7 +515,7 @@ output
 If the arguments are not strings or the first is not a sequence or an object, an exception is thrown.
 
 
-date
+\\date
 ----
 
 ### Description
@@ -541,7 +543,7 @@ output
 If the arguments are not strings or the first is not a sequence or an object, an exception is thrown.
 
 
-default
+\\default
 -------
 
 ### Description
@@ -569,7 +571,7 @@ output (assuming the variable `price` is *not* defined)
 none
 
 
-distinct
+\\distinct
 --------
 
 ### Description
@@ -597,7 +599,7 @@ output
 If the argument is not a sequence, an exception is thrown.
 
 
-downcase
+\\downcase
 --------
 
 ### Description
@@ -625,7 +627,7 @@ output
 If the argument is not a string, an exception is thrown.
 
 
-drop
+\\drop
 ----
 
 ### Description
@@ -653,7 +655,7 @@ output
 If the first argument is not a number and the second is not a string or a sequence, an exception is thrown.
 
 
-escape
+\\escape
 ------
 
 ### Description
@@ -681,7 +683,7 @@ output
 If the argument is not a string, an exception is thrown.
 
 
-escapeOnce
+\\escapeOnce
 ----------
 
 ### Description
@@ -709,7 +711,7 @@ output
 If the argument is not a string, an exception is thrown.
 
 
-filter
+\\filter
 ------
 
 ### Description
@@ -737,7 +739,7 @@ output
 If the second argument is not a sequence, an exception is thrown.
 
 
-floor
+\\floor
 -----
 
 ### Description
@@ -765,7 +767,7 @@ output
 If the argument is not numerical, an exception is thrown.
 
 
-head
+\\head
 ----
 
 ### Description
@@ -793,7 +795,7 @@ output
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
 
 
-include
+\\include
 -------
 
 ### Description
@@ -821,7 +823,7 @@ output
 An exception may be thrown during the rendering of the included file.
 
 
-integer
+\\integer
 -------
 
 ### Description
@@ -849,7 +851,7 @@ output
 If the argument is not a string or numerical, an exception is thrown.
 
 
-join
+\\join
 ----
 
 ### Description
@@ -877,7 +879,7 @@ output
 If the first argument is not a string and the second is not a sequence, an exception is thrown.
 
 
-last
+\\last
 ----
 
 ### Description
@@ -905,7 +907,7 @@ output
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
 
 
-lit
+\\lit
 ---
 
 ### Description
@@ -933,7 +935,7 @@ output
 none
 
 
-map
+\\map
 ---
 
 Transforms a sequence by applying a lambda expression to all elements of the sequence.
@@ -959,7 +961,7 @@ output
 If the second argument is not a sequence, an exception is thrown.
 
 
-markdown
+\\markdown
 --------
 
 ### Description
@@ -987,7 +989,7 @@ output
 none
 
 
-max
+\\max
 ---
 
 ### Description
@@ -1015,7 +1017,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-min
+\\min
 ---
 
 ### Description
@@ -1043,7 +1045,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-n
+\\n
 -
 
 ### Description
@@ -1073,7 +1075,7 @@ output
 none
 
 
-negate
+\\negate
 ------
 
 ### Description
@@ -1101,7 +1103,7 @@ output
 If the argument is not numerical, an exception is thrown.
 
 
-nil
+\\nil
 ---
 
 ### Description
@@ -1129,7 +1131,7 @@ output
 none
 
 
-normalize
+\\normalize
 ---------
 
 ### Description
@@ -1157,7 +1159,7 @@ output
 none
 
 
-now
+\\now
 ---
 
 ### Description
@@ -1185,7 +1187,7 @@ output
 none
 
 
-number
+\\number
 ------
 
 ### Description
@@ -1213,7 +1215,7 @@ output
 If the argument is not a string or numerical, an exception is thrown.
 
 
-rem
+\\rem
 ---
 
 ### Description
@@ -1241,7 +1243,7 @@ output
 If the arguments are not numerical, an exception is thrown.
 
 
-remove
+\\remove
 ------
 
 ### Description
@@ -1269,7 +1271,7 @@ output
 If the arguments are not strings, an exception is thrown.
 
 
-removeFirst
+\\removeFirst
 -----------
 
 ### Description
@@ -1297,7 +1299,7 @@ output
 If the arguments are not strings, an exception is thrown.
 
 
-replace
+\\replace
 -------
 
 ### Description
@@ -1325,7 +1327,7 @@ output
 If the arguments are not strings, an exception is thrown.
 
 
-replaceFirst
+\\replaceFirst
 ------------
 
 ### Description
@@ -1353,7 +1355,7 @@ output
 If the arguments are not strings, an exception is thrown.
 
 
-reverse
+\\reverse
 -------
 
 ### Description
@@ -1381,7 +1383,7 @@ output
 If the argument is not a sequence or string, an exception is thrown.
 
 
-round
+\\round
 -----
 
 ### Description
@@ -1409,7 +1411,7 @@ output
 If the argument is not numerical, an exception is thrown.
 
 
-size
+\\size
 ----
 
 ### Description
@@ -1437,7 +1439,7 @@ output
 If the argument is not a sequence or string, an exception is thrown.
 
 
-slice
+\\slice
 -----
 
 ### Description
@@ -1465,7 +1467,7 @@ output
 If the argument is not a sequence or string, an exception is thrown.
 
 
-sort
+\\sort
 ----
 
 ### Description
@@ -1493,7 +1495,7 @@ output
 If the argument is not a sequence, an exception is thrown.
 
 
-split
+\\split
 -----
 
 ### Description
@@ -1521,7 +1523,7 @@ output
 If the arguments are not strings, an exception is thrown.
 
 
-string
+\\string
 ------
 
 ### Description
@@ -1549,7 +1551,7 @@ output
 none
 
 
-t
+\\t
 -
 
 ### Description
@@ -1579,7 +1581,7 @@ output
 none
 
 
-tail
+\\tail
 ----
 
 ### Description
@@ -1607,7 +1609,7 @@ output
 If the argument is not a sequence or string, or the sequence is empty, an exception is thrown.
 
 
-take
+\\take
 ----
 
 ### Description
@@ -1635,7 +1637,7 @@ output
 If the first argument is not a number and the second is not a string or a sequence, an exception is thrown.
 
 
-timestamp
+\\timestamp
 ---------
 
 ### Description
@@ -1663,7 +1665,7 @@ output
 If the argument is not a string or an integer, an exception is thrown.
 
 
-today
+\\today
 -----
 
 ### Description
@@ -1691,7 +1693,7 @@ output
 none
 
 
-trim
+\\trim
 ----
 
 ### Description
@@ -1719,7 +1721,7 @@ output
 If the argument is not a string, an exception is thrown.
 
 
-u
+\\u
 -
 
 ### Description
@@ -1747,7 +1749,7 @@ output
 If the argument is not numerical, an exception is thrown.
 
 
-upcase
+\\upcase
 ------
 
 ### Description
@@ -1775,7 +1777,7 @@ output
 If the argument is not a string, an exception is thrown.
 
 
-{}
+\\{} (empty object)
 --
 
 ### Description

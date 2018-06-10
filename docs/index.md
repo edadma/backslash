@@ -130,41 +130,16 @@ which outputs
 
 ### Macros
 
-A snippet of a template that is used in multiple places within the same file can be given a name and formal parameters so that it can be reused by simply referring to it as a control sequence.  These are called macro definitions.
+A snippet of a template that is used in multiple places within the same file can be given a name and formal parameters so that it can be reused by simply referring to it as a control sequence.  These are called macro definitions.  Macros are discussed in the section dealing with the [`def` command](./parser-directives.html#def), which is the command that defines a macro.
 
-Here's typical macro definition
-
-```
-\def h level heading {<h\level>\heading</h\level>}
-
-\h1 Overview
-<p>This is the overview.</p>
-
-\h2 {First Subsection}
-<p>Let's read something else now.</p>
-```
-
-output
-
-```html
-<h1>Overview</h1>
-<p>This is the overview.</p>
-
-<h2>First Subsection</h2>
-<p>Let's read something else now.</p>
-```
-
-After the `\def` is the name of the macro followed by zero or more parameters.  The parameters are referenced within the body of the definition as if they were variables, though their existence is local to the macro.  The body of a macro definition must be surrounded by [group](./#grouping) delimiters.
 
 ### Special Commands
 
-[Flow Control Commands](./flow-control-commands.html)
-
-[Logical Connectives](./logical-connectives.html)
-
-
+Special commands are control sequences the need to be parsed in some special way.  They can naturally be sub-divided into three categories.  [Flow control commands](./flow-control-commands.html) can alter the normal, sequential way in which input is transformed into output.  The [Logical connectives](./logical-connectives.html) are usually used with the flow control commands to do basic logic.  And finally, the [Miscellaneous special commands](./miscellaneous-special-commands.html) are the ones that don't fall into any special category.
 
 ### Parser Directives
+
+The [Parser directives](./parser-directives.html) are control sequences that affect the parser in come way but don't produce any output.
 
 ### Variable References
 
