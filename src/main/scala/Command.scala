@@ -311,8 +311,7 @@ object Command {
 
           number( x ) match {
             case None => problem( pos, s"not a number: $x" )
-            case Some( n: BigDecimal ) if n.isWhole => n
-            case Some( n: BigDecimal ) => n.setScale( 0, BigDecimal.RoundingMode.DOWN )
+            case Some( n: BigDecimal ) => if (n.isWhole) n else n.setScale( 0, BigDecimal.RoundingMode.DOWN )
           }
         }
       },
