@@ -10,7 +10,7 @@ This page details all the built-in regular commands in lexicographical order.
 [TOC levels=2]
 
 
-\\&#x2423; (space)
+\\ (space)
 ---
 
 ### Description
