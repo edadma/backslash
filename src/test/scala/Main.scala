@@ -11,8 +11,9 @@ object Main extends App {
     )
   val input =
     """
-      |\set firstName John \set lastName Doe
-      |\firstName\ \lastName
+      |\def m a b {asdf \a\ zxvc \b}
+      |\set v 123
+      |\m qwer\v
     """.trim.stripMargin
   val assigns =
     Map(

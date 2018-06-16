@@ -64,15 +64,11 @@ class Parser( commands: Map[String, Command] ) {
     }
   }
 
-  def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, AST) =
-    if (r atEnd)
-      (r, LiteralAST( buf toString ))
-    else if (lookahead( r, csDelim ) || lookahead( r, endDelim ) || lookahead( r, beginDelim ))
-      (r, LiteralAST( buf toString ))
-    else {
-      buf += r.first
-      parseStatic( r.rest, buf )
-    }
+  def parseStatic( r: Input, buf: StringBuilder = new StringBuilder ): (Input, AST) = {
+    val (r1, s) = consumeCond( r, r => !r.atEnd && !lookahead(r, csDelim) && !lookahead(r, beginDelim) && !lookahead(r, endDelim) )
+
+    (r1, LiteralAST( s ))
+  }
 
   def parseStatement( r: Input ): (Input, AST) =
     parseControlSequence( r ) match {
@@ -289,7 +285,7 @@ class Parser( commands: Map[String, Command] ) {
         }
     }
 
-  def parseString( r: Input ) = consumeCond( r, r => !r.atEnd && !r.first.isWhitespace && !lookahead(r, endDelim) )
+  def parseString( r: Input ) = consumeCond( r, r => !r.atEnd && !r.first.isWhitespace && !lookahead(r, csDelim) && !lookahead(r, beginDelim) && !lookahead(r, endDelim) )
 
   def parseStringWhitespace( r: Input ) = consume( r, !_.isWhitespace )
 
