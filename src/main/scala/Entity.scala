@@ -5,6 +5,15 @@ object Entity {
 
   def apply( c: Char ) =
     c match {
+      case '&' => "amp"
+      case '<' => "lt"
+      case '>' => "gt"
+      case _ if c > '\u007F' => s"#${c.toInt}"
+      case _ => c.toString
+    }
+
+  def full( c: Char ) =
+    c match {
       case '\u0009' => "Tab"
       case '\u000A' => "NewLine"
       case '\u0021' => "excl"

@@ -243,6 +243,15 @@ object Command {
         }
       },
 
+      new Command( "escapeFull", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
+          args.head match {
+            case s: String => escapeFull( s )
+            case a => problem( pos, s"not a string: $a" )
+          }
+        }
+      },
+
       new Command( "escapeOnce", 1 ) {
         val regex = """&#?\w+;"""r
 
@@ -596,5 +605,8 @@ object Command {
 
   def escape( s: String ) =
     escapeRegex.replaceAllIn( s, { m => s"&${Entity( m group 1 head )};" } )
+
+  def escapeFull( s: String ) =
+    escapeRegex.replaceAllIn( s, { m => s"&${Entity.full( m group 1 head )};" } )
 
 }
