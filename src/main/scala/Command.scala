@@ -604,7 +604,7 @@ object Command {
     ) map (c => c.name -> c) toMap
 
   def escape( s: String ) =
-    escapeRegex.replaceAllIn( s, { m => s"&${Entity( m group 1 head )};" } )
+    escapeRegex.replaceSomeIn( s, { m => Entity( m group 1 head ) map (e => s"&$e;") } )
 
   def escapeFull( s: String ) =
     escapeRegex.replaceAllIn( s, { m => s"&${Entity.full( m group 1 head )};" } )

@@ -11,9 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\def m a b {asdf \a\ zxvc \b}
-      |\set v 123
-      |\m qwer\v
+      |\escape "a < b &&\n b < c"
     """.trim.stripMargin
   val assigns =
     Map(

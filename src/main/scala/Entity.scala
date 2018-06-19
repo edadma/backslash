@@ -5,11 +5,11 @@ object Entity {
 
   def apply( c: Char ) =
     c match {
-      case '&' => "amp"
-      case '<' => "lt"
-      case '>' => "gt"
-      case _ if c > '\u007F' => s"#${c.toInt}"
-      case _ => c.toString
+      case '&' => Some( "amp" )
+      case '<' => Some( "lt" )
+      case '>' => Some( "gt" )
+      case _ if c > '\u007F' => Some( s"#${c.toInt}" )
+      case _ => None
     }
 
   def full( c: Char ) =
