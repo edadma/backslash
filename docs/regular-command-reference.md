@@ -1204,7 +1204,7 @@ Returns the range as a sequence result.
 
 ### Example
 
-    \.. 3 6
+    \range 3 6
 
 output
 
