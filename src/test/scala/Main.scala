@@ -11,7 +11,9 @@ object Main extends App {
     )
   val input =
     """
-      |\escape "a < b &&\n b < c"
+      |\for \.. 1 5 {
+      |  <p>\forloop.element<\p>
+      |}
     """.trim.stripMargin
   val assigns =
     Map(

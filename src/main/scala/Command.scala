@@ -82,14 +82,6 @@ object Command {
           }
       },
 
-      new Command( "..", 2 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          args match {
-            case List( start: BigDecimal, end: BigDecimal ) => start to end by 1
-            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
-          }
-      },
-
       new Command( "/", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {
@@ -417,6 +409,14 @@ object Command {
             case Some( n ) => n
           }
         }
+      },
+
+      new Command( "range", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+          args match {
+            case List( start: BigDecimal, end: BigDecimal ) => start to end by 1
+            case List( a, b ) => problem( pos, s"expected arguments <number> <number>: $a, $b" )
+          }
       },
 
       new Command( "rem", 2 ) {
