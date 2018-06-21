@@ -43,14 +43,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\- 1 asdf""", false )}
   }
 
-  "range" in {
-    test( """\.. 3 6""", true ) shouldBe "[3, 4, 5, 6]"
-    test( """\.. 3.1 6""", true ) shouldBe "[3.1, 4.1, 5.1]"
-    test( """\.. 3 2""", true ) shouldBe "[]"
-    a [RuntimeException] should be thrownBy {test( """\.. 3 asdf""", false )}
-    a [RuntimeException] should be thrownBy {test( """\.. asdf 3""", false )}
-  }
-
   "division" in {
     test( """\/ 3 4""", true ) shouldBe "0.75"
     a [RuntimeException] should be thrownBy {test( """\/ asdf 1""", false )}
@@ -275,6 +267,14 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
   "number" in {
     test( """\set int "3."\set frac "5"\+ 1 \number \+ \int \frac""", false ) shouldBe "4.5"
     a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
+  }
+
+  "range" in {
+    test( """\range 3 6""", true ) shouldBe "[3, 4, 5, 6]"
+    test( """\range 3.1 6""", true ) shouldBe "[3.1, 4.1, 5.1]"
+    test( """\range 3 2""", true ) shouldBe "[]"
+    a [RuntimeException] should be thrownBy {test( """\range 3 asdf""", false )}
+    a [RuntimeException] should be thrownBy {test( """\range asdf 3""", false )}
   }
 
   "rem" in {
