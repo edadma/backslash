@@ -351,17 +351,6 @@ object Command {
         }
       },
 
-      new Command( "integer", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
-          val x = args.head
-
-          number( x ) match {
-            case None => problem( pos, s"not a number: $x" )
-            case Some( n: BigDecimal ) => if (n.isWhole) n else n.setScale( 0, BigDecimal.RoundingMode.DOWN )
-          }
-        }
-      },
-
       new Command( "join", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {
@@ -483,17 +472,6 @@ object Command {
           ZonedDateTime.now
       },
 
-      new Command( "number", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
-          val x = args.head
-
-          number( x ) match  {
-            case None => problem( pos, s"not a number: $x" )
-            case Some( n ) => n
-          }
-        }
-      },
-
       new Command( "range", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match {
@@ -609,11 +587,6 @@ object Command {
           }
       },
 
-      new Command( "string", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          display( args.head )
-      },
-
       new Command( "t", 0 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           "\t"
@@ -645,6 +618,33 @@ object Command {
               Instant ofEpochMilli millis.longValue atOffset ZoneOffset.UTC toZonedDateTime
             case List( a ) => problem( pos, s"expected string or integer argument: $a" )
           }
+      },
+
+      new Command( "toInteger", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
+          val x = args.head
+
+          number( x ) match {
+            case None => problem( pos, s"not a number: $x" )
+            case Some( n: BigDecimal ) => if (n.isWhole) n else n.setScale( 0, BigDecimal.RoundingMode.DOWN )
+          }
+        }
+      },
+
+      new Command( "toNumber", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
+          val x = args.head
+
+          number( x ) match  {
+            case None => problem( pos, s"not a number: $x" )
+            case Some( n ) => n
+          }
+        }
+      },
+
+      new Command( "toString", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+          display( args.head )
       },
 
       new Command( "today", 0 ) {

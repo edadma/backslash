@@ -197,13 +197,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\head \[]""", false )}
   }
 
-  "integer" in {
-    test( """\+ 0 \integer -3""", true ) shouldBe "-3"
-    test( """\integer 3.1""", true ) shouldBe "3"
-    test( """\integer -3.1""", true ) shouldBe "-3"
-    a [RuntimeException] should be thrownBy {test( """\integer asdf""", false )}
-  }
-
   "join" in {
     test( """\join " - " \seq {1 2 3}""", true ) shouldBe "1 - 2 - 3"
     a [RuntimeException] should be thrownBy {test( """\join asdf asdf""", false )}
@@ -262,11 +255,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
 
   "now" in {
     test( """\now | date "MMMM d, y"""", false ) shouldBe today
-  }
-
-  "number" in {
-    test( """\set int "3."\set frac "5"\+ 1 \number \+ \int \frac""", false ) shouldBe "4.5"
-    a [RuntimeException] should be thrownBy {test( """\number "asdf"""", false )}
   }
 
   "range" in {
@@ -346,10 +334,6 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\split 123 123""", false )}
   }
 
-  "string" in {
-    test( """\{a 3 b 4} | string""", true ) shouldBe """{"a": 3, "b": 4}"""
-  }
-
   "tail" in {
     test( """\seq {3 4 5} | tail""", true ) shouldBe "[4, 5]"
     test( """\tail asdf""", true ) shouldBe "sdf"
@@ -368,6 +352,22 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     test( """\timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"""", true ) shouldBe """June 5, 2018"""
     test( """\timestamp 1528314399243 | date "MMMM d, y"""", true ) shouldBe """June 6, 2018"""
     a [RuntimeException] should be thrownBy {test( """\timestamp \[]""", false )}
+  }
+
+  "toInteger" in {
+    test( """\+ 0 \toInteger -3""", true ) shouldBe "-3"
+    test( """\toInteger 3.1""", true ) shouldBe "3"
+    test( """\toInteger -3.1""", true ) shouldBe "-3"
+    a [RuntimeException] should be thrownBy {test( """\toInteger asdf""", false )}
+  }
+
+  "toNumber" in {
+    test( """\set int "3."\set frac "5"\+ 1 \toNumber \+ \int \frac""", false ) shouldBe "4.5"
+    a [RuntimeException] should be thrownBy {test( """\toNumber "asdf"""", false )}
+  }
+
+  "toString" in {
+    test( """\{a 3 b 4} | toString""", true ) shouldBe """{"a": 3, "b": 4}"""
   }
 
   "today" in {

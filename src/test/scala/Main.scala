@@ -11,7 +11,11 @@ object Main extends App {
     )
   val input =
     """
-      |\lighten 30 {rgb(127, 127, 127)} | darken 30
+      |\delim \ [ ]
+      |\set entity [rgb(73, 172, 206)]
+      |\set tag [rgb(148, 176, 94)]
+      |\entity
+      |\lighten 20 \entity
     """.trim.stripMargin
   val assigns =
     Map(
