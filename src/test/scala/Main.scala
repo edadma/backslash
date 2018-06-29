@@ -12,10 +12,32 @@ object Main extends App {
   val input =
     """
       |\delim \ [ ]
-      |\set entity [rgb(73, 172, 206)]
-      |\set tag [rgb(148, 176, 94)]
-      |\entity
-      |\lighten 20 \entity
+      |    \set entity [rgb(73, 172, 206)]
+      |    \set tag [rgb(148, 176, 94)]
+      |    \set string [rgb(81, 167, 182)]
+      |    \set \lum 15
+      |    <html>
+      |        <head>
+      |            <title>HTML highlighting example</title>
+      |            <style>
+      |                .highlight .hll { background-color: rgb(12, 11, 10); }
+      |                .highlight  { background: #272822; color: rgb(140, 131, 126); }
+      |                .highlight .entitydelim { color: \lighten\lum\entity; }
+      |                .highlight .entity { color: \entity; }
+      |                .highlight .preproc { color: #75715e }
+      |                .highlight .comment { color: rgb(69, 64, 61); }
+      |                .highlight .tagdelim { color: \lighten\lum\tag; }
+      |                .highlight .tag { color: \tag; }
+      |                .highlight .attr { color: rgb(98, 200, 172); }
+      |                .highlight .oper { color: rgb(238, 171, 106); }
+      |                .highlight .stringdelim { color: \lighten\lum\string; }
+      |                .highlight .string { color: \string; }
+      |            </style>
+      |        </head>
+      |        <body>
+      |            <div class="highlight"><pre>\content</pre></div>
+      |        </body>
+      |    </html>
     """.trim.stripMargin
   val assigns =
     Map(

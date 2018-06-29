@@ -337,9 +337,10 @@ class Parser( commands: Map[String, Command] ) {
   }
 
   def parseVariableArgument( r: Input ) = {
+    println( r.pos.longString )
     val res@(_, s) = parseString( r )
 
-    if (!nameFirst( s.head ) || !s.tail.forall( nameRest ))
+    if (s.isEmpty || !nameFirst( s.head ) || !s.tail.forall( nameRest ))
       problem( r, "illegal variable name" )
 
     check( r.pos, s )
