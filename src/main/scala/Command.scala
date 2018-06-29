@@ -9,6 +9,7 @@ import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
 import xyz.hyperreal.__markdown__._
+import xyz.hyperreal.hsl.HSL
 
 
 abstract class Command( val name: String, val arity: Int, val eval: Boolean = true ) extends ((Position, Renderer, List[Any], Map[String, Any], AnyRef) => Any) {
@@ -16,6 +17,12 @@ abstract class Command( val name: String, val arity: Int, val eval: Boolean = tr
 }
 
 object Command {
+
+  val hslRegex = """hsl\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*%\s*,\s*(\d+(?:\.\d+)?)\s*%\s*\)"""r
+  val hslaRegex = """hsla\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*%\s*,\s*(\d+(?:\.\d+)?)\s*%\s*,\s*(\d+(?:\.\d+)?)\s*\)"""r
+  val rgbRegex = """rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)"""r
+  val rgbaRegex = """rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)"""r
+  val colorRegex = "#([0-9a-fA-F]{6})".r
 
   class Const[T] {
     private var set = false
@@ -186,6 +193,44 @@ object Command {
           }
       },
 
+      new Command( "darken", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+          args match  {
+            case List( v: Number, c: String ) =>
+              c match {
+                case rgbRegex( r, g, b ) =>
+                  val hsl = HSL.fromRGB( r.toInt, g.toInt, b.toInt )
+                  val (nr, ng, nb) = hsl.luminosity( hsl.l - v.intValue/100.0 ).toRGB
+
+                  s"rgb($nr, $ng, $nb)"
+                case rgbaRegex( r, g, b, a ) =>
+                  val hsl = HSL.fromRGB( r.toInt, g.toInt, b.toInt )
+                  val (nr, ng, nb) = hsl.luminosity( hsl.l - v.intValue/100.0 ).toRGB
+
+                  s"rgba($nr, $ng, $nb, $a)"
+                case hslRegex( h, s, l ) =>
+                  val hsl = HSL( h.toDouble/360, s.toDouble/100, l.toDouble/100 )
+                  val HSL( hue, sat, lum ) = hsl.luminosity( hsl.l - v.intValue/100.0 )
+
+                  f"hsl(${hue*360}%.1f, ${sat*100}%.1f%%, ${lum*100}%.1f%%)"
+                case hslaRegex( h, s, l, a ) =>
+                  val hsl = HSL( h.toDouble/360, s.toDouble/100, l.toDouble/100 )
+                  val HSL( hue, sat, lum ) = hsl.luminosity( hsl.l - v.intValue/100.0 )
+
+                  f"hsla(${hue*360}%.1f, ${sat*100}%.1f%%, ${lum*100}%.1f%%, ${a.toDouble}%.3f)"
+                case colorRegex( hex ) =>
+                  val List( r: Int, g: Int, b: Int ) = hex grouped 2 map (Integer.parseInt(_, 16)) toList
+                  val hsl = HSL.fromRGB( r.toInt, g.toInt, b.toInt )
+                  val (nr, ng, nb) = hsl.luminosity( hsl.l - v.intValue/100.0 ).toRGB
+
+                  f"#$nr%02x$ng%02x$nb%02x"
+                case _ => sys.error( s"color doesn't match known format: $c" )
+              }
+            case List( c: String, _: Number ) => sys.error( s"color doesn't match known format: $c" )
+            case List( a, b ) => problem( pos, s"expected <string> <number> arguments: $a, $b" )
+          }
+      },
+
       new Command( "date", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {
@@ -331,6 +376,44 @@ object Command {
             case List( s: String ) => s last
             case List( s: Seq[_] ) => s last
             case List( a ) => problem( pos, s"expected string or sequence argument: $a" )
+          }
+      },
+
+      new Command( "lighten", 2 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+          args match  {
+            case List( v: Number, c: String ) =>
+              c match {
+                case rgbRegex( r, g, b ) =>
+                  val hsl = HSL.fromRGB( r.toInt, g.toInt, b.toInt )
+                  val (nr, ng, nb) = hsl.luminosity( hsl.l + v.intValue/100.0 ).toRGB
+
+                  s"rgb($nr, $ng, $nb)"
+                case rgbaRegex( r, g, b, a ) =>
+                  val hsl = HSL.fromRGB( r.toInt, g.toInt, b.toInt )
+                  val (nr, ng, nb) = hsl.luminosity( hsl.l + v.intValue/100.0 ).toRGB
+
+                  s"rgba($nr, $ng, $nb, $a)"
+                case hslRegex( h, s, l ) =>
+                  val hsl = HSL( h.toDouble/360, s.toDouble/100, l.toDouble/100 )
+                  val HSL( hue, sat, lum ) = hsl.luminosity( hsl.l + v.intValue/100.0 )
+
+                  f"hsl(${hue*360}%.1f, ${sat*100}%.1f%%, ${lum*100}%.1f%%)"
+                case hslaRegex( h, s, l, a ) =>
+                  val hsl = HSL( h.toDouble/360, s.toDouble/100, l.toDouble/100 )
+                  val HSL( hue, sat, lum ) = hsl.luminosity( hsl.l + v.intValue/100.0 )
+
+                  f"hsla(${hue*360}%.1f, ${sat*100}%.1f%%, ${lum*100}%.1f%%, ${a.toDouble}%.3f)"
+                case colorRegex( hex ) =>
+                  val List( r: Int, g: Int, b: Int ) = hex grouped 2 map (Integer.parseInt(_, 16)) toList
+                  val hsl = HSL.fromRGB( r.toInt, g.toInt, b.toInt )
+                  val (nr, ng, nb) = hsl.luminosity( hsl.l + v.intValue/100.0 ).toRGB
+
+                  f"#$nr%02x$ng%02x$nb%02x"
+                case _ => sys.error( s"color doesn't match known format: $c" )
+              }
+            case List( c: String, _: Number ) => sys.error( s"color doesn't match known format: $c" )
+            case List( a, b ) => problem( pos, s"expected <string> <number> arguments: $a, $b" )
           }
       },
 

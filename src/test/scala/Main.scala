@@ -11,9 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\for \.. 1 5 {
-      |  <p>\forloop.element<\p>
-      |}
+      |\lighten 30 {rgb(127, 127, 127)} | darken 30
     """.trim.stripMargin
   val assigns =
     Map(
