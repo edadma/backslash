@@ -337,7 +337,6 @@ class Parser( commands: Map[String, Command] ) {
   }
 
   def parseVariableArgument( r: Input ) = {
-    println( r.pos.longString )
     val res@(_, s) = parseString( r )
 
     if (s.isEmpty || !nameFirst( s.head ) || !s.tail.forall( nameRest ))
