@@ -13,7 +13,7 @@ import xyz.hyperreal.hsl.HSL
 
 
 abstract class Command( val name: String, val arity: Int, val eval: Boolean = true ) extends ((Position, Renderer, List[Any], Map[String, Any], AnyRef) => Any) {
-  override def toString = s"<$name/$arity>"
+  override def toString = s"""xyz.hyperreal.backslash.Command.standard("$name")"""
 }
 
 object Command {
