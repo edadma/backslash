@@ -8,7 +8,7 @@ import java.time.temporal.TemporalAccessor
 import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
-import xyz.hyperreal.__markdown__._
+import xyz.hyperreal.markdown.Markdown
 import xyz.hyperreal.hsl.HSL
 
 

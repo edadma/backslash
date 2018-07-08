@@ -324,8 +324,8 @@ class Parser( commands: Map[String, Command] ) {
         case -1 => expr
         case dot =>
           v.indexOf( '.', dot + 1 ) match {
-            case -1 => DotAST( pos, expr, pos, LiteralAST(v.substring(dot + 1)) )
-            case idx => fields( idx, DotAST(pos, expr, pos, LiteralAST(v.substring(dot + 1, idx))) )
+            case -1 => DotAST( pos, expr, pos, LiteralAST(v.substring(dot + 1)) )//todo: support integers after '.'
+            case idx => fields( idx, DotAST(pos, expr, pos, LiteralAST(v.substring(dot + 1, idx))) )//todo: as above
           }
       }
 
