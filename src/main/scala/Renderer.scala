@@ -112,7 +112,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
       case MatchAST( expr, cases, els ) =>
         val e = eval( expr )
 
-        cases find { case (expr, _) => e == eval( expr ) } match {
+        cases find { case (exp, _) => e == eval( exp ) } match {
           case None =>
             els match {
               case None => nil
@@ -127,7 +127,7 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           statements map deval mkString
       case LiteralAST( v ) => v
       case CommandAST( pos, c, args, optional ) =>
-        c( pos, this, if (c.eval) args map eval else args, optional map {case (k, v) => (k -> eval(v))}, null )
+        c( pos, this, if (c.eval) args map eval else args, optional map {case (k, v) => k -> eval(v)}, null )
       case ForAST( pos, expr, body, els ) =>
         val buf = new StringBuilder
 
