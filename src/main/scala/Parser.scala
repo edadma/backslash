@@ -35,7 +35,7 @@ class Parser( commands: Map[String, Command] ) {
       m => Integer.parseInt( m.matched.substring(2), 16 ).toChar.toString
     )
 
-  case class Macro( parameters: Vector[String], body: AST )
+  case class Macro( parameters: Vector[String], var body: AST )
 
   val macros = new mutable.HashMap[String, Macro]
 
@@ -109,9 +109,13 @@ class Parser( commands: Map[String, Command] ) {
         if (r2.atEnd || !lookahead( r2, beginDelim ))
           problem( r2.pos, s"expected body of definition for $name" )
 
+        val mac = Macro( v.tail, null )
+
+        macros(name) = mac
+
         val (r3, body) = parseRegularArgument( r2 )
 
-        macros(name) = Macro( v.tail, body )
+        mac.body = body
         (r3, null)
       case Some( (r1, name) ) => parseCommand( r.pos, name, r1, true )
     }
@@ -514,7 +518,7 @@ class Parser( commands: Map[String, Command] ) {
                     (r1, CommandAST( pos, c, args, optional ))
                 }
               case Some( Macro(parameters, body) ) =>
-                if (parameters isEmpty)
+                if (parameters isEmpty)   //todo: recursize parameterless macros could occur
                   (r, body)
                 else {
                   val (r1, args) = parseRegularArguments( r, parameters.length )

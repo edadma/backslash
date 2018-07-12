@@ -452,10 +452,10 @@ object Command {
           }
       },
 
-      new Command( "n", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          "\n"
-      },
+//      new Command( "n", 0 ) {
+//        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+//          "\n"
+//      },
 
       new Command( "negate", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
@@ -609,10 +609,10 @@ object Command {
           }
       },
 
-      new Command( "t", 0 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          "\t"
-      },
+//      new Command( "t", 0 ) {
+//        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+//          "\t"
+//      },
 
       new Command( "tail", 1 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =

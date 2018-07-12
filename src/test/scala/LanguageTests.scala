@@ -74,7 +74,7 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   "literals" in {
     test( """\+ 0x12 1""", false ) shouldBe "19"
     test( "\\set v '\\u0061'\\v", false ) shouldBe "a"
-    test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
+//    test( """asdf \n\t zxvc""", false ) shouldBe "asdf \n\tzxvc"
     test( """asdf \set v '"\b\f\n\r\t\\\'\"'\v zxvc""", false ) shouldBe "asdf \"\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v "'\b\f\n\r\t\\\'\""\v zxvc""", false ) shouldBe "asdf '\b\f\n\r\t\\\'\"zxvc"
     test( """asdf \set v 123.4\+ \v 1 zxvc""", false ) shouldBe "asdf 124.4 zxvc"

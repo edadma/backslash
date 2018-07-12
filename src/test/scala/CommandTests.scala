@@ -235,9 +235,9 @@ class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testi
     a [RuntimeException] should be thrownBy {test( """\min 1 asdf""", false )}
   }
 
-  "newline" in {
-    test( """\n""", false ) shouldBe "\n"
-  }
+//  "newline" in {
+//    test( """\n""", false ) shouldBe "\n"
+//  }
 
   "negate" in {
     test( """\negate 4""", true ) shouldBe "-4"
