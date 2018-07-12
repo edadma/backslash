@@ -35,8 +35,6 @@ class Parser( commands: Map[String, Command] ) {
       m => Integer.parseInt( m.matched.substring(2), 16 ).toChar.toString
     )
 
-  case class Macro( parameters: Vector[String], var body: AST )
-
   val macros = new mutable.HashMap[String, Macro]
 
   def parse( src: io.Source ): AST =
@@ -185,13 +183,16 @@ class Parser( commands: Map[String, Command] ) {
     else {
       val (r1, s) =
         if (nameFirst( r.first ))
-          consumeCond( r, r => !r.atEnd && nameRest(r.first) && !(r.first == '.' && (r.rest.atEnd || !nameRest(r.rest.first))) )
+          consumeCond( r,
+            r => !r.atEnd && nameRest(r.first) && !(r.first == '.' && (r.rest.atEnd || !nameRest(r.rest.first))) )
         else if (r.first.isWhitespace)
           (r.rest, " ")
         else if (r.first.isDigit)
           problem( r.pos, s"control sequence name can't start with a digit" )
         else
-          consume( r, c => !(c.isLetterOrDigit || c == '_' || c.isWhitespace) )
+          consumeCond( r,
+            r => !(r.atEnd ||
+              r.first.isLetterOrDigit || r.first == '_' || r.first.isWhitespace || lookahead(r, csDelim)) )
 
       Some( (skipSpace(r1), s) )
     }
@@ -517,13 +518,13 @@ class Parser( commands: Map[String, Command] ) {
 
                     (r1, CommandAST( pos, c, args, optional ))
                 }
-              case Some( Macro(parameters, body) ) =>
+              case Some( mac@Macro(parameters, body) ) =>
                 if (parameters isEmpty)   //todo: recursize parameterless macros could occur
                   (r, body)
                 else {
                   val (r1, args) = parseRegularArguments( r, parameters.length )
 
-                  (r1, MacroAST( body, parameters zip args ))
+                  (r1, MacroAST( mac, args ))
                 }
             }
         }
@@ -554,10 +555,10 @@ class Parser( commands: Map[String, Command] ) {
                       filters( r4, CommandAST(r2.pos, c, args :+ ast, optional) )
                   }
                 case Some( Macro(parameters, _) ) if parameters isEmpty => problem( r2, "expected a macro with parameters" )
-                case Some( Macro(parameters, body) ) =>
+                case Some( mac@Macro(parameters, _) ) =>
                   val (r4, args) = parseRegularArguments( r3, parameters.length - 1 )
 
-                  filters( r4, MacroAST(body, parameters zip (args :+ ast)) )
+                  filters( r4, MacroAST(mac, args :+ ast) )
               }
             }
 

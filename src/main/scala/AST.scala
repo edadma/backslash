@@ -13,7 +13,7 @@ case class GroupAST( statements: Seq[AST] ) extends AST
 case class LiteralAST( v: Any ) extends AST
 case class VariableAST(name: String ) extends AST
 case class CommandAST( pos: Position, c: Command, args: List[AST], optional: Map[String, AST] ) extends AST
-case class MacroAST( body: AST, args: Seq[(String, AST)] ) extends AST
+case class MacroAST( mac: Macro, args: Seq[AST] ) extends AST
 case class BreakAST( pos: Position ) extends AST
 case class ContinueAST( pos: Position ) extends AST
 case class AndAST( left: AST, right: AST ) extends AST
@@ -24,3 +24,5 @@ case class InAST( cpos: Position, v: String, epos: Position, expr: AST ) extends
 case class NotAST( expr: AST ) extends AST
 case class SeqAST( seq: Vector[AST] ) extends AST
 case class ObjectAST( seq: Vector[AST] ) extends AST
+
+case class Macro( parameters: Vector[String], var body: AST )

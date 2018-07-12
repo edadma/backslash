@@ -101,9 +101,9 @@ class Renderer( val parser: Parser, val config: Map[String, Any] ) {
           else
             false
         }
-      case MacroAST( body, args ) =>
+      case MacroAST( Macro(parms, body), args ) =>
         enterScope
-        scopes.top ++= args map {case (k, v) => (k, eval(v))}
+        scopes.top ++= parms zip args map {case (k, v) => (k, eval(v))}
 
         val res = eval( body )
 

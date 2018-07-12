@@ -11,7 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\def fac n {\if \= \n 0 1 \else \* \n \fac \- \n 1}
+      |\def fac n {\if \=\n0 1 \else \*\n\fac\-\n1}
       |
       |\fac 5
     """.trim.stripMargin
