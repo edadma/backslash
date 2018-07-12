@@ -8,7 +8,7 @@ import java.time.temporal.TemporalAccessor
 import java.util.regex.Matcher
 
 import scala.util.parsing.input.Position
-import xyz.hyperreal.markdown.Markdown
+//import xyz.hyperreal.markdown.Markdown
 import xyz.hyperreal.hsl.HSL
 
 
@@ -431,10 +431,10 @@ object Command {
           }
       },
 
-      new Command( "markdown", 1 ) {
-        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
-          Markdown( args.head.toString )
-      },
+//      new Command( "markdown", 1 ) {
+//        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
+//          Markdown( args.head.toString )
+//      },
 
       new Command( "max", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
