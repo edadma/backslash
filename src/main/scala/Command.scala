@@ -351,6 +351,17 @@ object Command {
         }
       },
 
+      new Command( "isEmpty", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
+          args.head match {
+            case s: String => s isEmpty
+            case m: collection.Map[_, _] => m isEmpty
+            case s: Seq[_] => s isEmpty
+            case a => problem( pos, s"expected string, map or sequence argument: $a"  )
+          }
+        }
+      },
+
       new Command( "join", 2 ) {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {
@@ -459,6 +470,17 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
           args.head
           nil
+        }
+      },
+
+      new Command( "nonEmpty", 1 ) {
+        def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any = {
+          args.head match {
+            case s: String => s nonEmpty
+            case m: collection.Map[_, _] => m nonEmpty
+            case s: Seq[_] => s nonEmpty
+            case a => problem( pos, s"expected string, map or sequence argument: $a"  )
+          }
         }
       },
 

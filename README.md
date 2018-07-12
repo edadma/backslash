@@ -5,7 +5,7 @@ Backslash
 [![Build status](https://ci.appveyor.com/api/projects/status/h5b23n2vd0k4oh9q/branch/master?svg=true)](https://ci.appveyor.com/project/edadma/backslash/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/edadma/backslash/badge.svg?branch=master)](https://coveralls.io/github/edadma/backslash?branch=master)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://github.com/edadma/backslash/blob/master/LICENSE)
-[![Version](https://img.shields.io/badge/latest_release-v0.4.18-orange.svg)](https://github.com/edadma/backslash/releases/tag/v0.4.18)
+[![Version](https://img.shields.io/badge/latest_release-v0.4.19-orange.svg)](https://github.com/edadma/backslash/releases/tag/v0.4.19)
 
 *Backslash* is a string templating language written in [Scala](http://scala-lang.org). Backslash looks like [TeX](https://en.wikipedia.org/wiki/TeX) with the default delimiters (which can be changed), but it's not TeX. Backslash behaves like any other macro/templating language: it copies input text to output. Backslash is an attempt to create a dryer templating language that still allows you to copy HTML (or whatever you're using it for) verbatim. So, although Backslash is somewhat inspired by TeX, it shares very little in common with it except less typing. If your HTML doesn't containing any scripting then the "TeXish" delimiters (`\`, `{`, `}`) are usually fine. However, as in [Mustache](http://mustache.github.io/), delimiters can be changed anywhere in the input stream (except between command arguments).
 
@@ -157,7 +157,7 @@ This program prints
 This next example shows how to use *Backslash* as an executable from the command line.
 
 ```bash
-echo "testing \join \v \", \"" | java -jar backslash-0.4.18.jar -j "{v: [\"one\", \"two\", \"three\"]}" --
+echo "testing \join \v \", \"" | java -jar backslash-0.4.19.jar -j "{v: [\"one\", \"two\", \"three\"]}" --
 ```
 
 The above command prints
@@ -181,7 +181,7 @@ Use the following definition to use Backslash in your Maven project:
 <dependency>
   <groupId>xyz.hyperreal</groupId>
   <artifactId>backslash</artifactId>
-  <version>0.4.18</version>
+  <version>0.4.19</version>
 </dependency>
 ```
 
@@ -190,14 +190,14 @@ Add the following to your `build.sbt` file to use Backslash in your SBT project:
 ```sbt
 resolvers += "Hyperreal Repository" at "https://dl.bintray.com/edadma/maven"
 
-libraryDependencies += "xyz.hyperreal" %% "backslash" % "0.4.18"
+libraryDependencies += "xyz.hyperreal" %% "backslash" % "0.4.19"
 ```
 
 ### Executable
 
-An executable can be downloaded from [here](https://dl.bintray.com/edadma/generic/backslash-0.4.18.jar). *You do not need* the Scala library for it to work because the JAR already contains all dependencies. You just need Java 8+ installed.
+An executable can be downloaded from [here](https://dl.bintray.com/edadma/generic/backslash-0.4.19.jar). *You do not need* the Scala library for it to work because the JAR already contains all dependencies. You just need Java 8+ installed.
 
-Run it as a normal Java executable JAR with the command `java -jar backslash-0.4.18.jar <template>` in the folder where you downloaded the file, where *template* is the name of the template file to be rendered.
+Run it as a normal Java executable JAR with the command `java -jar backslash-0.4.19.jar <template>` in the folder where you downloaded the file, where *template* is the name of the template file to be rendered.
 
 Building
 --------
