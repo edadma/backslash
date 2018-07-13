@@ -8,6 +8,10 @@ object Entity {
       case '&' => Some( "amp" )
       case '<' => Some( "lt" )
       case '>' => Some( "gt" )
+      case '"' => Some( "quot" )
+      case '\\' => Some( "bsol" )
+      case '{' => Some( "lcub" )
+      case '}' => Some( "rcub" )
       case _ if c > '\u007F' => Some( s"#${c.toInt}" )
       case _ => None
     }
