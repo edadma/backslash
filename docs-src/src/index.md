@@ -15,7 +15,7 @@ Here's a typical Backslash template with looping and conditionals.
 
 ### Template
 
-```html
+```backslash
 <h3>Products</h3>
 
 <ul>
@@ -97,7 +97,9 @@ Here are some examples.
 
 Here is an example of a regular command that doesn't take any arguments:
 
-    The current time is \now.
+```backslash
+The current time is \now.
+```
 
 which outputs
 
@@ -110,7 +112,9 @@ The `.` following the `\now` control sequence just gets copied to the output.
 
 Next is an example of a regular command that takes an argument that is a string of characters and transforms it into another string of characters:
 
-    \markdown {this is a __boring__ *example*}
+```backslash
+\markdown {this is a __boring__ *example*}
+```
 
 which outputs
 
@@ -120,7 +124,9 @@ which outputs
 
 Not all commands take character string arguments.  Here's an example of a command that takes two numerical arguments:
 
-    three plus four is \+ 3 4
+```backslash
+three plus four is \+ 3 4
+```
 
 which outputs
 
@@ -144,9 +150,11 @@ The [Parser directives](./parser-directives.html) are control sequences that aff
 
 Backslash has a facility for assigning names to data of any kind so that the data can then be inserted into the output stream or used as an argument to a command at a later point.  These are called *variables*.  A variable reference is a way of recalling the contents of a variable.  This is done by referring to the variable name in a control sequence.  Here's an example of a variable being assigned and then used.
 
-    \set UnixEpoch {\timestamp 0 | date "MMMM d, y 'at' HH:mm O"}
+```backslash
+\set UnixEpoch {\timestamp 0 | date "MMMM d, y 'at' HH:mm O"}
 
-    The Unix Epoch begins on \UnixEpoch.
+The Unix Epoch begins on \UnixEpoch.
+```
 
 output
 
@@ -156,9 +164,11 @@ In the above example, the variable `UnixEpoch` is assigned a string representing
 
 A variable may contain an object which means that there needs to be a way of accessing the properties within the object.  Variable reference can, therefore, make use of the well known "dotted" notation.  For example,
 
-    \set product \{name "Nice TV" price 1049.00}
+```backslash
+\set product \{name "Nice TV" price 1049.00}
 
-    The product name is \product.name.
+The product name is \product.name.
+```
 
 output
 
