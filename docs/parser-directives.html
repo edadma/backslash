@@ -1,0 +1,2522 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Parser Directive Reference</title>
+        <base href="">
+        <link rel="stylesheet" type="text/css" href="css/manni.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/docs.css">
+    </head>
+    <body>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-3">
+                    
+
+                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Overview">Overview</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Example">Example</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Template">Template</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Data">Data</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Output">Output</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Syntax">Syntax</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Control_Sequences">Control Sequences</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Regular_Commands">Regular Commands</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Without_Arguments">Without Arguments</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#With_Arguments">With Arguments</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Macros">Macros</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Special_Commands">Special Commands</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Parser_Directives">Parser Directives</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Variable_References">Variable References</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Grouping">Grouping</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Commands_Arguments">Commands Arguments</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Regular_Arguments">Regular Arguments</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Expression_Arguments">Expression Arguments</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Variable_Arguments">Variable Arguments</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html#Piping">Piping</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="parser-directives.html#Parser_Directives">Parser Directives</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="parser-directives.html#def">def</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="parser-directives.html#Description">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="parser-directives.html#Syntax">Syntax</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="parser-directives.html#Example">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="parser-directives.html#Exceptions">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Regular_Commands">Regular Commands</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\_(space)">\ (space)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\*_(times)">\* (times)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-1">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-1">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-1">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-1">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-1">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\+_(plus)">\+ (plus)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-2">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-2">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-2">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-2">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-2">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\-_(minus)">\- (minus)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-3">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-3">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-3">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-3">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-3">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\/_(divide)">\/ (divide)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-4">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-4">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-4">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-4">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-4">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\/=_(not_equal)">\/= (not equal)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-5">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-5">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-5">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-5">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-5">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\&amp;lt;_(less_than)">\&lt; (less than)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-6">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-6">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-6">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-6">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-6">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\&amp;lt;=_(less_than_or_equal)">\&lt;= (less than or equal)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-7">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-7">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-7">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-7">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-7">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\=_(equal)">\= (equal)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-8">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-8">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-8">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-8">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-8">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\&amp;gt;_(greater_than)">\&gt; (greater than)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-9">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-9">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-9">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-9">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-9">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\&amp;gt;=_(greater_than_or_equal)">\&gt;= (greater than or equal)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-10">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-10">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-10">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-10">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-10">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\[]_(nil)">\[] (nil)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-11">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-11">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-11">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-11">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-11">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\^_(exponential)">\^ (exponential)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-12">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-12">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-12">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-12">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-12">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\abs">\abs</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-13">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-13">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-13">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-13">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-13">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\append">\append</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-14">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-14">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-14">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-14">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-14">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\ceil">\ceil</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-15">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-15">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-15">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-15">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-15">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\contains">\contains</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-16">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-16">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-16">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-16">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-16">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\date">\date</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-17">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-17">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-17">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-17">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-17">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\default">\default</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-18">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-18">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-18">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-18">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-18">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\distinct">\distinct</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-19">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-19">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-19">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-19">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-19">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\downcase">\downcase</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-20">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-20">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-20">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-20">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-20">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\drop">\drop</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-21">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-21">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-21">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-21">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-21">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\escape">\escape</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-22">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-22">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-22">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-22">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-22">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\escapeOnce">\escapeOnce</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-23">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-23">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-23">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-23">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-23">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\filter">\filter</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-24">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-24">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-24">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-24">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-24">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\floor">\floor</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-25">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-25">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-25">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-25">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-25">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\head">\head</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-26">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-26">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-26">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-26">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-26">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\include">\include</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-27">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-27">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-27">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-27">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-27">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\integer">\integer</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-28">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-28">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-28">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-28">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-28">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\join">\join</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-29">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-29">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-29">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-29">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-29">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\last">\last</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-30">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-30">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-30">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-30">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-30">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\lit">\lit</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-31">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-31">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-31">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-31">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-31">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\map">\map</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-32">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-32">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-32">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-32">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\markdown">\markdown</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-32">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-33">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-33">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-33">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-33">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\max">\max</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-33">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-34">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-34">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-34">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-34">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\min">\min</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-34">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-35">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-35">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-35">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-35">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\n">\n</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-35">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-36">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-36">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-36">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-36">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\negate">\negate</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-36">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-37">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-37">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-37">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-37">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\nil">\nil</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-37">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-38">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-38">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-38">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-38">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\normalize">\normalize</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-38">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-39">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-39">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-39">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-39">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\now">\now</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-39">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-40">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-40">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-40">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-40">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\number">\number</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-40">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-41">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-41">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-41">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-41">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\range">\range</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-41">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-42">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-42">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-42">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-42">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\rem">\rem</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-42">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-43">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-43">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-43">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-43">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\remove">\remove</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-43">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-44">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-44">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-44">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-44">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\removeFirst">\removeFirst</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-44">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-45">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-45">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-45">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-45">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\replace">\replace</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-45">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-46">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-46">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-46">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-46">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\replaceFirst">\replaceFirst</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-46">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-47">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-47">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-47">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-47">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\reverse">\reverse</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-47">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-48">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-48">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-48">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-48">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\round">\round</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-48">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-49">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-49">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-49">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-49">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\size">\size</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-49">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-50">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-50">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-50">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-50">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\slice">\slice</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-50">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-51">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-51">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-51">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-51">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\sort">\sort</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-51">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-52">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-52">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-52">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-52">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\split">\split</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-52">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-53">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-53">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-53">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-53">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\string">\string</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-53">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-54">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-54">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-54">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-54">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\t">\t</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-54">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-55">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-55">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-55">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-55">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\tail">\tail</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-55">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-56">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-56">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-56">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-56">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\take">\take</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-56">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-57">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-57">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-57">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-57">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\timestamp">\timestamp</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-57">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-58">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-58">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-58">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-58">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\today">\today</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-58">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-59">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-59">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-59">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-59">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\trim">\trim</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-59">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-60">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-60">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-60">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-60">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\u">\u</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-60">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-61">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-61">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-61">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-61">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\upcase">\upcase</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-61">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-62">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-62">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-62">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-62">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#\{}_(empty_object)">\{} (empty object)</a>
+
+                                    
+                        <ul class="nav flex-column">
+
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Description-62">Description</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Input-63">Input</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Output-63">Output</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Example-63">Example</a>
+
+                                    </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="regular-command-reference.html#Exceptions-63">Exceptions</a>
+
+                                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+
+                        </ul>
+                    </li>
+                            
+
+                        </ul>
+                    </div>
+
+                <div class="col-9">
+                    <h1 id="Parser_Directives">Parser Directives</h1><h2 id="def">def</h2><h3 id="Description">Description</h3><p>Define a macro.</p><h3 id="Syntax">Syntax</h3><pre><code>def *name* *parameters*... { ...*body*... }</code></pre><p>where <em>name</em> is the name of the macro definition and <em>parameters</em> is a series of parameter names (possibly none) separated by space, and <em>body</em> is the material being assigned to <em>name</em>. The parameters are referenced within the body of the definition as if they were variables, though their existence is local to the macro.</p><h3 id="Example">Example</h3><pre><code class="highlight">\def h level heading {<span class="p">&lt;</span><span class="nt">h</span>\<span class="na">level</span><span class="p">&gt;</span>\heading</h\level>}
+
+\h1 Overview
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>This is the overview.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+\h2 {First Subsection}
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Let's read something else now.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></code></pre><p>output</p><pre><code class="highlight"><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Overview<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>This is the overview.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>First Subsection<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Let's read something else now.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></code></pre><h3 id="Exceptions">Exceptions</h3><p>The body of a macro definition must be surrounded by <a href="./#grouping">group</a> delimiters. If no, an exception is thrown.</p></div>
+            </div>
+        </main>
+    </body>
+</html>
