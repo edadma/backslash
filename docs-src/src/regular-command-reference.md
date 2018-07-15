@@ -7,11 +7,9 @@ Regular Commands
 
 This page details all the built-in regular commands in lexicographical order.
 
-[TOC levels=2]
 
-
-\\ (space)
----
+`\␣`
+----
 
 ### Description
 
@@ -27,8 +25,10 @@ Returns a string containing only the space character.
 
 ### Example
 
-    \set firstName John \set lastName Doe
-    \firstName\ \lastName
+```backslash
+\set firstName John \set lastName Doe
+\firstName\ \lastName
+```
 
 output
 
@@ -39,8 +39,8 @@ output
 none
 
 
-\\* (times)
----
+`\*`
+----
 
 ### Description
 
