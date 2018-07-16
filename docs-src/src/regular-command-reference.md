@@ -2,41 +2,11 @@
 title: Regular Command Reference
 ---
 
-Regular Commands
-================
+Regular Commands Reference
+==========================
 
 This page details all the built-in regular commands in lexicographical order.
 
-
-`\␣`
-----
-
-### Description
-
-The space character (\u0020).
-
-### Input
-
-none
-
-### Output
-
-Returns a string containing only the space character.
-
-### Example
-
-```backslash
-\set firstName John \set lastName Doe
-\firstName\ \lastName
-```
-
-output
-
-    John Doe
-
-### Exceptions
-
-none
 
 
 `\*`
