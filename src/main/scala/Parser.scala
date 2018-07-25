@@ -6,16 +6,15 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import util.parsing.input.{PagedSeq, PagedSeqReader, Position, Reader}
 
 
-class Parser( commands: Map[String, Command] ) {
+class Parser( commands: Map[String, Command],
+              var csDelim: String = "\\",
+              var beginDelim: String = "{",
+              var endDelim: String = "}",
+              var pipeDelim: String = "|",
+              var rawBeginDelim: String = "<<<",
+              var rawEndDelim: String = ">>>" ) {
 
   type Input = Reader[Char]
-
-  var csDelim = "\\"
-  var beginDelim = "{"
-  var endDelim = "}"
-  var pipeDelim = "|"
-  var rawBeginDelim = "<<<"
-  var rawEndDelim = ">>>"
 
   val varRegex = """\.([^.]*)"""r
   val unicodeRegex = "\\\\u[0-9a-fA-F]{4}".r
