@@ -24,6 +24,15 @@ class LanguageTests extends FreeSpec with PropertyChecks with Matchers with Test
   "def" in {
     test(
       """
+        |\def fac n {\if \=\n0 1 \else \*\n\fac\-\n1}
+        |
+        |\fac 5
+      """.stripMargin, true ) shouldBe
+      """
+        |120
+      """.trim.stripMargin
+    test(
+      """
         |\def m {asdf}
         |\m, \m
       """.stripMargin, true ) shouldBe

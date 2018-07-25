@@ -11,9 +11,8 @@ object Main extends App {
     )
   val input =
     """
-      |\def fac n {\if \=\n0 1 \else \*\n\fac\-\n1}
-      |
-      |\fac 5
+      |\set a_c 123
+      |\a_c
     """.trim.stripMargin
   val assigns =
     Map(
