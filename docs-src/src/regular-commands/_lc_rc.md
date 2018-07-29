@@ -1,9 +1,9 @@
-[]
+{}
 ===
 
 ### Description
 
-The empty sequence.
+The empty object.
 
 ### Input
 
@@ -11,15 +11,15 @@ none
 
 ### Output
 
-Returns the empty sequence.
+Returns the empty object.
 
 ### Example
 
-    \[]
+    \{}
 
 output
 
-    []
+    {}
 
 ### Exceptions
 

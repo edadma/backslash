@@ -45,6 +45,7 @@ code {
 
 .sidenav {
     position: fixed;
+    width: 280px;
     max-height: 100%;
     overflow-x: hidden;
     overflow-y: auto;

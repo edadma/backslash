@@ -1,19 +1,19 @@
 downcase
 ========
 
-## Description
+### Description
 
 Makes all characters in a string lower case.
 
-## Input
+### Input
 
 Takes a string argument.
 
-## Output
+### Output
 
 Returns a new string containing only lower case characters.
 
-## Example
+### Example
 
     \downcase {Hello World!}
 
@@ -21,6 +21,6 @@ output
 
     hello world!
 
-## Exceptions
+### Exceptions
 
 If the argument is not a string, an exception is thrown.

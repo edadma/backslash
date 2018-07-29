@@ -1,19 +1,19 @@
 floor
 =====
 
-## Description
+### Description
 
 Floor function.  Maps the argument to the greatest integer less than or equal to it.
 
-## Input
+### Input
 
 Takes one numerical argument.
 
-## Output
+### Output
 
 Returns the floor of the argument.
 
-## Example
+### Example
 
     \floor -5.1
 
@@ -21,6 +21,6 @@ output
 
     -6
 
-## Exceptions
+### Exceptions
 
 If the argument is not numerical, an exception is thrown.

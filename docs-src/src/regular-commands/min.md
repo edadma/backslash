@@ -1,19 +1,19 @@
 min
 ===
 
-## Description
+### Description
 
 Returns the lesser of two numbers.
 
-## Input
+### Input
 
 Takes two numerical arguments.
 
-## Output
+### Output
 
 Returns the lesser of the two arguments.
 
-## Example
+### Example
 
     \min 3 4
 
@@ -21,6 +21,6 @@ output
 
     3
 
-## Exceptions
+### Exceptions
 
 If the arguments are not numerical, an exception is thrown.

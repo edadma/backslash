@@ -93,7 +93,7 @@ There are five categories into which control sequences can be grouped, depending
 
 Here are some examples.
 
-#### Without Arguments
+### Without Arguments
 
 Here is an example of a regular command that doesn't take any arguments:
 
@@ -108,7 +108,7 @@ which outputs
 The `.` following the `\now` control sequence just gets copied to the output.
 
 
-#### With Arguments
+### With Arguments
 
 Next is an example of a regular command that takes an argument that is a string of characters and transforms it into another string of characters:
 
@@ -180,8 +180,8 @@ Grouping
 --------
 
 
-Commands Arguments
-------------------
+Arguments
+---------
 
 
 ### Regular Arguments

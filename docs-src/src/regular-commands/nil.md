@@ -1,19 +1,19 @@
 nil
 ===
 
-## Description
+### Description
 
 Evaluates it's argument discarding the result and returning a `nil`.
 
-## Input
+### Input
 
 One argument of any kind.
 
-## Output
+### Output
 
 Returns a `nil` after evaluating the argument.
 
-## Example
+### Example
 
     \nil {\do_something}
 
@@ -21,6 +21,6 @@ output
 
     `nil`
 
-## Exceptions
+### Exceptions
 
 none

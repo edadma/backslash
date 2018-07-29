@@ -11,8 +11,11 @@
     <body>
         <main role="main" class="container">
             <div class="row">
-                <div class="col-3">
+                <div class="col">
                 <div class="sidenav">
+                    <header>
+                        <a href="">Backslash<a>
+                    </header>
                     \def nav links {
                         <ul class="nav flex-column">
 
@@ -25,7 +28,7 @@
                                             <a class="nav-link" href="\path\if \nonEmpty\id {#\id}">\heading</a>
                                         }
                                     } \else {
-                                        <strong>\heading</strong>
+                                        <h3>\heading</h3>
                                     }
 
                                     \if \nonEmpty\sublinks
@@ -40,7 +43,7 @@
                 </div>
                 </div>
 
-                <div class="col-9">
+                <div class="col-8">
                     \content
                 </div>
             </div>

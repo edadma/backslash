@@ -1,19 +1,19 @@
 normalize
 =========
 
-## Description
+### Description
 
 Normalizes a string by removing whitespace from both ends of the string and converting any stretches of whitespace within the string to a single space character.
 
-## Input
+### Input
 
 Takes a string argument.
 
-## Output
+### Output
 
 Returns the normalized argument.
 
-## Example
+### Example
 
     \normalize { this   is a     boring  test }
 
@@ -21,6 +21,6 @@ output
 
     this is a boring test
 
-## Exceptions
+### Exceptions
 
 none

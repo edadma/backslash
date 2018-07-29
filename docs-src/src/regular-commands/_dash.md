@@ -1,19 +1,19 @@
-`-`
+-
 ===
 
-## Description
+### Description
 
 Computes the difference of two numbers.
 
-## Input
+### Input
 
 Takes two numerical arguments.
 
-## Output
+### Output
 
 Returns the difference as a numerical result.
 
-## Example
+### Example
 
     \- 3 4
 
@@ -21,6 +21,6 @@ output
 
     -1
 
-## Exceptions
+### Exceptions
 
 If the arguments are not numerical, an exception is thrown.

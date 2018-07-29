@@ -1,9 +1,9 @@
-max
+rem
 ===
 
 ### Description
 
-Returns the greater of two numbers.
+Computes the remainder of two numbers.
 
 ### Input
 
@@ -11,15 +11,15 @@ Takes two numerical arguments.
 
 ### Output
 
-Returns the greater of the two arguments.
+Returns the remainder as a numerical result.
 
 ### Example
 
-    \max 3 4
+    \rem 8 3
 
 output
 
-    4
+    2
 
 ### Exceptions
 

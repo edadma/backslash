@@ -1,9 +1,9 @@
-head
+tail
 ====
 
 ### Description
 
-Selects the first element of the sequence or string.
+Selects all elements other than the first of a sequence or string.
 
 ### Input
 
@@ -11,15 +11,15 @@ Takes a sequence or string argument.
 
 ### Output
 
-Returns the first element of the sequence or string.
+Returns every element after the first element of the sequence or string.
 
 ### Example
 
-    \seq {3 4 5} | head
+    \seq {3 4 5} | tail
 
 output
 
-    3
+    [4, 5]
 
 ### Exceptions
 

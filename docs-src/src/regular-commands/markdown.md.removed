@@ -1,19 +1,19 @@
 markdown
 ========
 
-## Description
+### Description
 
 Processes a string as a Markdown, transforming it into HTML.
 
-## Input
+### Input
 
 Takes a string argument.
 
-## Output
+### Output
 
 Returns the HTML corresponding to the Markdown text.
 
-## Example
+### Example
 
     \markdown {this is a __boring__ *test*}
 
@@ -21,6 +21,6 @@ output
 
     <p>this is a <strong>boring</strong> <em>test</em></p>
 
-## Exceptions
+### Exceptions
 
 none

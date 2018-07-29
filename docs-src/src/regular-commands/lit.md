@@ -1,19 +1,19 @@
 lit
 ===
 
-## Description
+### Description
 
 The identity function (`lit` is short for "literal").
 
-## Input
+### Input
 
 One argument of any kind.
 
-## Output
+### Output
 
 Returns the argument.
 
-## Example
+### Example
 
     \lit {this is a test} | replace 'is' '**'
 
@@ -21,6 +21,6 @@ output
 
     th** ** a test
 
-## Exceptions
+### Exceptions
 
 none

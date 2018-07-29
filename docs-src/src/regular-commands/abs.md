@@ -1,19 +1,19 @@
 abs
 ===
 
-## Description
+### Description
 
 Absolute value function.
 
-## Input
+### Input
 
 Takes one numerical argument.
 
-## Output
+### Output
 
 Returns the absolute value of the argument.
 
-## Example
+### Example
 
     \abs -5
 
@@ -21,6 +21,6 @@ output
 
     5
 
-## Exceptions
+### Exceptions
 
 If the argument is not numerical, an exception is thrown.

@@ -1,19 +1,19 @@
 =
 ===
 
-## Description
+### Description
 
 Tests for equality.
 
-## Input
+### Input
 
 Takes two arguments of any kind.
 
-## Output
+### Output
 
 Returns `true` if the arguments are equal, `false` otherwise.
 
-## Example
+### Example
 
     \= 3 4
 
@@ -21,6 +21,6 @@ output
 
     false
 
-## Exceptions
+### Exceptions
 
 none

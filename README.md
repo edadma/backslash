@@ -17,7 +17,7 @@ Examples
 
 Here's a typical Backslash template with looping and conditionals.
 
-#### Template
+### Template
 
 ```html
 <h3>Products</h3>
@@ -35,7 +35,7 @@ Here's a typical Backslash template with looping and conditionals.
 </ul>
 ```
 
-#### Data
+### Data
 
 ```json
 {
@@ -54,7 +54,7 @@ Here's a typical Backslash template with looping and conditionals.
 }
 ```
 
-#### Output
+### Output
 
 ```html
 <h3>Products</h3>

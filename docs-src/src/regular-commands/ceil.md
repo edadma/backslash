@@ -1,19 +1,19 @@
 ceil
 ====
 
-## Description
+### Description
 
 Ceiling function.  Maps the argument to the least integer greater than or equal to it.
 
-## Input
+### Input
 
 Takes one numerical argument.
 
-## Output
+### Output
 
 Returns the ceiling of the argument.
 
-## Example
+### Example
 
     \ceil -5.1
 
@@ -21,6 +21,6 @@ output
 
     -5
 
-## Exceptions
+### Exceptions
 
 If the argument is not numerical, an exception is thrown.

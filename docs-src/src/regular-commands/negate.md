@@ -1,19 +1,19 @@
 negate
 ======
 
-## Description
+### Description
 
 Negation.
 
-## Input
+### Input
 
 Takes one numerical argument.
 
-## Output
+### Output
 
 Returns the negative of the argument.
 
-## Example
+### Example
 
     \negate -5
 
@@ -21,6 +21,6 @@ output
 
     5
 
-## Exceptions
+### Exceptions
 
 If the argument is not numerical, an exception is thrown.
