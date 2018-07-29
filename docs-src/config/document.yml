@@ -1,4 +1,1 @@
-- index
-- parser-directives
-- regular-command-reference
-- regular-commands
+# specify source file loading order, or leave empty if alphabetical order is fine

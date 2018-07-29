@@ -1,0 +1,51 @@
+\delim \ [ ]
+\set codebg #eee
+
+.normal-code > pre > code {
+  background-color: #eee;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  display: block;
+  padding: 15px;
+}
+
+.captioned-code {
+  background-color: \codebg;
+}
+
+.captioned-code > pre > code {
+  display: block;
+}
+
+code {
+  background-color: \codebg;
+  padding: 3px;
+  color: unset;
+}
+
+.nav > li > ul > li a {
+  text-indent: 20px;
+}
+
+.nav > li > ul > li > ul > li a {
+  text-indent: 40px;
+}
+
+.nav > li > ul > li > ul > li > ul > li a {
+  text-indent: 60px;
+}
+
+.nav > li > ul > li > ul > li > ul > li > ul > li a {
+  text-indent: 80px;
+}
+
+.nav > li > ul > li > ul > li > ul > li > ul > li > ul > li a {
+  text-indent: 100px;
+}
+
+.sidenav {
+    position: fixed;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

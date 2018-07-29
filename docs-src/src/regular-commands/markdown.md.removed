@@ -1,0 +1,26 @@
+markdown
+========
+
+## Description
+
+Processes a string as a Markdown, transforming it into HTML.
+
+## Input
+
+Takes a string argument.
+
+## Output
+
+Returns the HTML corresponding to the Markdown text.
+
+## Example
+
+    \markdown {this is a __boring__ *test*}
+
+output
+
+    <p>this is a <strong>boring</strong> <em>test</em></p>
+
+## Exceptions
+
+none

@@ -1,0 +1,1 @@
+java -jar ../docs/target/scala-2.12/docs-0.1.jar init docs-src docs

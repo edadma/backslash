@@ -1,0 +1,26 @@
+[]
+===
+
+## Description
+
+The empty sequence.
+
+## Input
+
+none
+
+## Output
+
+Returns the empty sequence.
+
+## Example
+
+    \[]
+
+output
+
+    []
+
+## Exceptions
+
+none
