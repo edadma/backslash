@@ -11,8 +11,7 @@ object Main extends App {
     )
   val input =
     """
-      |\set a_c 123
-      |\a_c
+      |\+ \{a 3 b 4} \{c 5}
     """.trim.stripMargin
   val assigns =
     Map(

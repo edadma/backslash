@@ -1,8 +1,10 @@
 name := "backslash"
 
-version := "0.4.22"
+version := "0.5.0"
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.13.0"
+
+crossScalaVersions := Seq( "2.12.9" )
 
 scalacOptions ++= Seq( "-deprecation", "-feature", "-unchecked", "-language:postfixOps", "-language:implicitConversions", "-language:existentials" )
 
@@ -13,18 +15,18 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 resolvers += "Hyperreal Repository" at "https://dl.bintray.com/edadma/maven"
 
 libraryDependencies ++= Seq(
-	"org.scalatest" %% "scalatest" % "3.0.5" % "test",
+	"org.scalatest" %% "scalatest" % "3.0.8" % "test",
 	"org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
 )
 
 libraryDependencies ++= Seq(
-	"org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.0"
+	"org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 )
 
 libraryDependencies ++= Seq(
-  "xyz.hyperreal" %% "json" % "0.7.3",
-  "xyz.hyperreal" %% "args" % "0.1",
-  "xyz.hyperreal" %% "hsl" % "0.3.1"
+  "xyz.hyperreal" %% "json" % "0.8.0",
+  "xyz.hyperreal" %% "args" % "0.2",
+  "xyz.hyperreal" %% "hsl" % "0.4"
   //"xyz.hyperreal" %% "markdown" % "0.3.3"
 )
 

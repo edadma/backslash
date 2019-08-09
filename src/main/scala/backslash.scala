@@ -21,7 +21,7 @@ package object backslash {
     override def toString = ""
   }
 
-  def docroot( name: String, settings: Map[Symbol, Any] ) = new File( settings('docroot).toString, name )
+  def docroot( name: String, settings: Map[Symbol, Any] ) = new File( settings(Symbol("docroot")).toString, name )
 
   def isNumber( a: String ) = numberRegex.pattern.matcher( a ).matches
 
@@ -45,14 +45,14 @@ package object backslash {
 
   def display( a: Any ): String =
     a match {
-      case l: collection.Seq[_] => l map qdisplay mkString ("[", ", ", "]")
       case m: collection.Map[_, _] => m map { case (k, v) => qdisplay(k) + ": " + qdisplay(v) } mkString ("{", ", ", "}")
+      case l: collection.Seq[_] => l map qdisplay mkString ("[", ", ", "]")
       case s => String.valueOf( s )
     }
 
   def qdisplay( a: Any ): String =
     a match {
-      case s: String => '"' + s + '"'
+      case s: String => s""""$s""""
       case true => "<true>"
       case false => "<false>"
       case null => "<null>"

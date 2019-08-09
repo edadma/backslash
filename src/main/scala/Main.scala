@@ -21,23 +21,24 @@ object Main extends App {
   val assigns = new mutable.HashMap[String, Any]
   var templateFile: File = _
 
-  def usage {
-    """
-      |Backslash v0.4.22
-      |
-      |Usage:  java -jar backslash-0.4.22.jar <options> <template>
-      |
-      |Options:  --help              display this help and exit
-      |          -s <name> <string>  assign <string> to variable <name>
-      |          -n <name> <number>  assign <number> to variable <name>
-      |
-      |Note:  <template> may be -- meaning read from standard input
-    """.trim.stripMargin.lines foreach println
+  def usage = {
+    println(
+        """
+          |Backslash v0.5.0
+          |
+          |Usage:  java -jar backslash-0.5.0.jar <options> <template>
+          |
+          |Options:  --help              display this help and exit
+          |          -s <name> <string>  assign <string> to variable <name>
+          |          -n <name> <number>  assign <number> to variable <name>
+          |
+          |Note:  <template> may be -- meaning read from standard input
+        """.trim.stripMargin )
     sys.exit
   }
 
   def json( src: io.Source ) =
-    for ((k: String, v) <- DefaultJSONReader.fromString( src mkString ))
+    for ((k: String, v) <- DefaultJSONReader.fromString( src mkString ).asInstanceOf[Map[String, Any]])
       assigns(k) = v
 
   def run( src: io.Source ): Unit = {

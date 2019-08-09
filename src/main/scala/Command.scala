@@ -72,7 +72,7 @@ object Command {
         def apply( pos: Position, renderer: Renderer, args: List[Any], optional: Map[String, Any], context: AnyRef ): Any =
           args match  {
             case List( a: BigDecimal, b: BigDecimal ) => a + b
-            case List( a: Map[_, _], b: Map[_, _] ) => a ++ b
+            case List( a: collection.Map[_, _], b: collection.Map[_, _] ) => (a ++ b) toMap
             case List( a: Seq[_], b: Seq[_] ) => a ++ b
             case List( a: Seq[_], b: Any ) => a :+ b
             case List( a: Any, b: Seq[_] ) => a +: b
@@ -589,7 +589,7 @@ object Command {
 
           def lt( a: Any, b: Any ) =
             (a, b) match {
-              case (a: Comparable[Any], b: Comparable[_]) => (a compareTo b) < 0
+              case (a: Comparable[_], b: Comparable[_]) => (a.asInstanceOf[Comparable[Any]] compareTo b) < 0
               case _ => a.toString < b.toString
             }
 
