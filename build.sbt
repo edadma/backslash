@@ -1,10 +1,8 @@
 name := "backslash"
 
-version := "0.5.0"
+version := "0.5.1"
 
 scalaVersion := "2.13.0"
-
-crossScalaVersions := Seq( "2.12.9" )
 
 scalacOptions ++= Seq( "-deprecation", "-feature", "-unchecked", "-language:postfixOps", "-language:implicitConversions", "-language:existentials" )
 

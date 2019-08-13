@@ -5,10 +5,10 @@ import java.time.{LocalDate, ZonedDateTime}
 import java.time.format.{DateTimeFormatter, FormatStyle}
 
 import org.scalatest._
-import prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 
-class CommandTests extends FreeSpec with PropertyChecks with Matchers with Testing {
+class CommandTests extends FreeSpec with ScalaCheckPropertyChecks with Matchers with Testing {
 
   val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 

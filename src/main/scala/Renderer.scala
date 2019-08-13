@@ -9,7 +9,7 @@ import scala.collection.mutable
 class Renderer( val parser: Parser, val config: Map[String, Any] ) {
 
   val globals = new mutable.HashMap[String, Any]
-  val scopes = new mutable.ArrayStack[mutable.HashMap[String, Any]]
+  val scopes = new mutable.Stack[mutable.HashMap[String, Any]]
 
 	def setVar( name: String, value: Any ): Unit =
 		scopes find (_ contains name) match {
