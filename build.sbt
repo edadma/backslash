@@ -18,13 +18,14 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-	"org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
+//	"org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 )
 
 libraryDependencies ++= Seq(
   "xyz.hyperreal" %% "json" % "0.8.0",
   "xyz.hyperreal" %% "args" % "0.2",
-  "xyz.hyperreal" %% "hsl" % "0.4"
+  "xyz.hyperreal" %% "hsl" % "0.4",
+  "xyz.hyperreal" %% "texish" % "0.1.1"
   //"xyz.hyperreal" %% "markdown" % "0.3.3"
 )
 
