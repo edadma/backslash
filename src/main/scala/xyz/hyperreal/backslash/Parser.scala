@@ -1,9 +1,11 @@
 package xyz.hyperreal.backslash
 
+import xyz.hyperreal.char_reader.CharReader
+
+import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.util.matching.Regex
-import util.parsing.input.{PagedSeq, PagedSeqReader, Position, Reader}
 
 class Parser(commands: Map[String, Command],
              var csDelim: String = "\\",
@@ -13,8 +15,6 @@ class Parser(commands: Map[String, Command],
              var rawBeginDelim: String = "<<<",
              var rawEndDelim: String = ">>>") {
 
-  type Input = Reader[Char]
-
   val varRegex: Regex = """\.([^.]*)""" r
   val unicodeRegex: Regex = "\\\\u[0-9a-fA-F]{4}".r
   val keywords = List("true", "false", "null")
@@ -22,29 +22,33 @@ class Parser(commands: Map[String, Command],
 
   def unescape(s: String): String =
     unicodeRegex.replaceAllIn(
-      escapes.replaceAllIn(s, _.matched match {
-        case "\\b"  => "\b"
-        case "\\f"  => "\f"
-        case "\\t"  => "\t"
-        case "\\r"  => "\r"
-        case "\\n"  => "\n"
-        case "\\\\" => "\\"
-        case "\\\"" => "\""
-        case "\\\'" => "'"
-      }),
+      escapes.replaceAllIn(
+        s,
+        _.matched match {
+          case "\\b"  => "\b"
+          case "\\f"  => "\f"
+          case "\\t"  => "\t"
+          case "\\r"  => "\r"
+          case "\\n"  => "\n"
+          case "\\\\" => "\\\\" // quote the replacement
+          case "\\\"" => "\""
+          case "\\\'" => "'"
+        }
+      ),
       m => Integer.parseInt(m.matched.substring(2), 16).toChar.toString
     )
 
   val macros = new mutable.HashMap[String, Macro]
 
   def parse(src: io.Source): AST =
-    parseStatements(new PagedSeqReader(PagedSeq.fromSource(src))) match {
-      case (r1, b) if r1 atEnd => b
-      case (r1, _)             => problem(r1, s"expected end of input: $r1")
+    parseStatements(CharReader.fromString(src.mkString)) match {
+      case (r1, b) if r1 eoi => b
+      case (r1, _)           => problem(r1, s"expected end of input: $r1")
     }
 
-  def parseStatements(r: Input, v: Vector[AST] = Vector()): (Input, GroupAST) =
-    if (r.atEnd || lookahead(r, endDelim))
+  def parseStatements(r: CharReader,
+                      v: Vector[AST] = Vector()): (CharReader, GroupAST) =
+    if (r.eoi || lookahead(r, endDelim))
       (r, GroupAST(v))
     else
       parseStatement(r) match {
@@ -52,7 +56,7 @@ class Parser(commands: Map[String, Command],
         case (r1, s)    => parseStatements(r1, v :+ s)
       }
 
-  def parseGroup(r: Input, v: Vector[AST] = Vector()): (Input, GroupAST) = {
+  def parseGroup(r: CharReader): (CharReader, GroupAST) = {
     val (r1, g) = parseStatements(r)
 
     matches(r1, endDelim) match {
@@ -62,19 +66,18 @@ class Parser(commands: Map[String, Command],
     }
   }
 
-  def parseStatic(r: Input,
-                  buf: StringBuilder = new StringBuilder): (Input, AST) = {
+  def parseStatic(r: CharReader): (CharReader, AST) = {
     val (r1, s) =
       consumeCond(r,
                   r =>
-                    !r.atEnd && !lookahead(r, csDelim) && !lookahead(
+                    !r.eoi && !lookahead(r, csDelim) && !lookahead(
                       r,
                       beginDelim) && !lookahead(r, endDelim))
 
     (r1, LiteralAST(s))
   }
 
-  def parseStatement(r: Input): (Input, AST) =
+  def parseStatement(r: CharReader): (CharReader, AST) =
     parseControlSequence(r) match {
       case None =>
         matches(r, beginDelim) match {
@@ -106,12 +109,12 @@ class Parser(commands: Map[String, Command],
         val (r2, v) = parseStringArguments(r1)
 
         if (v isEmpty)
-          problem(r1.pos, "expected name of macro")
+          problem(r1, "expected name of macro")
 
         val name = v.head
 
-        if (r2.atEnd || !lookahead(r2, beginDelim))
-          problem(r2.pos, s"expected body of definition for $name")
+        if (r2.eoi || !lookahead(r2, beginDelim))
+          problem(r2, s"expected body of definition for $name")
 
         val mac = Macro(v.tail, null)
 
@@ -121,13 +124,14 @@ class Parser(commands: Map[String, Command],
 
         mac.body = body
         (r3, null)
-      case Some((r1, name)) => parseCommand(r.pos, name, r1, true)
+      case Some((r1, name)) => parseCommand(r, name, r1, statement = true)
     }
 
-  def parseList(r: Input, begin: Boolean) = {
+  def parseList(r: CharReader, begin: Boolean): (CharReader, Vector[AST]) = {
+    @tailrec
     def parseList(
-        r: Input,
-        buf: ArrayBuffer[AST] = new ArrayBuffer): (Input, Vector[AST]) = {
+        r: CharReader,
+        buf: ArrayBuffer[AST] = new ArrayBuffer): (CharReader, Vector[AST]) = {
       matches(r, endDelim) match {
         case None =>
           val (r1, ast) = parseRegularArgument(r)
@@ -140,18 +144,18 @@ class Parser(commands: Map[String, Command],
 
     if (begin)
       matches(r, beginDelim) match {
-        case None     => problem(r.pos, s"expected list")
+        case None     => problem(r, s"expected list")
         case Some(r1) => parseList(r1)
       } else
       parseList(r)
   }
 
   def parseStringArguments(
-      r: Input,
-      v: Vector[String] = Vector()): (Input, Vector[String]) = {
+      r: CharReader,
+      v: Vector[String] = Vector()): (CharReader, Vector[String]) = {
     val r1 = skipSpace(r)
 
-    if (r1.atEnd || lookahead(r1, beginDelim))
+    if (r1.eoi || lookahead(r1, beginDelim))
       (r1, v)
     else
       parseString(r1) match {
@@ -159,18 +163,18 @@ class Parser(commands: Map[String, Command],
       }
   }
 
-  def nameFirst(c: Char) = c.isLetter || c == '_'
+  def nameFirst(c: Char): Boolean = c.isLetter || c == '_'
 
-  def nameRest(c: Char) = c.isLetter || c == '_' || c == '.'
+  def nameRest(c: Char): Boolean = c.isLetter || c == '_' || c == '.'
 
-  def parseFilter(r: Input) =
+  def parseFilter(r: CharReader): Option[(CharReader, String)] =
     parseControlSequence(r) match {
       case None => parseControlSequenceName(r)
       case cs   => cs
     }
 
-  def parseControlSequence(r: Input): Option[(Input, String)] =
-    if (r.atEnd)
+  def parseControlSequence(r: CharReader): Option[(CharReader, String)] =
+    if (r.eoi)
       None
     else
       matches(r, csDelim) match {
@@ -178,111 +182,113 @@ class Parser(commands: Map[String, Command],
         case None     => None
       }
 
-  def parseName(r: Input) =
-    if (r atEnd)
+  def parseName(r: CharReader): Option[(CharReader, String)] =
+    if (r eoi)
       None
-    else if (nameFirst(r.first))
+    else if (nameFirst(r.ch))
       Some(consume(r, nameRest))
     else
       None
 
-  def parseControlSequenceName(r: Input) =
-    if (r atEnd)
+  def parseControlSequenceName(r: CharReader): Option[(CharReader, String)] =
+    if (r eoi)
       None
     else {
       val (r1, s) =
-        if (nameFirst(r.first))
+        if (nameFirst(r.ch))
           consumeCond(
             r,
             r =>
-              !r.atEnd && nameRest(r.first) && !(r.first == '.' && (r.rest.atEnd || !nameRest(
-                r.rest.first))))
-        else if (r.first.isWhitespace)
-          (r.rest, " ")
-        else if (r.first.isDigit)
-          problem(r.pos, s"control sequence name can't start with a digit")
+              !r.eoi && nameRest(r.ch) && !(r.ch == '.' && (r.next.eoi || !nameRest(
+                r.next.ch))))
+        else if (r.ch.isWhitespace)
+          (r.next, " ")
+        else if (r.ch.isDigit)
+          problem(r, s"control sequence name can't start with a digit")
         else
           consumeCond(
             r,
             r =>
-              !(r.atEnd ||
-                r.first.isLetterOrDigit || r.first == '_' || r.first.isWhitespace || lookahead(
+              !(r.eoi ||
+                r.ch.isLetterOrDigit || r.ch == '_' || r.ch.isWhitespace || lookahead(
                 r,
                 csDelim)))
 
       Some((skipSpace(r1), s))
     }
 
-  def keyword(r: Input, words: List[String]): Option[(Input, String)] =
+  def keyword(r: CharReader,
+              words: List[String]): Option[(CharReader, String)] =
     words match {
       case Nil => None
       case h :: t =>
         matches(r, h) match {
           case None => keyword(r, t)
           case Some(r1) =>
-            if (r1.atEnd || !r1.first.isLetter && r1.first != '_')
+            if (r1.eoi || !r1.ch.isLetter && r1.ch != '_')
               Some((r1, h))
             else
               keyword(r, t)
         }
     }
 
-  def matches(r: Input, s: String, idx: Int = 0): Option[Input] =
+  def matches(r: CharReader, s: String, idx: Int = 0): Option[CharReader] =
     if (idx == s.length)
       Some(r)
-    else if (r.atEnd || r.first != s.charAt(idx))
+    else if (r.eoi || r.ch != s.charAt(idx))
       None
     else
-      matches(r.rest, s, idx + 1)
+      matches(r.next, s, idx + 1)
 
-  def lookahead(r: Input, s: String) = matches(r, s) nonEmpty
+  def lookahead(r: CharReader, s: String): Boolean = matches(r, s) nonEmpty
 
-  def consumeCond(r: Input,
-                  cond: Input => Boolean,
-                  buf: StringBuilder = new StringBuilder): (Input, String) =
+  def consumeCond(
+      r: CharReader,
+      cond: CharReader => Boolean,
+      buf: StringBuilder = new StringBuilder): (CharReader, String) =
     if (cond(r)) {
-      buf += r.first
-      consumeCond(r.rest, cond, buf)
+      buf += r.ch
+      consumeCond(r.next, cond, buf)
     } else
       (r, buf toString)
 
-  def consume(r: Input,
+  def consume(r: CharReader,
               set: Char => Boolean,
-              buf: StringBuilder = new StringBuilder): (Input, String) =
-    consumeCond(r, r => !r.atEnd && set(r.first), buf)
+              buf: StringBuilder = new StringBuilder): (CharReader, String) =
+    consumeCond(r, r => !r.eoi && set(r.ch), buf)
 
-  def consumeStringLiteral(r: Input) = {
-    val del = r.first
+  def consumeStringLiteral(r: CharReader): (CharReader, String) = {
+    val del = r.ch
     var first = true
     var prev = ' '
 
-    def cond(cr: Input) = {
+    def cond(cr: CharReader) = {
       val res =
-        if (cr atEnd)
+        if (cr eoi)
           problem(r, "unclosed string literal")
         else
-          cr first match {
-            case '\\' if cr.rest.atEnd           => problem(cr, "unclosed string literal")
+          cr.ch match {
+            case '\\' if cr.next.eoi             => problem(cr, "unclosed string literal")
             case `del` if !first && prev == '\\' => true
             case `del`                           => false
             case _                               => true
           }
 
       first = false
-      prev = cr.first
+      prev = cr.ch
       res
     }
 
-    val (r1, s) = consumeCond(r.rest, cond)
+    val (r1, s) = consumeCond(r.next, cond)
 
-    (r1.rest, unescape(s))
+    (r1.next, unescape(s))
   }
 
-  def parseLiteralArgument(r: Input): (Input, Any) =
-    r.first match {
+  def parseLiteralArgument(r: CharReader): (CharReader, Any) =
+    r.ch match {
       case '"' | '\'' => consumeStringLiteral(r)
-      case '0' if !r.rest.atEnd && r.rest.first == 'x' =>
-        consume(r.rest.rest, "0123456789abcdefABCDEF" contains _) match {
+      case '0' if !r.next.eoi && r.next.ch == 'x' =>
+        consume(r.next.next, "0123456789abcdefABCDEF" contains _) match {
           case (r1, s) => (r1, BigDecimal(Integer.parseInt(s, 16)))
         }
       case '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' =>
@@ -291,10 +297,10 @@ class Parser(commands: Map[String, Command],
           case s                      => s
         }
       case '-' =>
-        if (r.rest.atEnd)
-          (r.rest, "-")
+        if (r.next.eoi)
+          (r.next, "-")
         else
-          parseLiteralArgument(r.rest) match {
+          parseLiteralArgument(r.next) match {
             case (r1, s: String)     => (r1, s"-$s")
             case (r1, n: BigDecimal) => (r1, -n)
             case _                   => problem(r, "something bad happened")
@@ -311,29 +317,30 @@ class Parser(commands: Map[String, Command],
         }
     }
 
-  def parseString(r: Input) =
+  def parseString(r: CharReader): (CharReader, String) =
     consumeCond(
       r,
       r =>
-        !r.atEnd && !r.first.isWhitespace && !lookahead(r, csDelim) && !lookahead(
+        !r.eoi && !r.ch.isWhitespace && !lookahead(r, csDelim) && !lookahead(
           r,
           beginDelim) && !lookahead(r, endDelim))
 
-  def parseStringWhitespace(r: Input) = consume(r, !_.isWhitespace)
+  def parseStringWhitespace(r: CharReader): (CharReader, String) =
+    consume(r, !_.isWhitespace)
 
-  def parseStringArgument(r: Input): (Input, String) = {
+  def parseStringArgument(r: CharReader): (CharReader, String) = {
     val r1 = skipSpace(r)
 
-    if (r1 atEnd)
+    if (r1 eoi)
       problem(r1, "expected string argument")
 
     parseStringWhitespace(r1)
   }
 
-  def parseRegularArgument(r: Input): (Input, AST) = {
+  def parseRegularArgument(r: CharReader): (CharReader, AST) = {
     val r1 = skipSpace(r)
 
-    if (r1 atEnd)
+    if (r1 eoi)
       problem(r1, "expected command argument")
 
     parseControlSequence(r1) match {
@@ -346,11 +353,12 @@ class Parser(commands: Map[String, Command],
               case (r2, s)   => (r2, LiteralAST(s))
             }
         }
-      case Some((r2, name)) => parseCommand(r1.pos, name, r2, false)
+      case Some((r2, name)) => parseCommand(r1, name, r2, statement = false)
     }
   }
 
-  def dotExpression(pos: Position, v: String) = {
+  def dotExpression(pos: CharReader, v: String): AST = {
+    @tailrec
     def fields(start: Int, expr: AST): AST =
       v.indexOf('.', start) match {
         case -1 => expr
@@ -375,20 +383,20 @@ class Parser(commands: Map[String, Command],
     }
   }
 
-  def parseVariableArgument(r: Input) = {
+  def parseVariableArgument(r: CharReader): (CharReader, String) = {
     val res @ (_, s) = parseString(r)
 
     if (s.isEmpty || !nameFirst(s.head) || !s.tail.forall(nameRest))
       problem(r, "illegal variable name")
 
-    check(r.pos, s)
+    check(r, s)
     res
   }
 
-  def parseExpressionArgument(r: Input): (Input, AST) = {
+  def parseExpressionArgument(r: CharReader): (CharReader, AST) = {
     val r0 = skipSpace(r)
 
-    if (r0 atEnd)
+    if (r0 eoi)
       problem(r0, "expected command argument")
 
     parseControlSequence(r0) match {
@@ -396,24 +404,24 @@ class Parser(commands: Map[String, Command],
         matches(r0, beginDelim) match {
           case Some(r1) => parseGroup(r1)
           case None =>
-            if (keyword(r0, keywords).isEmpty && nameFirst(r0.first)) {
+            if (keyword(r0, keywords).isEmpty && nameFirst(r0.ch)) {
               val (r1, s) = parseVariableArgument(r0)
 
-              (r1, dotExpression(r0.pos, s))
+              (r1, dotExpression(r0, s))
             } else {
               val (r1, s) = parseLiteralArgument(r0)
 
               (r1, LiteralAST(s))
             }
         }
-      case Some((r1, name)) => parseCommand(r0.pos, name, r1, false)
+      case Some((r1, name)) => parseCommand(r0, name, r1, statement = false)
     }
   }
 
   def parseRegularArguments(
-      r: Input,
+      r: CharReader,
       n: Int,
-      buf: ListBuffer[AST] = new ListBuffer[AST]): (Input, List[AST]) = {
+      buf: ListBuffer[AST] = new ListBuffer[AST]): (CharReader, List[AST]) = {
     if (n == 0)
       (r, buf toList)
     else {
@@ -425,9 +433,9 @@ class Parser(commands: Map[String, Command],
   }
 
   def parseExpressionArguments(
-      r: Input,
+      r: CharReader,
       n: Int,
-      buf: ListBuffer[AST] = new ListBuffer[AST]): (Input, List[AST]) = {
+      buf: ListBuffer[AST] = new ListBuffer[AST]): (CharReader, List[AST]) = {
     if (n == 0)
       (r, buf toList)
     else {
@@ -438,12 +446,12 @@ class Parser(commands: Map[String, Command],
     }
   }
 
-  def skipSpace(r: Input): Input = skip(r, !_.first.isWhitespace)
+  def skipSpace(r: CharReader): CharReader = skip(r, !_.ch.isWhitespace)
 
-  def skip(r: Input, cond: Input => Boolean): Input =
-    if (r.atEnd || cond(r)) r else skip(r.rest, cond)
+  def skip(r: CharReader, cond: CharReader => Boolean): CharReader =
+    if (r.eoi || cond(r)) r else skip(r.next, cond)
 
-  def check(pos: Position, name: String) =
+  def check(pos: CharReader, name: String): Unit =
     if (Set(
           "#",
           "delim",
@@ -475,24 +483,24 @@ class Parser(commands: Map[String, Command],
     else if (commands contains name)
       problem(pos, "illegal variable name, it's a command")
 
-  def parseCommand(pos: Position,
+  def parseCommand(pos: CharReader,
                    name: String,
-                   r: Input,
-                   statement: Boolean): (Input, AST) = {
+                   r: CharReader,
+                   statement: Boolean): (CharReader, AST) = {
     val res @ (rr, ast) =
       if (name == rawBeginDelim) {
         var first = true
         var prev = ' '
 
-        def cond(cr: Input) = {
+        def cond(cr: CharReader) = {
           val res =
-            if (cr atEnd)
+            if (cr eoi)
               problem(r, "unclosed raw text")
             else
               !lookahead(cr, csDelim + rawEndDelim)
 
           first = false
-          prev = cr.first
+          prev = cr.ch
           res
         }
 
@@ -502,14 +510,14 @@ class Parser(commands: Map[String, Command],
       } else
         name match {
           case "seq" =>
-            val (r1, vec) = parseList(r, true)
+            val (r1, vec) = parseList(r, begin = true)
 
             (r1, SeqAST(vec))
           case "{" =>
-            val (r1, vec) = parseList(r, false)
+            val (r1, vec) = parseList(r, begin = false)
 
             if (vec.length % 2 == 1)
-              problem(r1.pos,
+              problem(r1,
                       s"expected an even number of expressions: ${vec.length}")
 
             (r1, ObjectAST(vec))
@@ -518,7 +526,7 @@ class Parser(commands: Map[String, Command],
             val r2 = skipSpace(r1)
             val (r3, a) = parseRegularArgument(r1)
 
-            (r3, DotAST(r.pos, ast, r2.pos, a))
+            (r3, DotAST(r, ast, r2, a))
           case "set" =>
             val (r1, v) = parseVariableArgument(r)
             val (r2, ast) = parseRegularArgument(r1)
@@ -529,7 +537,7 @@ class Parser(commands: Map[String, Command],
             val r2 = skipSpace(r1)
             val (r3, ast) = parseExpressionArgument(r2)
 
-            (r3, InAST(pos, v, r2.pos, ast))
+            (r3, InAST(pos, v, r2, ast))
           case "not" =>
             val (r1, expr) = parseExpressionArgument(r)
 
@@ -575,8 +583,8 @@ class Parser(commands: Map[String, Command],
 
             parseElse(r2) match {
               case Some((r3, els)) =>
-                (r3, ForAST(r0.pos, expr, body, Some(els)))
-              case _ => (r2, ForAST(r0.pos, expr, body, None))
+                (r3, ForAST(r0, expr, body, Some(els)))
+              case _ => (r2, ForAST(r0, expr, body, None))
             }
           case "break"    => (r, BreakAST(pos))
           case "continue" => (r, ContinueAST(pos))
@@ -601,7 +609,8 @@ class Parser(commands: Map[String, Command],
             }
         }
 
-    def filters(r: Input, ast: AST): (Input, AST) =
+    @tailrec
+    def filters(r: CharReader, ast: AST): (CharReader, AST) =
       matches(skipSpace(r), pipeDelim) match {
         case None => (r, ast)
         case Some(r1) =>
@@ -626,7 +635,7 @@ class Parser(commands: Map[String, Command],
                   val (r4, args, optional) =
                     parseCommandArguments(r3, c.arity - 1)
 
-                  filters(r4, CommandAST(r2.pos, c, args :+ ast, optional))
+                  filters(r4, CommandAST(r2, c, args :+ ast, optional))
               }
             case Some(Macro(parameters, _)) if parameters isEmpty =>
               problem(r2, "expected a macro with parameters")
@@ -643,12 +652,15 @@ class Parser(commands: Map[String, Command],
       res
   }
 
-  def parseCommandArguments(r: Input, n: Int) = {
+  def parseCommandArguments(
+      r: CharReader,
+      n: Int): (CharReader, List[AST], Map[String, AST]) = {
     val (r1, args) = parseRegularArguments(r, n)
 
+    @tailrec
     def parseOptional(
-        r: Input,
-        optional: Map[String, AST]): (Input, List[AST], Map[String, AST]) =
+        r: CharReader,
+        optional: Map[String, AST]): (CharReader, List[AST], Map[String, AST]) =
       parseName(skipSpace(r)) match {
         case None => (r, args, optional)
         case Some((r1a, name)) =>
@@ -666,8 +678,8 @@ class Parser(commands: Map[String, Command],
 
   def parseCases(
       cs: String,
-      r: Input,
-      cases: Vector[(AST, AST)] = Vector()): (Input, Vector[(AST, AST)]) =
+      r: CharReader,
+      cases: Vector[(AST, AST)] = Vector()): (CharReader, Vector[(AST, AST)]) =
     parseControlSequence(skipSpace(r)) match {
       case Some((r1, `cs`)) =>
         val (r2, expr) = parseExpressionArgument(r1)
@@ -677,7 +689,7 @@ class Parser(commands: Map[String, Command],
       case _ => (r, cases)
     }
 
-  def parseElse(r: Input): Option[(Input, AST)] =
+  def parseElse(r: CharReader): Option[(CharReader, AST)] =
     parseControlSequence(skipSpace(r)) match {
       case Some((r1, "else")) => Some(parseRegularArgument(r1))
       case _                  => None
