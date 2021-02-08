@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "xyz.hyperreal" %% "json" % "0.8.3",
-  "xyz.hyperreal" %% "args" % "0.2",
+  "com.github.scopt" %% "scopt" % "4.0.0",
   "xyz.hyperreal" %% "hsl" % "1.0.0",
   "xyz.hyperreal" %% "char-reader" % "0.1.9"
 )
