@@ -48,47 +48,57 @@ object Main extends App {
   if (args isEmpty)
     usage
 
+  case class Args(strings: Map[String, String],
+                  numbers: Map[String, BigDecimal],
+                  json: Option[String],
+                  input: String,
+                  out: Option[File])
+
+  val parser = new scopt.OptionParser[Args]("backslash") {
+    head("backslash", "0.4.23")
+
+    help("help").text("prints this usage text")
+
+    opt[Option[String]]('j', "json")
+      .action((x, c) => c.copy(json = x))
+      .text("foo is an integer property")
+
+    opt[Map[String, BigDecimal]]("n")
+      .valueName("k1=v1, k2=v2, ...")
+      .action((x, c) => c.copy(numbers = x))
+      .text("other arguments")
+
+    opt[Map[String, String]]("s")
+      .valueName("k1=v1, k2=v2, ...")
+      .action((x, c) => c.copy(strings = x))
+      .text("other arguments")
+
+    arg[String]("<input file>...")
+      .required()
+      .action((x, c) => c.copy(input = x))
+      .validate(x =>
+        if (isReadable(x)) success
+        else failure("input file must exist and be readable"))
+      .text("input file or -- for stdin")
+
+    opt[Option[File]]('o', "out")
+      .optional()
+      .valueName("<output file>")
+      .action((x, c) => c.copy(out = x))
+      .validate(x =>
+        if (isReadable(x)) success
+        else failure("output file must exist and be readable"))
+      .text("output file")
+
+  }
   Options(args) {
-    case "-s" :: name :: s :: t =>
-      assigns(name) = s
-      t
-    case "-n" :: name :: n :: t =>
-      number(n) match {
-        case None    => sys.error(s"not a number: $n")
-        case Some(v) => assigns(name) = v
-      }
+    templateFile = new File(file)
 
-      t
-    case "-j" :: "--" :: t =>
-      json(io.Source.stdin)
-      t
-    case "-j" :: file :: t if !file.matches("""\s*\{.*""") =>
-      val jsonFile = new File(file)
-
-      if (jsonFile.exists && jsonFile.isFile && jsonFile.canRead) {
-        json(io.Source.fromFile(jsonFile))
-      } else
-        sys.error(s"error reading file: $file")
-
-      t
-    case "-j" :: s :: t =>
-      json(io.Source.fromString(s))
-      t
-    case "--help" :: _ =>
-      usage
+    if (templateFile.exists && templateFile.isFile && templateFile.canRead) {
+      run(io.Source.fromFile(templateFile))
       Nil
-    case "--" :: Nil =>
-      run(io.Source.stdin)
-      Nil
-    case s :: _ if s startsWith "-" => sys.error(s"invalid switch $s")
-    case file :: Nil =>
-      templateFile = new File(file)
-
-      if (templateFile.exists && templateFile.isFile && templateFile.canRead) {
-        run(io.Source.fromFile(templateFile))
-        Nil
-      } else
-        sys.error(s"error reading file: $file")
+    } else
+      sys.error(s"error reading file: $file")
   }
 
 }

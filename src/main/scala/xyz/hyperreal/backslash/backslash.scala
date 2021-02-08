@@ -2,11 +2,19 @@ package xyz.hyperreal
 
 import xyz.hyperreal.char_reader.CharReader
 
+import java.io.File
 import scala.util.matching.Regex
 
 package object backslash {
 
   val numberRegex: Regex = """-?\d+(\.\d+)?|0x[0-9a-fA-F]+""".r
+
+  def isReadable(f: File): Boolean = f.exists && f.isFile && f.canRead
+
+  def isWritable(f: File): Boolean =
+    (f.exists && f.isFile || !f.exists) && f.canWrite
+
+  def isReadable(f: String): Boolean = isReadable(new File(f))
 
   def problem(r: CharReader, error: String): Nothing =
     if (r eq null)
