@@ -416,7 +416,7 @@ object Command {
         }
       },
       new Command("escapeOnce", 1) {
-        val regex = """&#?\w+;""" r
+        val regex: Regex = """&#?\w+;""" r
 
         def apply(pos: CharReader,
                   renderer: Renderer,
@@ -666,7 +666,6 @@ object Command {
                   args: List[Any],
                   optional: Map[String, Any],
                   context: AnyRef): Any = {
-          args.head
           nil
         }
       },
