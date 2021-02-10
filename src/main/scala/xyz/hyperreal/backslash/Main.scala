@@ -15,38 +15,35 @@ object Main extends App {
       "rounding" -> "HALF_EVEN"
     )
   val assigns = new mutable.HashMap[String, Any]
-  var templateFile: File = _
+//  var templateFile: File = _
 
-  def usage = {
-    println("""
-          |Backslash v0.4.23
-          |
-          |Usage:  java -jar backslash-0.4.23.jar <options> <template>
-          |
-          |Options:  --help              display this help and exit
-          |          -s <name> <string>  assign <string> to variable <name>
-          |          -n <name> <number>  assign <number> to variable <name>
-          |
-          |Note:  <template> may be -- meaning read from standard input
-        """.trim.stripMargin)
-    sys.exit
-  }
+//  def usage = {
+//    println("""
+//          |Backslash v0.4.23
+//          |
+//          |Usage:  java -jar backslash-0.4.23.jar <options> <template>
+//          |
+//          |Options:  --help              display this help and exit
+//          |          -s <name> <string>  assign <string> to variable <name>
+//          |          -n <name> <number>  assign <number> to variable <name>
+//          |
+//          |Note:  <template> may be -- meaning read from standard input
+//        """.trim.stripMargin)
+//    sys.exit()
+//  }
 
-  def json(src: io.Source) =
+  def json(src: io.Source): Unit =
     for ((k: String, v) <- DefaultJSONReader
            .fromString(src mkString)
            .asInstanceOf[Map[String, Any]])
       assigns(k) = v
 
-  def run(src: io.Source): Unit = {
-    val parser = new Parser(Command.standard)
-    val renderer = new Renderer(parser, config)
-
-    renderer.render(parser.parse(src), assigns, Console.out)
-  }
-
-  if (args isEmpty)
-    usage
+//  def run(src: io.Source): Unit = {
+//    val parser = new Parser(Command.standard)
+//    val renderer = new Renderer(parser, config)
+//
+//    renderer.render(parser.parse(src), assigns, Console.out)
+//  }
 
   case class Args(strings: Map[String, String],
                   numbers: Map[String, BigDecimal],
@@ -60,45 +57,45 @@ object Main extends App {
     help("help").text("prints this usage text")
 
     opt[Option[String]]('j', "json")
+      .valueName("<file/value>")
       .action((x, c) => c.copy(json = x))
-      .text("foo is an integer property")
+      .text("variable assignments as json")
 
-    opt[Map[String, BigDecimal]]("n")
-      .valueName("k1=v1, k2=v2, ...")
+    opt[Map[String, BigDecimal]]('n', "number")
+      .valueName("k1=v1, ...")
       .action((x, c) => c.copy(numbers = x))
-      .text("other arguments")
-
-    opt[Map[String, String]]("s")
-      .valueName("k1=v1, k2=v2, ...")
-      .action((x, c) => c.copy(strings = x))
-      .text("other arguments")
-
-    arg[String]("<input file>...")
-      .required()
-      .action((x, c) => c.copy(input = x))
-      .validate(x =>
-        if (isReadable(x)) success
-        else failure("input file must exist and be readable"))
-      .text("input file or -- for stdin")
+      .text("numerical variable assignments")
 
     opt[Option[File]]('o', "out")
       .optional()
       .valueName("<output file>")
       .action((x, c) => c.copy(out = x))
       .validate(x =>
-        if (isReadable(x)) success
-        else failure("output file must exist and be readable"))
+        if (x.get.exists && x.get.canWrite || !x.get.exists && x.get.createNewFile && x.get.canWrite)
+          success
+        else failure("output file must be writable"))
       .text("output file")
 
-  }
-  Options(args) {
-    templateFile = new File(file)
+    opt[Map[String, String]]('s', "string")
+      .valueName("k1=v1, ...")
+      .action((x, c) => c.copy(strings = x))
+      .text("string variable assignments")
 
-    if (templateFile.exists && templateFile.isFile && templateFile.canRead) {
-      run(io.Source.fromFile(templateFile))
-      Nil
-    } else
-      sys.error(s"error reading file: $file")
+    arg[String]("<input file>")
+      .required()
+      .action((x, c) => c.copy(input = x))
+      .validate(x =>
+        if (isReadable(x)) success
+        else failure("input file must exist and be readable"))
+      .text("input file or -- for stdin")
+  }
+
+  parser.parse(args, Args(Map(), Map(), None, null, None)) match {
+    case Some(a) =>
+      println(a)
+//      run(io.Source.fromFile(templateFile))
+    case None =>
+      println("problem")
   }
 
 }
