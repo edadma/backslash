@@ -19,11 +19,11 @@ object Main extends App {
     opt[Option[String]]('j', "json")
       .valueName("<file/value>")
       .action((x, c) => c.copy(json = x))
-      .text("variable assignments as json")
+      .text("key/value assignments from JSON")
     opt[Map[String, BigDecimal]]('n', "number")
       .valueName("k1=v1, ...")
       .action((x, c) => c.copy(numbers = x))
-      .text("numerical variable assignments")
+      .text("numerical key/value assignments")
     opt[Option[File]]('o', "out")
       .valueName("<output file>")
       .action((x, c) => c.copy(out = x))
@@ -35,7 +35,7 @@ object Main extends App {
     opt[Map[String, String]]('s', "string")
       .valueName("k1=v1, ...")
       .action((x, c) => c.copy(strings = x))
-      .text("string variable assignments")
+      .text("string key/value assignments")
     arg[String]("<input file>")
       .required()
       .action((x, c) => c.copy(input = x))
@@ -51,23 +51,29 @@ object Main extends App {
   }
 
   parser.parse(args, Args(Map(), Map(), None, null, None)) match {
-    case Some(a) =>
+    case Some(Args(strings, numbers, json, input, out)) =>
       val parser = new Parser(Command.standard)
       val renderer = new Renderer(parser, config)
-      val out =
-        a.out match {
+      val os =
+        out match {
           case None    => Console.out
           case Some(f) => new PrintStream(new FileOutputStream(f))
         }
       val assigns = new mutable.HashMap[String, Any]
 
-      for ((k: String, v) <- DefaultJSONReader
-             .fromString(src mkString)
-             .asInstanceOf[Map[String, Any]])
-        assigns(k) = v
+      if (json.isDefined)
+        for ((k: String, v) <- DefaultJSONReader
+               .fromString(if (json.get startsWith "{") json.get
+               else util.Using(io.Source.fromFile(input))(_.mkString).get)
+               .asInstanceOf[Map[String, Any]])
+          assigns(k) = v
 
-      util.Using(io.Source.fromFile(a.input))(r =>
-        renderer.render(parser.parse(r), assigns, out))
+      val src =
+        if (input.trim == "--") io.Source.stdin
+        else io.Source.fromFile(input)
+
+      util.Using(src)(r =>
+        renderer.render(parser.parse(r), assigns ++ strings ++ numbers, os))
     case None =>
   }
 
