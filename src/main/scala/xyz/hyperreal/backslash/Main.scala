@@ -85,8 +85,13 @@ object Main extends App {
       .required()
       .action((x, c) => c.copy(input = x))
       .validate(x =>
-        if (isReadable(x)) success
-        else failure("input file must exist and be readable"))
+        if (x == "--") success
+        else {
+          val f = new File(x)
+
+          if (f.exists && f.isFile && f.canRead) success
+          else failure("input file must exist and be readable")
+      })
       .text("input file or -- for stdin")
   }
 
@@ -95,7 +100,6 @@ object Main extends App {
       println(a)
 //      run(io.Source.fromFile(templateFile))
     case None =>
-      println("problem")
   }
 
 }
