@@ -32,9 +32,9 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform/*, NativePlatform*/).i
   jsSettings(
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0",
     jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
-    Test / scalaJSUseMainModuleInitializer := true,
-    Test / scalaJSUseTestModuleInitializer := false,
-    //    Test / scalaJSUseMainModuleInitializer := false,
-    //    Test / scalaJSUseTestModuleInitializer := true,
+//    Test / scalaJSUseMainModuleInitializer := true,
+//    Test / scalaJSUseTestModuleInitializer := false,
+    Test / scalaJSUseMainModuleInitializer := false,
+    Test / scalaJSUseTestModuleInitializer := true,
     scalaJSUseMainModuleInitializer := true,
   )

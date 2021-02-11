@@ -31,11 +31,9 @@ class Renderer(val parser: Parser, val config: Map[String, Any]) {
 
   def enterScope(): Unit = scopes push new mutable.HashMap
 
-  def exitScope(): Unit = scopes.pop
+  def exitScope(): Unit = scopes.pop()
 
-  def render(ast: AST,
-             assigns: collection.Map[String, Any],
-             out: PrintStream): Unit = {
+  def render(ast: AST, assigns: collection.Map[String, Any], out: PrintStream): Unit = {
     def output(ast: AST): Unit = {
       out print deval(ast)
       out.flush()
@@ -49,8 +47,7 @@ class Renderer(val parser: Parser, val config: Map[String, Any]) {
     }
   }
 
-  def capture(ast: AST, assigns: collection.Map[String, Any])(
-      implicit codec: io.Codec): String = {
+  def capture(ast: AST, assigns: collection.Map[String, Any])(implicit codec: io.Codec): String = {
     val bytes = new ByteArrayOutputStream
 
     render(ast, assigns, new PrintStream(bytes, false, codec.name))

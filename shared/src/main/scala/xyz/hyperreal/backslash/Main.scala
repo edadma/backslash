@@ -1,6 +1,6 @@
 package xyz.hyperreal.backslash
 
-import java.io.{File, FileOutputStream, PrintStream}
+import java.io.{FileOutputStream, PrintStream}
 import scala.collection.mutable
 import xyz.hyperreal.json.DefaultJSONReader
 
@@ -27,12 +27,11 @@ object Main extends App {
     opt[Option[String]]('o', "out")
       .valueName("<output file>")
       .action((x, c) => c.copy(out = x))
-      .validate(x => {
-        val f =
-          if (x.get.exists && x.get.canWrite || !x.get.exists && x.get.createNewFile && x.get.canWrite)
+      .validate(
+        x =>
+          if (File.writable(x.get))
             success
-          else failure("output file must be writable")
-      })
+          else failure("output file must be writable"))
       .text("output file")
     opt[Map[String, String]]('s', "string")
       .valueName("k1=v1, ...")
@@ -41,14 +40,11 @@ object Main extends App {
     arg[String]("<input file>")
       .required()
       .action((x, c) => c.copy(input = x))
-      .validate(x =>
-        if (x == "--") success
-        else {
-          val f = new File(x)
-
-          if (f.exists && f.isFile && f.canRead) success
-          else failure("input file must exist and be readable")
-      })
+      .validate(
+        x =>
+          if (x == "--") success
+          else if (File.readable(x)) success
+          else failure("input file must exist and be readable"))
       .text("input file or -- for stdin")
   }
 

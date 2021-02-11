@@ -21,6 +21,7 @@ object File {
 
   def writable(file: String): Boolean =
     try {
+      write(file, "")
       fs.accessSync(file, fs.constants.W_OK)
       true
     } catch {
