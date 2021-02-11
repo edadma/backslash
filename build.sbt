@@ -1,55 +1,40 @@
-name := "backslash"
-
-version := "0.4.23"
-
-scalaVersion := "2.13.4"
-
-scalacOptions ++= Seq( "-deprecation", "-feature", "-unchecked", "-language:postfixOps", "-language:implicitConversions", "-language:existentials" )
-
-organization := "xyz.hyperreal"
-
-resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
-
-resolvers += "Hyperreal Repository" at "https://dl.bintray.com/edadma/maven"
-
-libraryDependencies ++= Seq(
-	"org.scalatest" %% "scalatest" % "3.2.3" % "test",
-)
-
-libraryDependencies ++= Seq(
-  "xyz.hyperreal" %% "json" % "0.8.3",
-  "com.github.scopt" %% "scopt" % "4.0.0",
-  "xyz.hyperreal" %% "hsl" % "1.0.0",
-  "xyz.hyperreal" %% "char-reader" % "0.1.9"
-)
-
-coverageExcludedPackages := ".*Main;.*nil;.*package;.*Example;.*Entity"
-
-mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value.replace('-', '_') + ".Main" )
-
-mainClass in assembly := Some( "xyz.hyperreal." + name.value.replace('-', '_') + ".Main" )
-
-assemblyJarName in assembly := name.value + "-" + version.value + ".jar"
-
-publishMavenStyle := true
-
-publishArtifact in Test := false
-
-pomIncludeRepository := { _ => false }
-
-licenses := Seq("ISC" -> url("https://opensource.org/licenses/ISC"))
-
-homepage := Some(url("https://github.com/edadma/" + name.value))
-
-pomExtra :=
-  <scm>
-    <url>git@github.com:edadma/{name.value}.git</url>
-    <connection>scm:git:git@github.com:edadma/{name.value}.git</connection>
-  </scm>
-  <developers>
-    <developer>
-      <id>edadma</id>
-      <name>Edward A. Maxedon, Sr.</name>
-      <url>https://github.com/edadma</url>
-    </developer>
-  </developers>
+lazy val backslash = crossProject(JSPlatform, JVMPlatform/*, NativePlatform*/).in(file(".")).
+  settings(
+    name := "backslash",
+    version := "0.4.24",
+    scalaVersion := "2.13.4",
+    scalacOptions ++=
+      Seq(
+        "-deprecation", "-feature", "-unchecked",
+        "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:dynamics",
+        "-Xasync"
+      ),
+    organization := "xyz.hyperreal",
+    mainClass := Some("xyz.hyperreal.backslash.Main"),
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.3" % "test",
+    libraryDependencies ++=
+      Seq(
+        "xyz.hyperreal" %%% "json" % "0.8.3",
+        "com.github.scopt" %%% "scopt" % "4.0.0",
+        "xyz.hyperreal" %%% "hsl" % "1.0.0",
+        "xyz.hyperreal" %%% "char-reader" % "0.1.9"
+      ),
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
+  ).
+  jvmSettings(
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided",
+  ).
+  //  nativeSettings(
+  //    nativeLinkStubs := true
+  //  ).
+  jsSettings(
+    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0",
+    jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
+    Test / scalaJSUseMainModuleInitializer := true,
+    Test / scalaJSUseTestModuleInitializer := false,
+    //    Test / scalaJSUseMainModuleInitializer := false,
+    //    Test / scalaJSUseTestModuleInitializer := true,
+    scalaJSUseMainModuleInitializer := true,
+  )

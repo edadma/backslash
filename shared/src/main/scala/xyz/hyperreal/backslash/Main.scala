@@ -24,13 +24,15 @@ object Main extends App {
       .valueName("k1=v1, ...")
       .action((x, c) => c.copy(numbers = x))
       .text("numerical key/value assignments")
-    opt[Option[File]]('o', "out")
+    opt[Option[String]]('o', "out")
       .valueName("<output file>")
       .action((x, c) => c.copy(out = x))
-      .validate(x =>
-        if (x.get.exists && x.get.canWrite || !x.get.exists && x.get.createNewFile && x.get.canWrite)
-          success
-        else failure("output file must be writable"))
+      .validate(x => {
+        val f =
+          if (x.get.exists && x.get.canWrite || !x.get.exists && x.get.createNewFile && x.get.canWrite)
+            success
+          else failure("output file must be writable")
+      })
       .text("output file")
     opt[Map[String, String]]('s', "string")
       .valueName("k1=v1, ...")
@@ -72,8 +74,7 @@ object Main extends App {
         if (input.trim == "--") io.Source.stdin
         else io.Source.fromFile(input)
 
-      util.Using(src)(r =>
-        renderer.render(parser.parse(r), assigns ++ strings ++ numbers, os))
+      util.Using(src)(r => renderer.render(parser.parse(r), assigns ++ strings ++ numbers, os))
     case None =>
   }
 
@@ -81,6 +82,6 @@ object Main extends App {
                   numbers: Map[String, BigDecimal],
                   json: Option[String],
                   input: String,
-                  out: Option[File])
+                  out: Option[String])
 
 }

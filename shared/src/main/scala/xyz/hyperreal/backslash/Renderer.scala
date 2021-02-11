@@ -1,4 +1,3 @@
-//@
 package xyz.hyperreal.backslash
 
 import java.io.{ByteArrayOutputStream, PrintStream}
@@ -32,7 +31,7 @@ class Renderer(val parser: Parser, val config: Map[String, Any]) {
 
   def enterScope(): Unit = scopes push new mutable.HashMap
 
-  def exitScope(): Unit = scopes pop
+  def exitScope(): Unit = scopes.pop
 
   def render(ast: AST,
              assigns: collection.Map[String, Any],
