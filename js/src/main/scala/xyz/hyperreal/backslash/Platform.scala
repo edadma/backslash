@@ -3,9 +3,13 @@ package xyz.hyperreal.backslash
 import scala.scalajs.js
 import js.Dynamic.{global => g}
 
-object File {
+object Platform {
+
+  def args(a: Array[String]): Seq[String] = g.process.argv.asInstanceOf[js.Array[String]] drop 2 toList
 
   private val fs = g.require("fs")
+
+  def separator: String = "/"
 
   def read(file: String): String = fs.readFileSync(file).toString
 

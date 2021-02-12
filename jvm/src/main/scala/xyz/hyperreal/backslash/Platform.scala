@@ -2,7 +2,11 @@ package xyz.hyperreal.backslash
 
 import java.nio.file.{Files, Paths}
 
-object File {
+object Platform {
+
+  def args(a: Array[String]): Seq[String] = a
+
+  def separator: String = "/"
 
   def read(file: String): String = Files.readString(Paths.get(file))
 

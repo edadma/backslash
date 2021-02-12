@@ -1,4 +1,3 @@
-//@
 package xyz.hyperreal.backslash
 
 import java.time.{LocalDate, ZonedDateTime}
@@ -9,8 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class CommandTests extends AnyFreeSpec with Matchers with Testing {
 
-  val today = ZonedDateTime.now.format(
-    DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+  val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
   "space" in {
     test("""
@@ -282,16 +280,13 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "remove" in {
-    test("""\remove "rain" "I strained to see the train through the rain"""",
-         false) shouldBe """I sted to see the t through the """
+    test("""\remove "rain" "I strained to see the train through the rain"""", false) shouldBe """I sted to see the t through the """
     a[RuntimeException] should be thrownBy { test("""\remove asdf 1""", false) }
     a[RuntimeException] should be thrownBy { test("""\remove 1 asdf""", false) }
   }
 
   "removeFirst" in {
-    test(
-      """\removeFirst "rain" "I strained to see the train through the rain"""",
-      false) shouldBe """I sted to see the train through the rain"""
+    test("""\removeFirst "rain" "I strained to see the train through the rain"""", false) shouldBe """I sted to see the train through the rain"""
     a[RuntimeException] should be thrownBy {
       test("""\removeFirst asdf 1""", false)
     }
@@ -301,9 +296,7 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "replace" in {
-    test(
-      """\replace "my" "your" "Take my protein pills and put my helmet on"""",
-      false) shouldBe """Take your protein pills and put your helmet on"""
+    test("""\replace "my" "your" "Take my protein pills and put my helmet on"""", false) shouldBe """Take your protein pills and put your helmet on"""
     a[RuntimeException] should be thrownBy {
       test("""\replace asdf 1 1""", false)
     }
@@ -316,9 +309,7 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "replaceFirst" in {
-    test(
-      """\replaceFirst "my" "your" "Take my protein pills and put my helmet on"""",
-      false) shouldBe """Take your protein pills and put my helmet on"""
+    test("""\replaceFirst "my" "your" "Take my protein pills and put my helmet on"""", false) shouldBe """Take your protein pills and put my helmet on"""
     a[RuntimeException] should be thrownBy {
       test("""\replaceFirst asdf 1 1""", false)
     }
@@ -337,8 +328,7 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "round" in {
-    test("""\round 5.2 \round 5.6 \round 1.23 scale: 1 \round 1.26 scale: 1""",
-         true) shouldBe "5 6 1.2 1.3"
+    test("""\round 5.2 \round 5.6 \round 1.23 scale: 1 \round 1.26 scale: 1""", true) shouldBe "5 6 1.2 1.3"
     a[RuntimeException] should be thrownBy { test("""\round asdf""", false) }
   }
 
@@ -360,9 +350,7 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   "sort" in {
     test("""\seq {\timestamp 5 \timestamp 4 \timestamp 3} | sort""", true) shouldBe "[1970-01-01T00:00:00.003Z, 1970-01-01T00:00:00.004Z, 1970-01-01T00:00:00.005Z]"
     test("""\seq {3 5 4 7 6 2 1} | sort""", true) shouldBe "[1, 2, 3, 4, 5, 6, 7]"
-    test(
-      """\seq {\{a 3} \{a 5} \{a 4} \{a 7} \{a 6} \{a 2} \{a 1}} | sort on: a order: desc""",
-      true) shouldBe """[{"a": 7}, {"a": 6}, {"a": 5}, {"a": 4}, {"a": 3}, {"a": 2}, {"a": 1}]"""
+    test("""\seq {\{a 3} \{a 5} \{a 4} \{a 7} \{a 6} \{a 2} \{a 1}} | sort on: a order: desc""", true) shouldBe """[{"a": 7}, {"a": 6}, {"a": 5}, {"a": 4}, {"a": 3}, {"a": 2}, {"a": 1}]"""
     test("""\seq {\{a 3} \{a 5} \{a 4}} | sort""", true) shouldBe """[{"a": 3}, {"a": 4}, {"a": 5}]"""
     a[RuntimeException] should be thrownBy { test("""\sort 123""", false) }
   }

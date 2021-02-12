@@ -1,6 +1,5 @@
 package xyz.hyperreal.backslash
 
-import java.io.{FileOutputStream, PrintStream}
 import scala.collection.mutable
 import xyz.hyperreal.json.DefaultJSONReader
 
@@ -29,7 +28,7 @@ object Main extends App {
       .action((x, c) => c.copy(out = x))
       .validate(
         x =>
-          if (File.writable(x.get))
+          if (Platform.writable(x.get))
             success
           else failure("output file must be writable"))
       .text("output file")
@@ -43,34 +42,34 @@ object Main extends App {
       .validate(
         x =>
           if (x == "--") success
-          else if (File.readable(x)) success
+          else if (Platform.readable(x)) success
           else failure("input file must exist and be readable"))
       .text("input file or -- for stdin")
   }
 
-  parser.parse(args, Args(Map(), Map(), None, null, None)) match {
+  parser.parse(Platform.args(args), Args(Map(), Map(), None, null, None)) match {
     case Some(Args(strings, numbers, json, input, out)) =>
       val parser = new Parser(Command.standard)
       val renderer = new Renderer(parser, config)
       val os =
         out match {
-          case None    => Console.out
-          case Some(f) => new PrintStream(new FileOutputStream(f))
+          case None => Console.out
+//          case Some(f) => new PrintStream(new FileOutputStream(f))//todo: stdout
         }
       val assigns = new mutable.HashMap[String, Any]
 
       if (json.isDefined)
         for ((k: String, v) <- DefaultJSONReader
                .fromString(if (json.get startsWith "{") json.get
-               else util.Using(io.Source.fromFile(input))(_.mkString).get)
+               else Platform.read(json.get))
                .asInstanceOf[Map[String, Any]])
           assigns(k) = v
 
       val src =
-        if (input.trim == "--") io.Source.stdin
-        else io.Source.fromFile(input)
+        if (input.trim == "--") "" //todo: io.Source.stdin
+        else Platform.read(input)
 
-      util.Using(src)(r => renderer.render(parser.parse(r), assigns ++ strings ++ numbers, os))
+      renderer.render(parser.parse(src), assigns ++ strings ++ numbers, os)
     case None =>
   }
 

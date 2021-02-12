@@ -29,7 +29,7 @@ object Main extends App {
       )
     )
   val parser = new Parser(Command.standard)
-  val ast = parser.parse(io.Source.fromString(input))
+  val ast = parser.parse(input)
   val renderer = new Renderer(parser, config)
 
 //  println( ast )

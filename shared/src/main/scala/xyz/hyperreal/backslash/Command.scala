@@ -1,9 +1,7 @@
-//@
 package xyz.hyperreal.backslash
 
 import xyz.hyperreal.char_reader.CharReader
 
-import java.io.File
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
@@ -12,9 +10,7 @@ import xyz.hyperreal.hsl.HSL
 
 import scala.util.matching.Regex
 
-abstract class Command(val name: String,
-                       val arity: Int,
-                       val eval: Boolean = true)
+abstract class Command(val name: String, val arity: Int, val eval: Boolean = true)
     extends ((CharReader, Renderer, List[Any], Map[String, Any], AnyRef) => Any) {
   override def toString =
     s"""xyz.hyperreal.backslash.Command.standard("$name")"""
@@ -96,9 +92,7 @@ object Command {
             case List(a: Any, b: Seq[_])    => a +: b
             case List(a: String, b: String) => a + b
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <number> <number> or <string> <string>: $a, $b")
+              problem(pos, s"expected arguments <number> <number> or <string> <string>: $a, $b")
           }
       },
       new Command("-", 2) {
@@ -143,9 +137,7 @@ object Command {
             case List(a: String, b: String)         => a < b
             case List(a: BigDecimal, b: BigDecimal) => a < b
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <number> <number> or <string> <string>: $a, $b")
+              problem(pos, s"expected arguments <number> <number> or <string> <string>: $a, $b")
           }
       },
       new Command("<=", 2) {
@@ -158,9 +150,7 @@ object Command {
             case List(a: String, b: String)         => a <= b
             case List(a: BigDecimal, b: BigDecimal) => a <= b
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <number> <number> or <string> <string>: $a, $b")
+              problem(pos, s"expected arguments <number> <number> or <string> <string>: $a, $b")
           }
       },
       new Command("=", 2) {
@@ -181,9 +171,7 @@ object Command {
             case List(a: String, b: String)         => a > b
             case List(a: BigDecimal, b: BigDecimal) => a > b
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <number> <number> or <string> <string>: $a, $b")
+              problem(pos, s"expected arguments <number> <number> or <string> <string>: $a, $b")
           }
       },
       new Command(">=", 2) {
@@ -196,9 +184,7 @@ object Command {
             case List(a: String, b: String)         => a >= b
             case List(a: BigDecimal, b: BigDecimal) => a >= b
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <number> <number> or <string> <string>: $a, $b")
+              problem(pos, s"expected arguments <number> <number> or <string> <string>: $a, $b")
           }
       },
       new Command("[]", 0) {
@@ -244,9 +230,7 @@ object Command {
             case List(a: Any, b: Seq[_])    => b :+ a
             case List(a: String, b: String) => b + a
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <any> <sequence> or <string> <string>: $a, $b")
+              problem(pos, s"expected arguments <any> <sequence> or <string> <string>: $a, $b")
           }
       },
       new Command("ceil", 1) {
@@ -273,9 +257,7 @@ object Command {
             case List(a: Map[_, _], b) =>
               a.asInstanceOf[Map[Any, Any]] contains b
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <string> <string> or <sequence> <any> or <object> <any>: $a, $b")
+              problem(pos, s"expected arguments <string> <string> or <sequence> <any> or <object> <any>: $a, $b")
           }
       },
       new Command("darken", 2) {
@@ -386,9 +368,7 @@ object Command {
             case List(n: BigDecimal, s: String) if n.isValidInt =>
               s drop n.toInt
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b")
+              problem(pos, s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b")
           }
       },
       new Command("escape", 1) {
@@ -452,8 +432,7 @@ object Command {
             case (lambda: AST, s: Seq[_]) =>
               s filter (e => truthy(invoke(renderer, lambda, e)))
             case (a, b) =>
-              problem(pos,
-                      s"expected arguments <lambda <sequence>, given $a, $b")
+              problem(pos, s"expected arguments <lambda <sequence>, given $a, $b")
           }
       },
       new Command("floor", 1) {
@@ -489,14 +468,12 @@ object Command {
                   args: List[Any],
                   optional: Map[String, Any],
                   context: AnyRef): Any = {
-          val file = new File(dir(renderer.config("include").toString),
-                              args.head.toString)
+          val file = s"${dir(renderer.config("include").toString)}${Platform.separator}${args.head.toString}"
           val charset = optional get "charset" map (_.toString)
 
           renderer.eval(
             renderer.parser.parse(
-              if (charset.isDefined) io.Source.fromFile(file)
-              else io.Source.fromFile(file)(charset get)))
+            /*if (charset.isDefined)*/ Platform.read(file))) //todo: charset
         }
       },
       new Command("isEmpty", 1) {
@@ -523,9 +500,7 @@ object Command {
           args match {
             case List(sep: String, s: Seq[_]) => s mkString sep
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <separator> <sequence>, given $a, $b")
+              problem(pos, s"expected arguments <separator> <sequence>, given $a, $b")
           }
       },
       new Command("last", 1) {
@@ -611,9 +586,7 @@ object Command {
               s.asInstanceOf[Seq[Map[String, Any]]] map (_ getOrElse (f, nil))
             case (lambda: AST, s: Seq[_]) => s map (invoke(renderer, lambda, _))
             case (a, b) =>
-              problem(
-                pos,
-                s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b")
+              problem(pos, s"expected arguments <variable> <sequence> or <lambda <sequence>>, given $a, $b")
           }
       },
 //      new Command( "markdown", 1 ) {
@@ -758,9 +731,7 @@ object Command {
           args match {
             case List(l1: String, l2: String, r: String) => r.replace(l1, l2)
             case List(a, b, c) =>
-              problem(
-                pos,
-                s"expected arguments <string> <string> <string>: $a, $b, $c")
+              problem(pos, s"expected arguments <string> <string> <string>: $a, $b, $c")
           }
       },
       new Command("replaceFirst", 3) {
@@ -773,9 +744,7 @@ object Command {
             case List(l1: String, l2: String, r: String) =>
               r replaceFirst (Matcher.quoteReplacement(l1), l2)
             case List(a, b, c) =>
-              problem(
-                pos,
-                s"expected arguments <string> <string> <string>: $a, $b, $c")
+              problem(pos, s"expected arguments <string> <string> <string>: $a, $b, $c")
           }
       },
       new Command("reverse", 1) {
@@ -825,16 +794,12 @@ object Command {
                   optional: Map[String, Any],
                   context: AnyRef): Any = {
           args match {
-            case List(start: BigDecimal, end: BigDecimal, s: String)
-                if start.isValidInt && end.isValidInt =>
+            case List(start: BigDecimal, end: BigDecimal, s: String) if start.isValidInt && end.isValidInt =>
               s.slice(start.intValue, end.intValue)
-            case List(start: BigDecimal, end: BigDecimal, s: Seq[_])
-                if start.isValidInt && end.isValidInt =>
+            case List(start: BigDecimal, end: BigDecimal, s: Seq[_]) if start.isValidInt && end.isValidInt =>
               s.slice(start.intValue, end.intValue)
             case List(a, b, c) =>
-              problem(
-                pos,
-                s"expected arguments <start> <end> <string> or <start> <end> <sequence>: $a, $b, $c")
+              problem(pos, s"expected arguments <start> <end> <string> or <start> <end> <sequence>: $a, $b, $c")
           }
         }
       },
@@ -858,9 +823,7 @@ object Command {
 
           args match {
             case List(s: Seq[_]) if on isDefined =>
-              s.asInstanceOf[Seq[Map[String, Any]]] sortWith (
-                  (a,
-                   b) => comp(a(on.get), b(on.get)))
+              s.asInstanceOf[Seq[Map[String, Any]]] sortWith ((a, b) => comp(a(on.get), b(on.get)))
             case List(s: Seq[_]) => s sortWith comp
             case List(a)         => problem(pos, s"expected sequence argument: $a")
           }
@@ -876,8 +839,7 @@ object Command {
             case List(sep: String, s: String) =>
               s split sep toVector
             case List(a, b) =>
-              problem(pos,
-                      s"expected arguments <string> <string>, given $a, $b")
+              problem(pos, s"expected arguments <string> <string>, given $a, $b")
           }
       },
 //      new Command( "t", 0 ) {
@@ -909,9 +871,7 @@ object Command {
             case List(n: BigDecimal, s: String) if n.isValidInt =>
               s take n.toInt
             case List(a, b) =>
-              problem(
-                pos,
-                s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b")
+              problem(pos, s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b")
           }
       },
       new Command("timestamp", 1) {
@@ -973,9 +933,7 @@ object Command {
                   args: List[Any],
                   optional: Map[String, Any],
                   context: AnyRef): Any =
-          ZonedDateTime.now.format(
-            format(
-              DateTimeFormatter.ofPattern(renderer.config("today").toString)))
+          ZonedDateTime.now.format(format(DateTimeFormatter.ofPattern(renderer.config("today").toString)))
       },
       new Command("trim", 1) {
         def apply(pos: CharReader,

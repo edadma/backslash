@@ -40,8 +40,8 @@ class Parser(commands: Map[String, Command],
 
   val macros = new mutable.HashMap[String, Macro]
 
-  def parse(src: io.Source): AST =
-    parseStatements(CharReader.fromString(src.mkString)) match {
+  def parse(src: String): AST =
+    parseStatements(CharReader.fromString(src)) match {
       case (r1, b) if r1 eoi => b
       case (r1, _)           => problem(r1, s"expected end of input: $r1")
     }
