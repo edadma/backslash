@@ -8,8 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class LanguageTests extends AnyFreeSpec with Matchers with Testing {
 
-  val today = ZonedDateTime.now.format(
-    DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+  val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
   "basic" in {
     test("", false) shouldBe ""
@@ -111,12 +110,8 @@ class LanguageTests extends AnyFreeSpec with Matchers with Testing {
     test("""start \if v defined \elsif x x end""", true, "x" -> 123) shouldBe "start x end"
     test("""start \if v defined \elsif x x end""", true, "v" -> 123) shouldBe "start defined end"
     test("""start \if v defined \elsif x x \else undefined end""", true) shouldBe "start undefined end"
-    test("""start \if v defined \elsif x x \else undefined end""",
-         true,
-         "x" -> 123) shouldBe "start x end"
-    test("""start \if v defined \elsif x x \else undefined end""",
-         true,
-         "v" -> 123) shouldBe "start defined end"
+    test("""start \if v defined \elsif x x \else undefined end""", true, "x" -> 123) shouldBe "start x end"
+    test("""start \if v defined \elsif x x \else undefined end""", true, "v" -> 123) shouldBe "start defined end"
     test("""start \if v defined \else undefined end""", true) shouldBe "start undefined end"
     test("""start \if v defined \else undefined end""", true, "v" -> 123) shouldBe "start defined end"
   }
@@ -136,39 +131,26 @@ class LanguageTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "for" in {
-    test("""start \for l \forloop.element end""",
-         true,
-         "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l \forloop.element end""", true, "l" -> List("a", "b", "c")) shouldBe
       "start abcend"
     test("""start \for \in e l \e end""", true, "l" -> List("a", "b", "c")) shouldBe
       "start abcend"
-    test("""start \for l {\forloop.element} end""",
-         true,
-         "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\forloop.element} end""", true, "l" -> List("a", "b", "c")) shouldBe
       "start abc end"
-    test("""start \for l {\forloop.element\ } end""",
-         true,
-         "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\forloop.element\ } end""", true, "l" -> List("a", "b", "c")) shouldBe
       "start a b c end"
-    test("""start \for l {\forloop.element\ } \else else end""",
-         true,
-         "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\forloop.element\ } \else else end""", true, "l" -> List("a", "b", "c")) shouldBe
       "start a b c else end"
     test("""start \for m \f end""", true, "m" -> Map("f" -> 123)) shouldBe
       "start 123end"
   }
 
   "filters" in {
-    test("""\lit {this is a test} | replace 'is' '**' | remove test | size""",
-         true) shouldBe
+    test("""\lit {this is a test} | replace 'is' '**' | remove test | size""", true) shouldBe
       "10"
-    test("""\l | \reverse | \take 2 | \drop 1""",
-         true,
-         "l" -> List("a", "b", "c")) shouldBe
+    test("""\l | \reverse | \take 2 | \drop 1""", true, "l" -> List("a", "b", "c")) shouldBe
       """["b"]"""
-    test("""\l | map \+ _ 1 | filter \> _ 5""",
-         true,
-         "l" -> List[BigDecimal](3, 4, 5, 6, 7)) shouldBe
+    test("""\l | map \+ _ 1 | filter \> _ 5""", true, "l" -> List[BigDecimal](3, 4, 5, 6, 7)) shouldBe
       """[6, 7, 8]"""
     test("""\seq {\{a 3} \{b 4} \{a 5}} | map a | filter _""", false) shouldBe "[3, 5]"
     test("""\def m {asdf}\m | upcase""", false) shouldBe "ASDF"
@@ -182,29 +164,25 @@ class LanguageTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "break" in {
-    test(
-      """start \for l {\if \> \forloop.indexz 1 \break \forloop.element\ } \else else end""",
-      true,
-      "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\if \> \forloop.indexz 1 \break \forloop.element\ } \else else end""",
+         true,
+         "l" -> List("a", "b", "c")) shouldBe
       "start a b end"
-    test(
-      """start \for l {\if \> \forloop.indexz 1 \break {\forloop.element\ }} end""",
-      true,
-      "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\if \> \forloop.indexz 1 \break {\forloop.element\ }} end""",
+         true,
+         "l" -> List("a", "b", "c")) shouldBe
       "start a b end"
     a[RuntimeException] should be thrownBy { test("""\break""", true) }
   }
 
   "continue" in {
-    test(
-      """start \for l {\if \= \forloop.indexz 1 \continue \forloop.element\ } \else else end""",
-      true,
-      "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\if \= \forloop.indexz 1 \continue \forloop.element\ } \else else end""",
+         true,
+         "l" -> List("a", "b", "c")) shouldBe
       "start a c else end"
-    test(
-      """start \for l {\if \= \forloop.indexz 1 \continue {\forloop.element\ }} end""",
-      true,
-      "l" -> List("a", "b", "c")) shouldBe
+    test("""start \for l {\if \= \forloop.indexz 1 \continue {\forloop.element\ }} end""",
+         true,
+         "l" -> List("a", "b", "c")) shouldBe
       "start a c end"
     a[RuntimeException] should be thrownBy { test("""\continue""", true) }
   }

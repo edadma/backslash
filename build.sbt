@@ -30,7 +30,8 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform/*, NativePlatform*/).i
   //    nativeLinkStubs := true
   //  ).
   jsSettings(
-    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0",
+    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.1.0",
+    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.1.0",
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
 //    Test / scalaJSUseMainModuleInitializer := true,

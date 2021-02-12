@@ -13,7 +13,7 @@ object Main extends App {
     )
 
   val parser = new scopt.OptionParser[Args]("backslash") {
-    head("backslash", "0.4.23")
+    head("backslash", "0.4.24")
     help("help").text("prints this usage text")
     opt[Option[String]]('j', "json")
       .valueName("<file/value>")
