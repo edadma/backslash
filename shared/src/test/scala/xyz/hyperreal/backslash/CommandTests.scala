@@ -2,13 +2,13 @@ package xyz.hyperreal.backslash
 
 import java.time.{LocalDate, ZonedDateTime}
 import java.time.format.{DateTimeFormatter, FormatStyle}
-
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter}
 
 class CommandTests extends AnyFreeSpec with Matchers with Testing {
 
-  val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+  val today: String = Datetime.now().format("MMMM D, Y")
 
   "space" in {
     test("""
@@ -142,9 +142,9 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "date" in {
-    val date = LocalDate.parse("20111203", DateTimeFormatter.BASIC_ISO_DATE)
+    val date = Datetime(2011, 12, 3)
 
-    test("""\date "MMMM d, y" \d""", true, "d" -> date) shouldBe "December 3, 2011"
+    test("""\date "MMMM D, Y" \d""", true, "d" -> date) shouldBe "December 3, 2011"
     a[RuntimeException] should be thrownBy { test("""\date asdf 1""", false) }
   }
 
@@ -262,7 +262,7 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "now" in {
-    test("""\now | date "MMMM d, y"""", false) shouldBe today
+    test("""\now | date "MMMM D, Y"""", false) shouldBe today
   }
 
   "range" in {
@@ -375,8 +375,8 @@ class CommandTests extends AnyFreeSpec with Matchers with Testing {
   }
 
   "timestamp" in {
-    test("""\timestamp "2018-06-05T14:52:25Z" | date "MMMM d, y"""", true) shouldBe """June 5, 2018"""
-    test("""\timestamp 1528314399243 | date "MMMM d, y"""", true) shouldBe """June 6, 2018"""
+    test("""\timestamp "2018-06-05T14:52:25Z" | date "MMMM D, Y"""", true) shouldBe """June 5, 2018"""
+    test("""\timestamp 1528314399243 | date "MMMM D, Y"""", true) shouldBe """June 6, 2018"""
     a[RuntimeException] should be thrownBy { test("""\timestamp \[]""", false) }
   }
 

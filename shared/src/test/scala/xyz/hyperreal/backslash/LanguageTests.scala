@@ -2,13 +2,13 @@ package xyz.hyperreal.backslash
 
 import java.time.ZonedDateTime
 import java.time.format.{DateTimeFormatter, FormatStyle}
-
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+import xyz.hyperreal.datetime.Datetime
 
 class LanguageTests extends AnyFreeSpec with Matchers with Testing {
 
-  val today = ZonedDateTime.now.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+  val today: String = Datetime.now().format("MMMM D, Y")
 
   "basic" in {
     test("", false) shouldBe ""

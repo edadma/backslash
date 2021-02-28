@@ -1,8 +1,8 @@
-lazy val backslash = crossProject(JSPlatform, JVMPlatform/*, NativePlatform*/).in(file(".")).
+lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(
     name := "backslash",
     version := "0.4.24",
-    scalaVersion := "2.13.4",
+    scalaVersion := "2.13.5",
     scalacOptions ++=
       Seq(
         "-deprecation", "-feature", "-unchecked",
@@ -11,13 +11,14 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform/*, NativePlatform*/).i
       ),
     organization := "xyz.hyperreal",
     mainClass := Some("xyz.hyperreal.backslash.Main"),
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.3" % "test",
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.5" % "test",
     libraryDependencies ++=
       Seq(
         "xyz.hyperreal" %%% "json" % "0.8.3",
         "com.github.scopt" %%% "scopt" % "4.0.0",
         "xyz.hyperreal" %%% "hsl" % "1.0.0",
-        "xyz.hyperreal" %%% "char-reader" % "0.1.9"
+        "xyz.hyperreal" %%% "char-reader" % "0.1.9",
+        "xyz.hyperreal" %%% "datetime" % "0.1.3"
       ),
     publishMavenStyle := true,
     publishArtifact in Test := false,
@@ -26,12 +27,12 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform/*, NativePlatform*/).i
   jvmSettings(
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided",
   ).
-  //  nativeSettings(
-  //    nativeLinkStubs := true
-  //  ).
+    nativeSettings(
+      nativeLinkStubs := true
+    ).
   jsSettings(
-    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.1.0",
-    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.1.0",
+//    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.2.0",
+//    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.2.0",
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
 //    Test / scalaJSUseMainModuleInitializer := true,

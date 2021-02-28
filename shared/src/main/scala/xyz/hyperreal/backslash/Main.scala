@@ -1,5 +1,7 @@
 package xyz.hyperreal.backslash
 
+import xyz.hyperreal.datetime.Timezone
+
 import scala.collection.mutable
 import xyz.hyperreal.json.DefaultJSONReader
 
@@ -7,7 +9,8 @@ object Main extends App {
 
   val config =
     Map(
-      "today" -> "MMMM d, y",
+      "today" -> "MMMM D, Y",
+      "timezone" -> Timezone.UTC,
       "include" -> ".",
       "rounding" -> "HALF_EVEN"
     )

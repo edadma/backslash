@@ -4,7 +4,7 @@ object Main extends App {
 
   val config =
     Map(
-      "today" -> "MMMM d, y",
+      "today" -> "MMMM D, Y",
       "include" -> ".",
       "rounding" -> "HALF_EVEN"
     )
@@ -19,13 +19,9 @@ object Main extends App {
       "y" -> 4,
       "m" -> Map("firstName" -> "Bugs", "lastName" -> "Bunny"),
       "products" -> List(
-        Map("name" -> "RCA 32\u2033 ROKU SMART TV",
-            "price" -> BigDecimal("207.00"),
-            "inStock" -> true),
+        Map("name" -> "RCA 32\u2033 ROKU SMART TV", "price" -> BigDecimal("207.00"), "inStock" -> true),
         Map("asdf" -> "asdf"),
-        Map("name" -> "LG 55UK6300",
-            "price" -> BigDecimal("1098.00"),
-            "inStock" -> false)
+        Map("name" -> "LG 55UK6300", "price" -> BigDecimal("1098.00"), "inStock" -> false)
       )
     )
   val parser = new Parser(Command.standard)

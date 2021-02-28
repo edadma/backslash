@@ -1,10 +1,8 @@
 package xyz.hyperreal.backslash
 
 import xyz.hyperreal.char_reader.CharReader
+import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter, Timezone}
 
-import java.time.{Instant, ZoneOffset, ZonedDateTime}
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAccessor
 import java.util.regex.Matcher
 import xyz.hyperreal.hsl.HSL
 
@@ -318,10 +316,8 @@ object Command {
                   optional: Map[String, Any],
                   context: AnyRef): Any =
           args match {
-            case List(format: String, date: TemporalAccessor) =>
-              DateTimeFormatter.ofPattern(format).format(date)
-            case List(a, b) =>
-              problem(pos, s"expected arguments <format> <date>, given $a, $b")
+            case List(format: String, date: Datetime) => DatetimeFormatter(format).format(date)
+            case List(a, b)                           => problem(pos, s"expected arguments <format> <date>, given $a, $b")
           }
       },
       new Command("default", 2) {
@@ -670,8 +666,7 @@ object Command {
                   renderer: Renderer,
                   args: List[Any],
                   optional: Map[String, Any],
-                  context: AnyRef): Any =
-          ZonedDateTime.now
+                  context: AnyRef): Any = Datetime.now(renderer.config("timezone").asInstanceOf[Timezone])
       },
       new Command("range", 2) {
         def apply(pos: CharReader,
@@ -681,8 +676,7 @@ object Command {
                   context: AnyRef): Any =
           args match {
             case List(start: BigDecimal, end: BigDecimal) => start to end by 1
-            case List(a, b) =>
-              problem(pos, s"expected arguments <number> <number>: $a, $b")
+            case List(a, b)                               => problem(pos, s"expected arguments <number> <number>: $a, $b")
           }
       },
       new Command("rem", 2) {
@@ -693,8 +687,7 @@ object Command {
                   context: AnyRef): Any =
           args match {
             case List(a: BigDecimal, b: BigDecimal) => a remainder b
-            case List(a, b) =>
-              problem(pos, s"expected arguments <number> <number>: $a, $b")
+            case List(a, b)                         => problem(pos, s"expected arguments <number> <number>: $a, $b")
           }
       },
       new Command("remove", 2) {
@@ -705,8 +698,7 @@ object Command {
                   context: AnyRef): Any =
           args match {
             case List(l: String, r: String) => r replace (l, "")
-            case List(a, b) =>
-              problem(pos, s"expected arguments <string> <string>: $a, $b")
+            case List(a, b)                 => problem(pos, s"expected arguments <string> <string>: $a, $b")
           }
       },
       new Command("removeFirst", 2) {
@@ -718,8 +710,7 @@ object Command {
           args match {
             case List(l: String, r: String) =>
               r replaceFirst (Matcher.quoteReplacement(l), "")
-            case List(a, b) =>
-              problem(pos, s"expected arguments <string> <string>: $a, $b")
+            case List(a, b) => problem(pos, s"expected arguments <string> <string>: $a, $b")
           }
       },
       new Command("replace", 3) {
@@ -730,8 +721,7 @@ object Command {
                   context: AnyRef): Any =
           args match {
             case List(l1: String, l2: String, r: String) => r.replace(l1, l2)
-            case List(a, b, c) =>
-              problem(pos, s"expected arguments <string> <string> <string>: $a, $b, $c")
+            case List(a, b, c)                           => problem(pos, s"expected arguments <string> <string> <string>: $a, $b, $c")
           }
       },
       new Command("replaceFirst", 3) {
@@ -743,8 +733,7 @@ object Command {
           args match {
             case List(l1: String, l2: String, r: String) =>
               r replaceFirst (Matcher.quoteReplacement(l1), l2)
-            case List(a, b, c) =>
-              problem(pos, s"expected arguments <string> <string> <string>: $a, $b, $c")
+            case List(a, b, c) => problem(pos, s"expected arguments <string> <string> <string>: $a, $b, $c")
           }
       },
       new Command("reverse", 1) {
@@ -756,8 +745,7 @@ object Command {
           args match {
             case List(s: String) => s reverse
             case List(s: Seq[_]) => s reverse
-            case List(a) =>
-              problem(pos, s"expected string or sequence argument: $a")
+            case List(a)         => problem(pos, s"expected string or sequence argument: $a")
           }
       },
       new Command("round", 1) {
@@ -767,9 +755,8 @@ object Command {
                   optional: Map[String, Any],
                   context: AnyRef): Any = {
           (args.head, optional.getOrElse("scale", 0)) match {
-            case (n: BigDecimal, scale: Number) =>
-              round(n, scale.intValue, renderer.config)
-            case (a, b) => problem(pos, s"not a number: $a, $b")
+            case (n: BigDecimal, scale: Number) => round(n, scale.intValue, renderer.config)
+            case (a, b)                         => problem(pos, s"not a number: $a, $b")
           }
         }
       },
@@ -838,8 +825,7 @@ object Command {
           args match {
             case List(sep: String, s: String) =>
               s split sep toVector
-            case List(a, b) =>
-              problem(pos, s"expected arguments <string> <string>, given $a, $b")
+            case List(a, b) => problem(pos, s"expected arguments <string> <string>, given $a, $b")
           }
       },
 //      new Command( "t", 0 ) {
@@ -855,8 +841,7 @@ object Command {
           args match {
             case List(s: String) => s tail
             case List(s: Seq[_]) => s tail
-            case List(a) =>
-              problem(pos, s"expected string or sequence argument: $a")
+            case List(a)         => problem(pos, s"expected string or sequence argument: $a")
           }
       },
       new Command("take", 2) {
@@ -866,10 +851,8 @@ object Command {
                   optional: Map[String, Any],
                   context: AnyRef): Any =
           args match {
-            case List(n: BigDecimal, s: Seq[_]) if n.isValidInt =>
-              s take n.toInt
-            case List(n: BigDecimal, s: String) if n.isValidInt =>
-              s take n.toInt
+            case List(n: BigDecimal, s: Seq[_]) if n.isValidInt => s take n.toInt
+            case List(n: BigDecimal, s: String) if n.isValidInt => s take n.toInt
             case List(a, b) =>
               problem(pos, s"expected arguments <integer> <sequence> or <integer> <string>, given $a, $b")
           }
@@ -881,11 +864,9 @@ object Command {
                   optional: Map[String, Any],
                   context: AnyRef): Any =
           args match {
-            case List(s: String) => ZonedDateTime parse s
-            case List(millis: BigDecimal) if millis isValidLong =>
-              Instant ofEpochMilli millis.longValue atOffset ZoneOffset.UTC toZonedDateTime
-            case List(a) =>
-              problem(pos, s"expected string or integer argument: $a")
+            case List(s: String)                                => Datetime.fromString(s).timestamp
+            case List(millis: BigDecimal) if millis isValidLong => Datetime.fromMillis(millis.longValue).timestamp
+            case List(a)                                        => problem(pos, s"expected string or integer argument: $a")
           }
       },
       new Command("toInteger", 1) {
@@ -897,9 +878,8 @@ object Command {
           val x = args.head
 
           number(x) match {
-            case None => problem(pos, s"not a number: $x")
-            case Some(n: BigDecimal) =>
-              if (n.isWhole) n else n.setScale(0, BigDecimal.RoundingMode.DOWN)
+            case None                => problem(pos, s"not a number: $x")
+            case Some(n: BigDecimal) => if (n.isWhole) n else n.setScale(0, BigDecimal.RoundingMode.DOWN)
           }
         }
       },
@@ -926,14 +906,14 @@ object Command {
           display(args.head)
       },
       new Command("today", 0) {
-        val format = new Const[DateTimeFormatter]
+        val format = new Const[DatetimeFormatter] //todo: not sure, check against Liquid
 
         def apply(pos: CharReader,
                   renderer: Renderer,
                   args: List[Any],
                   optional: Map[String, Any],
                   context: AnyRef): Any =
-          ZonedDateTime.now.format(format(DateTimeFormatter.ofPattern(renderer.config("today").toString)))
+          Datetime.now(renderer.config("timezone").asInstanceOf[Timezone]).format(renderer.config("today").toString)
       },
       new Command("trim", 1) {
         def apply(pos: CharReader,
