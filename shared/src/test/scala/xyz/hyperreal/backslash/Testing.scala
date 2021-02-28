@@ -1,12 +1,12 @@
 package xyz.hyperreal.backslash
 
-import xyz.hyperreal.datetime.Timezone
+import xyz.hyperreal.datetime.{DatetimeFormatter, Timezone}
 
 trait Testing {
 
   val config =
     Map(
-      "today" -> "MMMM D, Y",
+      "today" -> DatetimeFormatter("MMMM D, Y"),
       "timezone" -> Timezone.UTC,
       "include" -> ".",
       "rounding" -> "HALF_EVEN"

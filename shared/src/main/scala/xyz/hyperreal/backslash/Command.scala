@@ -1,6 +1,7 @@
 package xyz.hyperreal.backslash
 
 import xyz.hyperreal.char_reader.CharReader
+import xyz.hyperreal.datetime
 import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter, Timezone}
 
 import java.util.regex.Matcher
@@ -913,7 +914,10 @@ object Command {
                   args: List[Any],
                   optional: Map[String, Any],
                   context: AnyRef): Any =
-          Datetime.now(renderer.config("timezone").asInstanceOf[Timezone]).format(renderer.config("today").toString)
+          renderer
+            .config("today")
+            .asInstanceOf[datetime.DatetimeFormatter]
+            .format(Datetime.now(renderer.config("timezone").asInstanceOf[Timezone]))
       },
       new Command("trim", 1) {
         def apply(pos: CharReader,

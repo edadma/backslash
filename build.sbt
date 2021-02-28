@@ -27,9 +27,9 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(fi
   jvmSettings(
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided",
   ).
-    nativeSettings(
-      nativeLinkStubs := true
-    ).
+  nativeSettings(
+    nativeLinkStubs := true
+  ).
   jsSettings(
 //    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.2.0",
 //    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.2.0",
