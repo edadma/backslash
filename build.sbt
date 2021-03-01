@@ -18,7 +18,7 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(fi
         "com.github.scopt" %%% "scopt" % "4.0.0",
         "xyz.hyperreal" %%% "hsl" % "1.0.0",
         "xyz.hyperreal" %%% "char-reader" % "0.1.10",
-        "xyz.hyperreal" %%% "datetime" % "0.1.4"
+        "xyz.hyperreal" %%% "datetime" % "0.1.6"
       ),
     publishMavenStyle := true,
     publishArtifact in Test := false,
