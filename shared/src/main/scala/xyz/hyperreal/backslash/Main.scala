@@ -1,5 +1,7 @@
 package xyz.hyperreal.backslash
 
+import xyz.hyperreal.char_reader.readFile
+import xyz.hyperreal.cross_plateform.{processArgs, readableFile, writableFile}
 import xyz.hyperreal.datetime.{DatetimeFormatter, Timezone}
 
 import scala.collection.mutable
@@ -31,7 +33,7 @@ object Main extends App {
       .action((x, c) => c.copy(out = x))
       .validate(
         x =>
-          if (Platform.writable(x.get))
+          if (writableFile(x.get))
             success
           else failure("output file must be writable"))
       .text("output file")
@@ -45,12 +47,12 @@ object Main extends App {
       .validate(
         x =>
           if (x == "--") success
-          else if (Platform.readable(x)) success
+          else if (readableFile(x)) success
           else failure("input file must exist and be readable"))
       .text("input file or -- for stdin")
   }
 
-  parser.parse(Platform.args(args), Args(Map(), Map(), None, null, None)) match {
+  parser.parse(processArgs(args), Args(Map(), Map(), None, null, None)) match {
     case Some(Args(strings, numbers, json, input, out)) =>
       val parser = new Parser(Command.standard)
       val renderer = new Renderer(parser, config)
@@ -64,13 +66,13 @@ object Main extends App {
       if (json.isDefined)
         for ((k: String, v) <- DefaultJSONReader
                .fromString(if (json.get startsWith "{") json.get
-               else Platform.read(json.get))
+               else readFile(json.get))
                .asInstanceOf[Map[String, Any]])
           assigns(k) = v
 
       val src =
         if (input.trim == "--") "" //todo: io.Source.stdin
-        else Platform.read(input)
+        else readFile(input)
 
       renderer.render(parser.parse(src), assigns ++ strings ++ numbers, os)
     case None =>

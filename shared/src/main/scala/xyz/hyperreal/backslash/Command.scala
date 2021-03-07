@@ -1,6 +1,7 @@
 package xyz.hyperreal.backslash
 
 import xyz.hyperreal.char_reader.CharReader
+import xyz.hyperreal.cross_plateform.{nameSeparator, readFile}
 import xyz.hyperreal.datetime
 import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter, Timezone}
 
@@ -465,12 +466,12 @@ object Command {
                   args: List[Any],
                   optional: Map[String, Any],
                   context: AnyRef): Any = {
-          val file = s"${dir(renderer.config("include").toString)}${Platform.separator}${args.head.toString}"
+          val file = s"${dir(renderer.config("include").toString)}$nameSeparator${args.head.toString}"
           val charset = optional get "charset" map (_.toString)
 
           renderer.eval(
             renderer.parser.parse(
-            /*if (charset.isDefined)*/ Platform.read(file))) //todo: charset
+            /*if (charset.isDefined)*/ readFile(file))) //todo: charset
         }
       },
       new Command("isEmpty", 1) {

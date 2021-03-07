@@ -2,7 +2,6 @@ package xyz.hyperreal
 
 import xyz.hyperreal.char_reader.CharReader
 
-import java.io.File
 import scala.util.matching.Regex
 
 package object backslash {
@@ -33,8 +32,7 @@ package object backslash {
     }
 
   def round(n: BigDecimal, scale: Int, config: Map[String, Any]): BigDecimal =
-    n.setScale(scale,
-               BigDecimal.RoundingMode.withName(config("rounding").toString))
+    n.setScale(scale, BigDecimal.RoundingMode.withName(config("rounding").toString))
 
   def truthy(a: Any): Boolean = !falsy(a)
 
