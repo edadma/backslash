@@ -1,7 +1,7 @@
 lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(
     name := "backslash",
-    version := "0.4.25",
+    version := "0.4.26",
     scalaVersion := "2.13.5",
     scalacOptions ++=
       Seq(
@@ -17,7 +17,7 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(fi
         "xyz.hyperreal" %%% "json" % "0.8.3",
         "com.github.scopt" %%% "scopt" % "4.0.0",
         "xyz.hyperreal" %%% "hsl" % "1.0.0",
-        "xyz.hyperreal" %%% "char-reader" % "0.1.10",
+        "xyz.hyperreal" %%% "char-reader" % "0.1.11",
         "xyz.hyperreal" %%% "datetime" % "0.1.6",
         "xyz.hyperreal" %%% "cross-platform" % "0.1.0-snapshot.2"
       ),
