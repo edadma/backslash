@@ -1,7 +1,6 @@
 package xyz.hyperreal.backslash
 
-import xyz.hyperreal.char_reader.readFile
-import xyz.hyperreal.cross_plateform.{processArgs, readableFile, writableFile}
+import xyz.hyperreal.cross_platform.{readFile, processArgs, readableFile, writableFile}
 import xyz.hyperreal.datetime.{DatetimeFormatter, Timezone}
 
 import scala.collection.mutable

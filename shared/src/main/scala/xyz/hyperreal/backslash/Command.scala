@@ -1,7 +1,7 @@
 package xyz.hyperreal.backslash
 
 import xyz.hyperreal.char_reader.CharReader
-import xyz.hyperreal.cross_plateform.{nameSeparator, readFile}
+import xyz.hyperreal.cross_platform.{nameSeparator, readFile}
 import xyz.hyperreal.datetime
 import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter, Timezone}
 
