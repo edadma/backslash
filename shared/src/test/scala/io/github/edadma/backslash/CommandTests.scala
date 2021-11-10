@@ -1,10 +1,8 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
-import java.time.{LocalDate, ZonedDateTime}
-import java.time.format.{DateTimeFormatter, FormatStyle}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter}
+import io.github.edadma.datetime.{Datetime, DatetimeFormatter}
 
 class CommandTests extends AnyFreeSpec with Matchers with Testing {
 

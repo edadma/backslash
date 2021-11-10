@@ -1,6 +1,6 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
-import xyz.hyperreal.datetime.{DatetimeFormatter, Timezone}
+import io.github.edadma.datetime.{DatetimeFormatter, Timezone}
 
 trait Testing {
 

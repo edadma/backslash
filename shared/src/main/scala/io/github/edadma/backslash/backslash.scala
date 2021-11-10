@@ -1,6 +1,6 @@
-package xyz.hyperreal
+package io.github.edadma
 
-import xyz.hyperreal.char_reader.CharReader
+import io.github.edadma.char_reader.CharReader
 
 import scala.util.matching.Regex
 

@@ -1,6 +1,6 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
-import xyz.hyperreal.char_reader.CharReader
+import io.github.edadma.char_reader.CharReader
 
 import scala.annotation.tailrec
 import scala.collection.mutable

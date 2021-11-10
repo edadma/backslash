@@ -1,4 +1,4 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
 
 object Entity {

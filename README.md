@@ -83,7 +83,7 @@ This example program shows how to create a custom command to output an HTML unor
 ```scala
 import scala.util.parsing.input.Position
 
-import xyz.hyperreal.backslash._
+import io.github.edadma.backslash._
 
 
 object Example extends App {
@@ -179,7 +179,7 @@ Use the following definition to use Backslash in your Maven project:
 </repository>
 
 <dependency>
-  <groupId>xyz.hyperreal</groupId>
+  <groupId>io.github.edadma</groupId>
   <artifactId>backslash</artifactId>
   <version>0.4.23</version>
 </dependency>
@@ -190,7 +190,7 @@ Add the following to your `build.sbt` file to use Backslash in your SBT project:
 ```sbt
 resolvers += "Hyperreal Repository" at "https://dl.bintray.com/edadma/maven"
 
-libraryDependencies += "xyz.hyperreal" %% "backslash" % "0.4.23"
+libraryDependencies += "io.github.edadma" %% "backslash" % "0.4.23"
 ```
 
 ### Executable

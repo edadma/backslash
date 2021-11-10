@@ -1,4 +1,4 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
 import java.io.{ByteArrayOutputStream, PrintStream}
 
@@ -47,7 +47,7 @@ class Renderer(val parser: Parser, val config: Map[String, Any]) {
     }
   }
 
-  def capture(ast: AST, assigns: collection.Map[String, Any])(implicit codec: io.Codec): String = {
+  def capture(ast: AST, assigns: collection.Map[String, Any])(implicit codec: scala.io.Codec): String = {
     val bytes = new ByteArrayOutputStream
 
     render(ast, assigns, new PrintStream(bytes, false, codec.name))

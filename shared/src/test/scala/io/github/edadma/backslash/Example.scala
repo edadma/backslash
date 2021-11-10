@@ -1,6 +1,6 @@
 //import scala.util.parsing.input.Position
 //
-//import xyz.hyperreal.backslash._
+//import io.github.edadma.backslash._
 //
 //
 //object Example extends App {

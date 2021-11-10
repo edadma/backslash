@@ -1,10 +1,10 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
-import xyz.hyperreal.cross_platform.{readFile, processArgs, readableFile, writableFile}
-import xyz.hyperreal.datetime.{DatetimeFormatter, Timezone}
+import io.github.edadma.cross_platform.{readFile, processArgs, readableFile, writableFile}
+import io.github.edadma.datetime.{DatetimeFormatter, Timezone}
 
 import scala.collection.mutable
-import xyz.hyperreal.json.DefaultJSONReader
+import io.github.edadma.json.DefaultJSONReader
 
 object Main extends App {
 

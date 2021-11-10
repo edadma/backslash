@@ -1,19 +1,19 @@
-package xyz.hyperreal.backslash
+package io.github.edadma.backslash
 
-import xyz.hyperreal.char_reader.CharReader
-import xyz.hyperreal.cross_platform.{nameSeparator, readFile}
-import xyz.hyperreal.datetime
-import xyz.hyperreal.datetime.{Datetime, DatetimeFormatter, Timezone}
+import io.github.edadma.char_reader.CharReader
+import io.github.edadma.cross_platform.{nameSeparator, readFile}
+import io.github.edadma.datetime
+import io.github.edadma.datetime.{Datetime, DatetimeFormatter, Timezone}
 
 import java.util.regex.Matcher
-import xyz.hyperreal.hsl.HSL
+import io.github.edadma.hsl.HSL
 
 import scala.util.matching.Regex
 
 abstract class Command(val name: String, val arity: Int, val eval: Boolean = true)
     extends ((CharReader, Renderer, List[Any], Map[String, Any], AnyRef) => Any) {
   override def toString =
-    s"""xyz.hyperreal.backslash.Command.standard("$name")"""
+    s"""io.github.edadma.backslash.Command.standard("$name")"""
 }
 
 object Command {

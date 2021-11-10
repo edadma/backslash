@@ -1,28 +1,30 @@
 lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(
     name := "backslash",
-    version := "0.4.27",
-    scalaVersion := "2.13.5",
+    version := "0.1.0",
+    scalaVersion := "2.13.6",
     scalacOptions ++=
       Seq(
         "-deprecation", "-feature", "-unchecked",
         "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:dynamics",
         "-Xasync"
       ),
-    organization := "xyz.hyperreal",
-    mainClass := Some("xyz.hyperreal.backslash.Main"),
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.5" % "test",
+    organization := "io.github.edadma",
+    githubOwner := "edadma",
+    githubRepository := name.value,
+    mainClass := Some(s"${organization.value}.${name.value}.Main"),
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.10" % "test",
     libraryDependencies ++=
       Seq(
-        "xyz.hyperreal" %%% "json" % "0.8.3",
-        "com.github.scopt" %%% "scopt" % "4.0.0",
-        "xyz.hyperreal" %%% "hsl" % "1.0.0",
-        "xyz.hyperreal" %%% "char-reader" % "0.1.12",
-        "xyz.hyperreal" %%% "datetime" % "0.1.6",
-        "xyz.hyperreal" %%% "cross-platform" % "0.1.0-snapshot.3"
+        "io.github.edadma" %%% "json" % "0.1.12",
+        "io.github.edadma" %%% "hsl" % "0.1.1",
+        "io.github.edadma" %%% "char-reader" % "0.1.7",
+        "io.github.edadma" %%% "datetime" % "0.1.11",
+        "io.github.edadma" %%% "cross-platform" % "0.1.1",
       ),
+    libraryDependencies += "com.github.scopt" %%% "scopt" % "4.0.1",
     publishMavenStyle := true,
-    publishArtifact in Test := false,
+    Test / publishArtifact := false,
     licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
   ).
   jvmSettings(
@@ -32,8 +34,6 @@ lazy val backslash = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(fi
     nativeLinkStubs := true
   ).
   jsSettings(
-//    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.2.0",
-//    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.2.0",
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
 //    Test / scalaJSUseMainModuleInitializer := true,
